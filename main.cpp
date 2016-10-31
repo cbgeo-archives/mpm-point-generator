@@ -42,3 +42,5 @@ int main() {
         cout << Coord[i].first <<","<< Coord[i].second << endl;
     }
 }
+
+// Status: Can output coordinates to console.
