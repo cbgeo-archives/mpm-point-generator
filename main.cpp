@@ -1,46 +1,38 @@
-//
-//  main.cpp
-//  test3
-//
-//  Created by Christopher Wilkes on 31/10/2016.
-//  Copyright © 2016 Christopher Wilkes. All rights reserved.
-//
+//Copyright (c) [2016] [CB-Geo FE-Lib]
 
 #include <iostream>
 #include <vector>
 #include <utility>
-using namespace std;
 
 int main() {
     
   // Following Values need to be cin'd at some point, values are test case.
     
-    int xLength  = 5;
-    int yHieght  = 5;
-    double xSpacing = 1;
-    double ySpacing = 1;
+    const double xlength=5.;
+    const double yheight=5.;
+    const double xspacing = 1;
+    const double yspacing = 1;
     
    // NI = Number of nodes in I Direction
    // NJ = Number of nodes in J Direction
 
-    int NI = ((double)xLength/xSpacing)+1;
-    int NJ = ((double)yHieght/ySpacing)+1;
+    int NI = ((double)xlength/xspacing)+1;
+    int NJ = ((double)yheight/yspacing)+1;
     
 
-    vector<pair<int,int>> Coord;
+    std::vector<std::pair<int,int>> Coord; //Coordinate output
     
-    for (int i = 0; i < NI; i++)
+    for (int i = 0; i < NI; ++i)
     {
-        for (int j = 0; j < NJ; j++)
+        for (int j = 0; j < NJ; ++j)
         {
-            Coord.push_back(make_pair(i,j));
+            Coord.push_back(std::make_pair(i,j));
         }
     }
     
-    for (int i = 0; i < Coord.size(); i++)
-    {
-        cout << Coord[i].first <<","<< Coord[i].second << endl;
-    }
+    for (const auto &coord : Coord) std::cout << coord.first <<","<< coord.second << '\n';
+    
 }
 
-// Status: Can output coordinates to console.
+// Status : Can print coordinates of points to console
+
