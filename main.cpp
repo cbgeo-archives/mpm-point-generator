@@ -20,8 +20,8 @@ int main() {
       ((double)yheight / yspacing) + 1; // NJ = Number of nodes in J Direction
 
   std::vector<std::pair<int, int>> Coord;   // Coordinate output
-  std::fstream outfile;                     // File stream name
-  std::string outputfilename = "Coord.txt"; // File name and type
+  std::fstream outfile;                     // Output file stream name
+  std::string outputfilename = "Coord.txt"; // Output file name and type
 
   outfile.open(outputfilename, std::ios::out);
 
