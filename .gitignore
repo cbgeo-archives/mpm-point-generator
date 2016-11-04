@@ -1,0 +1,11 @@
+build/*
+*~*
+*#*
+*Makefile*
+*mpm_point_generator*
+*CMakeFiles*
+*CMakeLists.txt*
+*CMakeCache.txt*
+*cmake_install.cmake*
+*Coord.txt*
+

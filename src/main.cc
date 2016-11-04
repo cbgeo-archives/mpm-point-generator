@@ -11,17 +11,18 @@ int main() {
 
   const double xlength = 5.;
   const double yheight = 5.;
-  const double xspacing = 1;
-  const double yspacing = 1;
+  const double xspacing = 1.;
+  const double yspacing = 1.;
 
-  int NI =
-      ((double)xlength / xspacing) + 1; // NI = Number of nodes in I Direction
+  // NI = Number of nodes in I Direction
+  int NI = ((double)xlength / xspacing) + 1;
+  // NJ = Number of nodes in J Direction
   int NJ =
-      ((double)yheight / yspacing) + 1; // NJ = Number of nodes in J Direction
+      ((double)yheight / yspacing) + 1;
 
-  std::vector<std::pair<int, int>> Coord;   // Coordinate output
-  std::fstream outfile;                     // Output file stream name
-  std::string outputfilename = "Coord.txt"; // Output file name and type
+  std::vector<std::pair<int, int>> Coord;    // Coordinate output
+  std::fstream outfile;                      // Output file stream name
+  std::string outputfilename = "Coord.txt";  // Output file name and type
 
   outfile.open(outputfilename, std::ios::out);
 
@@ -32,7 +33,7 @@ int main() {
       }
     }
 
-    for (const auto &coord : Coord)
+    for (const auto& coord : Coord)
       outfile << coord.first << "," << coord.second << '\n';
     outfile.close();
   }
