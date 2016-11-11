@@ -19,9 +19,6 @@ int main() {
   const int nj = (static_cast<double>(yheight / yspacing)) + 1;
   // Coordinate output
   std::vector<std::array<double, 2>> coords;
-  std::fstream outfile;                      // Output file stream name
-  std::string outputfilename = "coord.txt";  // Output file name and type
-
   for (unsigned i = 0; i < ni; ++i) {
     for (unsigned j = 0; j < nj; ++j) {
       std::array<double, 2> coord = {i * xspacing, j * yspacing};
@@ -29,17 +26,16 @@ int main() {
     }
   }
 
+  // Output file stream name
+  std::fstream outfile;
+  // Output file name and type
+  std::string outputfilename = "coord.txt";
   outfile.open(outputfilename, std::ios::out);
-
   if (outfile.is_open()) {
     for (const auto& coord : coords)
       outfile << coord.at(0) << "," << coord.at(1) << '\n';
     outfile.close();
-  }
-
-  else {
+  } else {
     std::cout << "Could not create file:" << outputfilename << std::endl;
   }
 }
-
-// Status : Can print coordinates of points to console
