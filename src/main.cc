@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "Header.h"
+#include "point.h"
 
 int main() {
 
@@ -22,7 +22,7 @@ int main() {
 
   // Coordinate output
 
-  Point testrun;
+  Point newrun;
 
   std::vector<std::array<double, 2>> coords;
 
@@ -32,8 +32,6 @@ int main() {
       coords.push_back(coord);
     }
   }
-
-  testrun.insert(coords);
 
   // Output file stream name
   std::fstream outfile;
