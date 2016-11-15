@@ -1,8 +1,9 @@
 #include <array>
 #include <fstream>
 #include <iostream>
-#include <utility>
 #include <vector>
+
+#include "Header.h"
 
 int main() {
 
@@ -15,10 +16,16 @@ int main() {
 
   // NI = Number of nodes in I Direction
   const int ni = (static_cast<double>(xlength / xspacing)) + 1;
+
   // NJ = Number of nodes in J Direction
   const int nj = (static_cast<double>(yheight / yspacing)) + 1;
+
   // Coordinate output
+
+  Point testrun;
+
   std::vector<std::array<double, 2>> coords;
+
   for (unsigned i = 0; i < ni; ++i) {
     for (unsigned j = 0; j < nj; ++j) {
       std::array<double, 2> coord = {i * xspacing, j * yspacing};
@@ -26,16 +33,21 @@ int main() {
     }
   }
 
+  testrun.insert(coords);
+
   // Output file stream name
   std::fstream outfile;
+
   // Output file name and type
   std::string outputfilename = "coord.txt";
   outfile.open(outputfilename, std::ios::out);
-  if (outfile.is_open()) {
-    for (const auto& coord : coords)
-      outfile << coord.at(0) << "," << coord.at(1) << '\n';
-    outfile.close();
-  } else {
-    std::cout << "Could not create file:" << outputfilename << std::endl;
-  }
+
+  //    if (outfile.is_open()) {
+  //        for (const auto& coord : coords)
+  //            outfile << coord.at(0) << "," << coord.at(1) << '\n';
+  //        outfile.close();
+  //    } else {
+  //        std::cout << "Could not create file:" << outputfilename <<
+  //        std::endl;
+  //    }
 }
