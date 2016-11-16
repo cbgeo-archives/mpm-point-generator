@@ -1,6 +1,7 @@
 #include <array>
 #include <fstream>
 #include <iostream>
+#include <memory>
 #include <vector>
 
 #include "point.h"
@@ -22,7 +23,7 @@ int main() {
 
   // Coordinate output
 
-  Point newrun;
+  Point newpoint(0, {0., 0.});
 
   std::vector<std::array<double, 2>> coords;
 
