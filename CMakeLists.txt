@@ -29,6 +29,7 @@ endif()
 # Include directories
 include_directories(
   ${PROJECT_SOURCE_DIR}/include
+  ${PROJECT_SOURCE_DIR}/external
 )
 
 # lem executable
@@ -39,3 +40,15 @@ SET(mpm_point_gen_src
 add_executable(mpm_point_generator
                ${mpm_point_gen_src}
 )
+
+# Unit test
+SET(test_src
+  ${PROJECT_SOURCE_DIR}/tests/test.cc
+  ${PROJECT_SOURCE_DIR}/tests/point_test.cc
+)   
+add_executable(mpm_point_generator_test
+	       ${test_src}
+)
+add_test(NAME mpm_point_generator_test COMMAND $<TARGET_FILE:mpm_point_generator_test>)
+enable_testing()
+

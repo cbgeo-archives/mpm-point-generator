@@ -5,13 +5,13 @@
 
 //! \brief Point class to store coordinates
 class Point {
- public:
+public:
   //! Constructor with id and coordinates
-  Point(unsigned id, const std::array<double, 2>& coord);
+  Point(unsigned id, const std::array<double, 2> &coord);
 
   //! Returns the id of the point
   unsigned id() const { return id_; }
-  
+
   //! Returns coordinates of the point
   std::array<double, 2> coordinates() const { return coordinates_; }
 
@@ -22,4 +22,4 @@ private:
   std::array<double, 2> coordinates_;
 };
 
-#endif  // MPM_MESH_POINT_H_
+#endif // MPM_MESH_POINT_H_
