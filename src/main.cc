@@ -21,18 +21,20 @@ int main() {
   // NJ = Number of nodes in J Direction
   const int nj = (static_cast<double>(yheight / yspacing)) + 1;
 
-  // Coordinate output
+  std::vector<std::shared_ptr<Point>> points;
 
-  Point* newpoint = new Point(0, {0., 0.});
-
+  // Compute coordinates
   std::vector<std::array<double, 2>> coords;
-
+  unsigned id = 0;
   for (unsigned i = 0; i < ni; ++i) {
     for (unsigned j = 0; j < nj; ++j) {
       std::array<double, 2> coord = {i * xspacing, j * yspacing};
-      newpoint->
+      points.emplace_back(std::make_shared<Point>(id, coord));
+      ++id;
     }
   }
+
+  std::cout << "# Points: " << points.size() << '\n';
 
   // Output file stream name
   std::fstream outfile;
@@ -40,6 +42,14 @@ int main() {
   // Output file name and type
   std::string outputfilename = "coord.txt";
   outfile.open(outputfilename, std::ios::out);
+
+  for (const auto& point : points) {
+    outfile << point->id() << '\t';
+    outfile << point->coordinates().at(0) << "," << point->coordinates().at(1)
+            << '\n';
+  }
+
+  outfile.close();
 
   //    if (outfile.is_open()) {
   //        for (const auto& coord : coords)
