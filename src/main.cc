@@ -23,14 +23,14 @@ int main() {
 
   // Coordinate output
 
-  Point newpoint(0, {0., 0.});
+  Point* newpoint = new Point(0, {0., 0.});
 
   std::vector<std::array<double, 2>> coords;
 
   for (unsigned i = 0; i < ni; ++i) {
     for (unsigned j = 0; j < nj; ++j) {
       std::array<double, 2> coord = {i * xspacing, j * yspacing};
-      coords.push_back(coord);
+      newpoint->
     }
   }
 
