@@ -9,9 +9,22 @@ public:
   Mesh(double, double, double, double);
 
   // Following Values need to be cin'd at some point, values are test case.
-  void forloop() {}
+  void forloop() {
 
-private:
+	  std::array<double, 2> coord;
+
+	  for (unsigned i = 0; i < ni(); ++i) {
+		  for (unsigned j = 0; j < nj(); ++j) {
+			  coord = { i * xspacing, j * yspacing };
+			  // need to call the points object created by Point class here - not sure how
+			  (Point.*points)emplace_back(std::make_shared<Point>(id, coord));
+			  ++id;
+
+		  }
+	  }
+  }
+
+ private:
 
   const double xlength;
   const double yheight;
@@ -29,10 +42,4 @@ private:
  // std::array<double, 2> coord;
 
   unsigned id;
-
-
-
-
-
-
 };
