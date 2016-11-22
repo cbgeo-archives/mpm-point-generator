@@ -11,14 +11,10 @@ int main() {
 
   std::vector<std::shared_ptr<Point>> points;
 
-  unsigned id = 0;
-  for (unsigned i = 0; i < newmesh.ni(); ++i) {
-    for (unsigned j = 0; j < newmesh.nj(); ++j) {
-      newmesh.coord = {i * newmesh.xspacing, j * newmesh.yspacing};
-      points.emplace_back(std::make_shared<Point>(id, newmesh.coord));
-      ++id;
-    }
-  }
+  newmesh.forloop();
+
+
+
 
   std::cout << "# Points: " << points.size() << '\n';
 
