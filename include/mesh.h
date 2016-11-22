@@ -9,6 +9,9 @@ public:
   Mesh(double, double, double, double);
 
   // Following Values need to be cin'd at some point, values are test case.
+  void forloop() {}
+
+private:
 
   const double xlength;
   const double yheight;
@@ -16,14 +19,20 @@ public:
   const double yspacing;
 
   // NI = Number of nodes in I Direction
-  int ni() const { return (xlength / xspacing) + 1; };
+  double ni() const { return (xlength / xspacing) + 1; };
 
   // NJ = Number of nodes in J Direction
-  int nj() const { return (yheight / yspacing) + 1; };
+  double nj() const { return (yheight / yspacing) + 1; };
 
   std::vector<std::array<double, 2>> coords;
 
-  std::array<double, 2> coord;
+ // std::array<double, 2> coord;
 
-private:
+  unsigned id;
+
+
+
+
+
+
 };
