@@ -34,6 +34,7 @@ include_directories(
 
 # lem executable
 SET(mpm_point_gen_src
+    src/mesh.cc
     src/point.cc
     src/main.cc
 )
