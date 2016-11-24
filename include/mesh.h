@@ -1,36 +1,12 @@
-#include "point.h"
 #include <array>
 #include <fstream>
 #include <iostream>
+#include <memory>
 #include <vector>
 
+#include "point.h"
+
 class Mesh {
-
-private:
-  const double xlength;
-  const double yheight;
-  const double xspacing;
-  const double yspacing;
-
-  // NI = Number of nodes in I Direction
-  double ni() const { return (xlength / xspacing) + 1; };
-
-  // NJ = Number of nodes in J Direction
-  double nj() const { return (yheight / yspacing) + 1; };
-
-  std::vector<std::array<double, 2>> coords;
-
-  unsigned id;
-
-  //! Create point vector
-  std::vector<std::shared_ptr<Point>> points;
-
-  // Output file stream name
-  std::fstream outfile;
-
-  // Output file name and type
-  std::string outputfilename = "coord.txt";
-
 public:
   //!  Constructor
   Mesh(double, double, double, double);
@@ -63,6 +39,31 @@ public:
 
     outfile.close();
   }
+
+private:
+  const double xlength;
+  const double yheight;
+  const double xspacing;
+  const double yspacing;
+
+  // NI = Number of nodes in I Direction
+  double ni() const { return (xlength / xspacing) + 1; };
+
+  // NJ = Number of nodes in J Direction
+  double nj() const { return (yheight / yspacing) + 1; };
+
+  std::vector<std::array<double, 2>> coords;
+
+  unsigned id;
+
+  //! Create point vector
+  std::vector<std::shared_ptr<Point>> points;
+
+  // Output file stream name
+  std::fstream outfile;
+
+  // Output file name and type
+  std::string outputfilename = "coord.txt";
 };
 
 //    if (outfile.is_open()) {
