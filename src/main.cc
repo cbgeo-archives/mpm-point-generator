@@ -6,8 +6,9 @@
 
 int main() {
 
-  Mesh newmesh(5, 5, 1, 1);
+  std::unique_ptr<Mesh> mesh(new Mesh(0, 5, 5, 1, 1));
 
-  newmesh.generatecoordinates();
-  newmesh.coordinatesoutput();
+  mesh->generatecoordinates();
+
+  mesh->coordinatesoutput();
 }
