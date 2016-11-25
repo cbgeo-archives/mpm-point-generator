@@ -7,4 +7,4 @@ build/*
 *CMakeCache.txt*
 *cmake_install.cmake*
 *coord.txt*
-
+*docs/*
