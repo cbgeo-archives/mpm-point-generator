@@ -17,7 +17,7 @@ void Mesh::generatecoordinates() {
       std::array<double, 2> coord = {static_cast<double>(i) * xspacing_,
                                      static_cast<double>(j) * yspacing_};
       // Create a point object based on id and coordinates
-      points_.emplace_back(std::make_shared<Point>(pointid, coord));
+      points_.emplace_back(new Point(pointid, coord));
       ++pointid;
     }
   }

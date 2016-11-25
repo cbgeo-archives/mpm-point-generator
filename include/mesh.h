@@ -30,5 +30,5 @@ private:
   //! Spacing in y direction
   double yspacing_;
   //! Vector of points
-  std::vector<std::shared_ptr<Point>> points_;
+  std::vector<std::unique_ptr<Point>> points_;
 };
