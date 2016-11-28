@@ -1,12 +1,11 @@
 #include "mesh.h"
 
 //! Mesh constructor
-//! \param[in] xlength Lenght of mesh in x-direction
-Mesh::Mesh(unsigned id, double xlength, double yheight, double xspacing,
-           double yspacing)
-    : id_{id}, xspacing_{xspacing}, yspacing_{yspacing} {
-  ni_ = (xlength / xspacing_) + 1;
-  nj_ = (yheight / yspacing_) + 1;
+//! \param[in]
+Mesh::Mesh(unsigned id, std::array<double, 4> param) : id_{ id }{
+		param_ = param;
+		ni_ = (param_[0] / param_[2]) + 1;
+		nj_ = (param_[1] / param_[3]) + 1;
 }
 
 void Mesh::generatecoordinates() {
@@ -14,14 +13,17 @@ void Mesh::generatecoordinates() {
   // Iterate through number of nodes in x and y directions
   for (unsigned i = 0; i < ni_; ++i) {
     for (unsigned j = 0; j < nj_; ++j) {
-      std::array<double, 2> coord = {static_cast<double>(i) * xspacing_,
-                                     static_cast<double>(j) * yspacing_};
+      std::array<double, 2> coord = {static_cast<double>(i) * param_[2],
+                                     static_cast<double>(j) * param_[3]};
       // Create a point object based on id and coordinates
       points_.emplace_back(new Point(pointid, coord));
       ++pointid;
     }
   }
+
+  std::cout << "# Points: " << points_.size() << '\n';
 }
+
 
 void Mesh::coordinatesoutput() {
   const std::string outputfilename = "coords.txt";

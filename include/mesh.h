@@ -10,7 +10,7 @@
 class Mesh {
 public:
   //!  Constructor
-  Mesh(unsigned, double, double, double, double);
+  Mesh(unsigned, std::array<double, 4>);
 
   //! Following Values need to be cin'd at some point, values are test case.
   void generatecoordinates();
@@ -21,14 +21,13 @@ public:
 private:
   //! Mesh id
   unsigned id_;
-  //! Number of nodes in I Direction
+  //! Number of nodes in I Direction (possible memory loss when converting warning)
   unsigned ni_;
-  //! Number of nodes in J Direction
+  //! Number of nodes in J Direction (possible memory loss when converting warning)
   unsigned nj_;
-  //! Spacing in x direction
-  double xspacing_;
-  //! Spacing in y direction
-  double yspacing_;
-  //! Vector of points
+
+   //! An array containing parameters used to calculate ni/nj (xlength[0], yehight[1], xspacing[2], yspacing[3])
+  std::array<double, 4> param_;
+
   std::vector<std::unique_ptr<Point>> points_;
 };
