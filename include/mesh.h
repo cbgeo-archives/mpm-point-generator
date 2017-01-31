@@ -7,10 +7,10 @@
 #include "point.h"
 
 //! \brief Mesh class
-class Mesh {
+template<unsigned Tdim> class Mesh {
 public:
   //!  Constructor
-  Mesh(unsigned, std::array<double, 4>);
+  Mesh(unsigned, std::array<double, Tdim> param);
 
   //! Following Values need to be cin'd at some point, values are test case.
   void generatecoordinates();
@@ -27,7 +27,11 @@ private:
   unsigned nj_;
 
    //! An array containing parameters used to calculate ni/nj (xlength[0], yehight[1], xspacing[2], yspacing[3])
-  std::array<double, 4> param_;
+  std::array<double, Tdim> param_;
 
-  std::vector<std::unique_ptr<Point>> points_;
+  std::vector<std::unique_ptr<Point<2>>> points_;
+
+
+
+
 };

@@ -1,14 +1,16 @@
 #include "mesh.h"
+#include "point.cc"
 
 //! Mesh constructor
 //! \param[in]
-Mesh::Mesh(unsigned id, std::array<double, 4> param) : id_{ id }{
+template <unsigned Tdim>
+Mesh<Tdim>::Mesh(unsigned id, std::array<double, Tdim> param) : id_{ id }{
 		param_ = param;
 		ni_ = (param_[0] / param_[2]) + 1;
 		nj_ = (param_[1] / param_[3]) + 1;
 }
-
-void Mesh::generatecoordinates() {
+template <unsigned Tdim>
+void Mesh<Tdim>::generatecoordinates() {
   unsigned pointid = 0;
   // Iterate through number of nodes in x and y directions
   for (unsigned i = 0; i < ni_; ++i) {
@@ -16,7 +18,7 @@ void Mesh::generatecoordinates() {
       std::array<double, 2> coord = {static_cast<double>(i) * param_[2],
                                      static_cast<double>(j) * param_[3]};
       // Create a point object based on id and coordinates
-      points_.emplace_back(new Point(pointid, coord));
+      points_.emplace_back(new Point<2>(pointid, coord));
       ++pointid;
     }
   }
@@ -24,8 +26,8 @@ void Mesh::generatecoordinates() {
   std::cout << "# Points: " << points_.size() << '\n';
 }
 
-
-void Mesh::coordinatesoutput() {
+template <unsigned Tdim>
+void Mesh<Tdim>::coordinatesoutput() {
   const std::string outputfilename = "coords.txt";
   std::fstream outfile;
   outfile.open(outputfilename, std::ios::out);
