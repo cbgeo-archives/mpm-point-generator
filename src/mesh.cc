@@ -1,6 +1,5 @@
 #include "mesh.h"
 #include "point.cc"
-
 //! Mesh constructor
 //! \param[in]
 template <unsigned Tdim>
