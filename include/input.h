@@ -8,7 +8,7 @@
 #define MPM_POINT_GEN_INPUT_H
 
 //! Class to input coordinates from text file
-template<unsigned Idim> class Input {
+template<unsigned Idim, unsigned Rows> class Input {
 
 public:
     //!  Constructor
@@ -23,6 +23,8 @@ public:
     //!Generate point coordinates
     void generatemesh();
 
+
+
 private:
 
     //! Vector containing input coordinates
@@ -34,15 +36,16 @@ private:
 
     double meshsize = linearray.size();
 
-    //std::array<double, Idim> xlengtharray;
-    double lengtharray[1][3];
+    double lengtharray[Rows][4];
 
 
     //test variables
-    double a;
-    double b;
-    double c;
-    double d;
+    double xlengths;
+    double ylengths;
+
+    double xlentotal;
+    double ylentotal;
+
 
 
     //! coordinates used in incoordvector

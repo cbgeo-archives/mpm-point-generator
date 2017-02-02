@@ -11,9 +11,24 @@ Mesh<Tdim>::Mesh(unsigned id, std::array<double, Tdim> param) : id_{ id }{
 template <unsigned Tdim>
 void Mesh<Tdim>::generatecoordinates() {
   unsigned pointid = 0;
+
+    //!Find origin of shape, so coordinates of points will fit in shape
+    const std::string infilename = "input.txt";
+    std::fstream infile;
+    infile.open(infilename, std::ios::in);
+
+        std::string line;
+            infile >> xorigin;
+            getline(infile, line, ',');
+
+            infile >> yorigin;
+            getline(infile, line, ':');
+
+        infile.close();
+
   // Iterate through number of nodes in x and y directions
-  for (unsigned i = 0; i < ni_; ++i) {
-    for (unsigned j = 0; j < nj_; ++j) {
+  for (auto i = xorigin; i < ni_ + xorigin; ++i) {
+    for (auto j = yorigin; j < nj_ + yorigin; ++j) {
       std::array<double, 2> coord = {static_cast<double>(i) * param_[2],
                                      static_cast<double>(j) * param_[3]};
       // Create a point object based on id and coordinates

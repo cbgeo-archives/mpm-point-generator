@@ -28,6 +28,9 @@ private:
   //! Number of nodes in J Direction
   unsigned nj_;
 
+  double xorigin;
+  double yorigin;
+
    //! An array containing parameters used to calculate ni/nj (xlength[0], yehight[1], xspacing[2], yspacing[3])
   std::array<double, Tdim> param_;
 

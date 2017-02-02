@@ -37,7 +37,7 @@ SET(mpm_point_gen_src
     src/mesh.cc
     src/point.cc
     src/main.cc
-        include/input.h src/input.cpp)
+    src/input.cpp)
 add_executable(mpm_point_generator
                ${mpm_point_gen_src}
 )
