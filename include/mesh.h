@@ -28,14 +28,19 @@ private:
   //! Number of nodes in J Direction
   unsigned nj_;
 
+  unsigned nz_;
+
   double xorigin;
   double yorigin;
+  double zorigin;
+
+    std::string spacingline;
 
    //! An array containing parameters used to calculate ni/nj (xlength[0], yehight[1], xspacing[2], yspacing[3])
   std::array<double, Tdim> param_;
 
     //! Initialise Point template
-  std::vector<std::unique_ptr<Point<2>>> points_;
+  std::vector<std::unique_ptr<Point<3>>> points_;
 
 
 

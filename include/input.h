@@ -24,7 +24,6 @@ public:
     void generatemesh();
 
 
-
 private:
 
     //! Vector containing input coordinates
@@ -36,19 +35,18 @@ private:
 
     double meshsize = linearray.size();
 
-    double lengtharray[Rows][4];
+    double lengtharray[Rows][6];
 
 
     //test variables
-    double xlengths;
-    double ylengths;
+    double xlengths, ylengths, zlengths;
+    double xlentotal, ylentotal, zlentotal;
+    double xspacing, yspacing, zspacing;
 
-    double xlentotal;
-    double ylentotal;
 
 
 
     //! coordinates used in incoordvector
-    double xlow, ylow, xhigh, yhigh;
+    double xlow, ylow, xhigh, yhigh, zlow, zhigh;
 };
 #endif //MPM_POINT_GEN_INPUT_H
