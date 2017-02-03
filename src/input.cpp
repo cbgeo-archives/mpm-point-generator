@@ -1,6 +1,6 @@
 #include "input.h"
 #include "mesh.cc"
-#include <boost/range/numeric.hpp>
+#include <numeric>
 
 template <unsigned Idim, unsigned Rows>
 Input<Idim, Rows>::Input(std::array<double, Idim> outcoordtest, std::vector<std::array<double, Idim>> incoordvector) {
@@ -119,9 +119,9 @@ void Input<Idim, Rows>::generatemesh(){
         zlength_.emplace_back(zlengths);
     }
 
-   xlentotal = boost::accumulate(xlength_, 0);
-   ylentotal = boost::accumulate(ylength_, 0)/(incoordvector_.size() -1);
-   zlentotal = boost::accumulate(zlength_, 0);
+   xlentotal = std::accumulate(xlength_.begin(), xlength_.end(),0);
+   ylentotal = std::accumulate(ylength_.begin(), ylength_.end(),0)/(incoordvector_.size() -1);
+   zlentotal = std::accumulate(zlength_.begin(), zlength_.end(),0);
 
     std::cout<< "x Length:        " << xlentotal << '\n' <<
                 "y Length:        " << ylentotal << '\n' <<
