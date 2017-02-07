@@ -1,6 +1,7 @@
 #include "input.h"
 #include "mesh.cc"
 #include <numeric>
+#include <algorithm>
 
 template <unsigned Idim, unsigned Rows>
 Input<Idim, Rows>::Input(std::array<double, Idim> outcoordtest, std::vector<std::array<double, Idim>> incoordvector) {
@@ -13,7 +14,7 @@ template <unsigned Idim, unsigned Rows>
 void Input<Idim,Rows>::readfile() {
 
     
-    int i;
+    unsigned i;
     int k = 0;
 
     const std::string infilename = "input.txt";
@@ -111,7 +112,7 @@ void Input<Idim, Rows>::generatemesh(){
     for (unsigned i =0; i< incoordvector_.size()-1; ++i){
 
         xlengths = lengtharray[i+1][3] - lengtharray[i][0];
-        ylengths = lengtharray[i][4] - lengtharray[i][1];
+        ylengths = lengtharray[i+1][4];
         zlengths = lengtharray[i+1][5] - lengtharray[i][2];
 
         xlength_.emplace_back(xlengths);
@@ -120,7 +121,7 @@ void Input<Idim, Rows>::generatemesh(){
     }
 
    xlentotal = std::accumulate(xlength_.begin(), xlength_.end(),0);
-   ylentotal = std::accumulate(ylength_.begin(), ylength_.end(),0)/(incoordvector_.size() -1);
+   ylentotal = *std::max_element(ylength_.begin(), ylength_.end());
    zlentotal = std::accumulate(zlength_.begin(), zlength_.end(),0);
 
     std::cout<< "x Length:        " << xlentotal << '\n' <<
