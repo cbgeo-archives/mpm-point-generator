@@ -1,7 +1,6 @@
 #include "mesh.h"
 #include <numeric>
 #include <sstream>
-#include <algorithm>
 #include "point.cc"
 
 
@@ -11,6 +10,13 @@ Mesh<Tdim>::Mesh() {
 
 template <unsigned Tdim>
 void Mesh <Tdim>::readfile() {
+
+    //! total number of vectors and vertex coordinates
+    double nvertices,xcoord,ycoord,zcoord;
+    //! Vertices id
+    unsigned vertn;
+    //!Array to store vertices coordinates
+    std::array<double, Tdim> verticesarray;
 
     const std::string infilename = "input";
     std::fstream infile;
@@ -22,7 +28,7 @@ void Mesh <Tdim>::readfile() {
         std::string line;
 
         //!ignore first 4 lines
-        for (unsigned k =0;  k < 4; ++k ) {
+        for (unsigned k = 0;  k < 4; ++k ) {
             std::getline(infile, line);
             std::istringstream istream(line);
             if (line.find('#') == std::string::npos && line != "") {
@@ -42,7 +48,7 @@ void Mesh <Tdim>::readfile() {
                 istream >> ycoord;
                 istream >> zcoord;
                 verticesarray = {xcoord,ycoord,zcoord};
-                vertices_.emplace_back(new Point<3>(vertn, verticesarray));
+                vertices_.emplace_back(new Point<Tdim>(vertn, verticesarray));
             }
         }
         infile.close();
