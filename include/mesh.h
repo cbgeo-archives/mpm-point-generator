@@ -20,17 +20,12 @@ public:
 
 private:
 
-
     //!Total number of vertices
     double nvertices;
     //! coordinates used in incoordvector
     double xcoord,ycoord,zcoord;
     //! Vertices id
     unsigned vertn;
-    //!Unused lines at start of gmsh file
-    std::string line1,line2,line3,line4;
-
-
 
     //!Array to store vertices coordinates
     std::array<double, Tdim> verticesarray;
