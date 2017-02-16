@@ -11,7 +11,6 @@ Mesh<Tdim>::Mesh() {
 
 template <unsigned Tdim>
 void Mesh <Tdim>::readfile() {
-    int k = 0;
 
     const std::string infilename = "input";
     std::fstream infile;
@@ -23,44 +22,32 @@ void Mesh <Tdim>::readfile() {
         std::string line;
 
         //!ignore first 4 lines
-        while (k < 4) {
-
+        for (unsigned k =0;  k < 4; ++k ) {
             std::getline(infile, line);
             std::istringstream istream(line);
             if (line.find('#') == std::string::npos && line != "") {
                 istream >> line; }
-
-            ++k;
         }
-
         //!get number of vertices
         infile >> nvertices;
         getline(infile, line);
 
         //!Get vertex coordinates
         for (int i = 0; i < nvertices; ++i) {
-
-            infile >> vertn;
-            getline(infile, line, ' ');
-
-            infile >> xcoord;
-            getline(infile, line, ' ');
-
-            infile >> ycoord;
-            getline(infile, line, ' ');
-
-            infile >> zcoord;
-            getline(infile, line);
-
-            verticesarray = {xcoord,ycoord,zcoord};
-
-            vertices_.emplace_back(new Point<3>(vertn, verticesarray));
+            std::getline(infile, line);
+            std::istringstream istream(line);
+            if (line.find('#') == std::string::npos && line != "") {
+                istream >> vertn;
+                istream >> xcoord;
+                istream >> ycoord;
+                istream >> zcoord;
+                verticesarray = {xcoord,ycoord,zcoord};
+                vertices_.emplace_back(new Point<3>(vertn, verticesarray));
+            }
         }
-
         infile.close();
     }
     std::cout << "Number of Elements: " << vertices_.size() << '\n';
-
 }
 
 template <unsigned Tdim>

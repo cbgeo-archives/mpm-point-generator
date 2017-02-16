@@ -31,5 +31,5 @@ private:
     std::array<double, Tdim> verticesarray;
 
     //!coordinate and id container
-    std::vector<std::unique_ptr<Point<3>>> vertices_;
+    std::vector<std::unique_ptr<Point<Tdim>>> vertices_;
 };
