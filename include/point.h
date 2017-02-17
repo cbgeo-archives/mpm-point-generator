@@ -3,21 +3,22 @@
 
 #include <array>
 
-//! \brief Point class to store coordinates
+//! \brief Point class to store vector coordinates
+//! \tparam Dimension
 template <unsigned Tdim>
 class Point {
 public:
-  //! Constructor with id and coordinates
+  //! \brief Constructor with id and coordinates
   Point(unsigned id, const std::array<double, Tdim> &coord);
 
-  //! Returns the id of the point
+  //! Returns the id of the vertex
   unsigned id() const { return id_; }
 
-  //! Returns coordinates of the point
+  //! Returns coordinates of the vertex
   std::array<double, Tdim> coordinates() const { return coordinates_; }
 
 private:
-  //! Index of the material point
+  //! Index of the vertex
   unsigned id_;
   //! Coordinates
   std::array<double, Tdim> coordinates_;

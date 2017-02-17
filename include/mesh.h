@@ -5,21 +5,23 @@
 #include <vector>
 #include "point.h"
 
-//! Class to input coordinates from text file
+//! \brief Template class to read gmsh file
+//! \details Stores id and coordinate in vector
+//! \tparam Tdim Dimension
 template<unsigned Tdim> class Mesh {
 
 public:
-    //!  Constructor
+    //! \brief Constructor
     Mesh();
 
-    //! Read file
+    //! Read from file
     void readfile();
 
-    //!Output contents of vector to check right data included
+    //! Text output of coordinates
     void outputcoords();
 
 private:
 
-    //!coordinate and id container
+    //! \brief  Coordinate and id container
     std::vector<std::unique_ptr<Point<Tdim>>> vertices_;
 };

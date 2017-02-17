@@ -4,14 +4,19 @@
 #include "point.cc"
 
 
+//! \brief Constructor
 template <unsigned Tdim>
 Mesh<Tdim>::Mesh() {
 }
 
+//! \brief Open and read gmsh file
+//! \details to retrive vertex id and coordinates
+//! \tparam Tdim Dimension
 template <unsigned Tdim>
 void Mesh <Tdim>::readfile() {
 
-    //! total number of vectors and vertex coordinates
+    //! \brief Variables used
+    //! Number of vectors and vertex coordinates
     double nvertices,xcoord,ycoord,zcoord;
     //! Vertices id
     unsigned vertn;
@@ -22,23 +27,25 @@ void Mesh <Tdim>::readfile() {
     std::fstream infile;
     infile.open(infilename, std::ios::in);
 
+    //! \brief Iterate through gmsh file to get information
+    //! Open input file
     while (infile.is_open()) {
         std::cout << '\n' << "INPUT FILE FOUND" << '\n' << '\n';
 
         std::string line;
 
-        //!ignore first 4 lines
+        //!Ignore first 4 lines
         for (unsigned k = 0;  k < 4; ++k ) {
             std::getline(infile, line);
             std::istringstream istream(line);
             if (line.find('#') == std::string::npos && line != "") {
                 istream >> line; }
         }
-        //!get number of vertices
+        //! Get number of vertices
         infile >> nvertices;
         getline(infile, line);
 
-        //!Get vertex coordinates
+        //!Get vertex coordinates & id
         for (int i = 0; i < nvertices; ++i) {
             std::getline(infile, line);
             std::istringstream istream(line);
@@ -56,6 +63,8 @@ void Mesh <Tdim>::readfile() {
     std::cout << "Number of Elements: " << vertices_.size() << '\n';
 }
 
+//! \brief Print vector to text file
+//! \details to Check data entry correct
 template <unsigned Tdim>
 void Mesh<Tdim>::outputcoords() {
 
@@ -66,6 +75,7 @@ void Mesh<Tdim>::outputcoords() {
 
     if (inputcheck.is_open()) {
 
+        //! Iterate through vector and print
         for (const auto &point : vertices_) {
             inputcheck << point->id() << '\t';
             inputcheck << point->coordinates().at(0) << " " << point->coordinates().at(1) << " "
