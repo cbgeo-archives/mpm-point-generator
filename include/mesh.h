@@ -6,7 +6,7 @@
 #include "point.h"
 
 //! \brief Template class to read gmsh file
-//! \details Stores id and coordinate in vector
+//! \details Stores id and coordinates in vector
 //! \tparam Tdim Dimension
 template<unsigned Tdim> class Mesh {
 

@@ -16,7 +16,7 @@ template <unsigned Tdim>
 void Mesh <Tdim>::readfile() {
 
     //! \brief Variables used
-    //! Number of vectors and vertex coordinates
+    //! Number of vertices and vertex coordinates
     double nvertices,xcoord,ycoord,zcoord;
     //! Vertices id
     unsigned vertn;

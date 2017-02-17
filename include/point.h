@@ -3,7 +3,7 @@
 
 #include <array>
 
-//! \brief Point class to store vector coordinates
+//! \brief Point class to store vertex coordinates & id
 //! \tparam Dimension
 template <unsigned Tdim>
 class Point {
