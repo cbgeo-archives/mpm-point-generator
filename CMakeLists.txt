@@ -34,10 +34,10 @@ include_directories(
 
 # lem executable
 SET(mpm_point_gen_src
-        src/mesh.cc
-        src/point.cc
+        include/mesh.tcc
+        include/point.tcc
         src/main.cc
-        )
+        include/input.h include/input.tcc)
 add_executable(mpm_point_generator
         ${mpm_point_gen_src}
         )

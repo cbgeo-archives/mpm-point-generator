@@ -18,7 +18,7 @@ public:
   std::array<double, Tdim> coordinates() const { return coordinates_; }
 
 private:
-  //! Index of the vertex
+  //! Index
   unsigned id_;
   //! Coordinates
   std::array<double, Tdim> coordinates_;

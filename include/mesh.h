@@ -1,3 +1,6 @@
+#ifndef MPM_MESH_H_
+#define MPM_MESH_H_
+
 #include <array>
 #include <fstream>
 #include <iostream>
@@ -7,21 +10,30 @@
 
 //! \brief Template class to read gmsh file
 //! \details Stores id and coordinates in vector
-//! \tparam Tdim Dimension
+//! \tparam Tdim Element Type
 template<unsigned Tdim> class Mesh {
 
 public:
-    //! \brief Constructor
-    Mesh();
 
     //! Read from file
-    void readfile();
+    void get_vertices();
 
-    //! Text output of coordinates
-    void outputcoords();
+    //! Text output to check contents of vertices vector match input
+    void output_vertices();
+
+    //! Read from file
+    void get_elements();
+
+    //! Text output to check contents of element vector match input
+    void output_elements();
 
 private:
 
-    //! \brief  Coordinate and id container
-    std::vector<std::unique_ptr<Point<Tdim>>> vertices_;
+    //! Vertices vector
+    std::vector<std::shared_ptr<Point<3>>> vertex_;
+
+    //! Element vector
+    std::vector<std::shared_ptr<Point<Tdim>>> element_;
+
 };
+#endif // MPM_MESH_H_
