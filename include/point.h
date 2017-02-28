@@ -3,23 +3,26 @@
 
 #include <array>
 
-//! \brief Point class to store coordinates
+//! \brief Point class to store vertex coordinates & id
+//! \tparam Dimension
+template <unsigned Tdim>
 class Point {
 public:
-  //! Constructor with id and coordinates
-  Point(unsigned id, const std::array<double, 2> &coord);
+  //! \brief Constructor with id and coordinates
+  Point(unsigned id, const std::array<double, Tdim> &coord);
 
-  //! Returns the id of the point
+  //! Returns the id of the vertex
   unsigned id() const { return id_; }
 
-  //! Returns coordinates of the point
-  std::array<double, 2> coordinates() const { return coordinates_; }
+  //! Returns coordinates of the vertex
+  std::array<double, Tdim> coordinates() const { return coordinates_; }
 
 private:
-  //! Index of the material point
+  //! Index
   unsigned id_;
   //! Coordinates
-  std::array<double, 2> coordinates_;
+  std::array<double, Tdim> coordinates_;
 };
 
 #endif // MPM_MESH_POINT_H_
+

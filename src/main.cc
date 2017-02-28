@@ -1,15 +1,14 @@
 #include <iostream>
 #include <memory>
-
-#include "mesh.h"
-#include "point.h"
+#include "mesh.tcc"
 
 int main() {
 
-	std::unique_ptr<Mesh> mesh(new Mesh(0, { 5,5,1,1 }));
+    //Put gmsh file in project directory and un-comment out below, Tdim = n element vertices
+    //std::unique_ptr<Mesh<4>> mesh(new Mesh<4>());
+    //mesh->get_vertices();
+    //mesh->output_vertices();
+    //mesh->get_elements();
+    //mesh-> output_elements();
+}
 
-  mesh->generatecoordinates();
-
-  mesh->coordinatesoutput();
-
-  }

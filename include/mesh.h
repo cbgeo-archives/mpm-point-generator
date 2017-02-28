@@ -1,33 +1,39 @@
+#ifndef MPM_MESH_H_
+#define MPM_MESH_H_
+
 #include <array>
 #include <fstream>
 #include <iostream>
 #include <memory>
 #include <vector>
-
 #include "point.h"
 
-//! \brief Mesh class
-class Mesh {
+//! \brief Template class to read gmsh file
+//! \details Stores id and coordinates in vector
+//! \tparam Tdim Element Type
+template<unsigned Tdim> class Mesh {
+
 public:
-  //!  Constructor
-  Mesh(unsigned, std::array<double, 4>);
 
-  //! Following Values need to be cin'd at some point, values are test case.
-  void generatecoordinates();
+    //! Read from file
+    void get_vertices();
 
-  //! Print out coordinates
-  void coordinatesoutput();
+    //! Text output to check contents of vertices vector match input
+    void output_vertices();
+
+    //! Read from file
+    void get_elements();
+
+    //! Text output to check contents of element vector match input
+    void output_elements();
 
 private:
-  //! Mesh id
-  unsigned id_;
-  //! Number of nodes in I Direction (possible memory loss when converting warning)
-  unsigned ni_;
-  //! Number of nodes in J Direction (possible memory loss when converting warning)
-  unsigned nj_;
 
-   //! An array containing parameters used to calculate ni/nj (xlength[0], yehight[1], xspacing[2], yspacing[3])
-  std::array<double, 4> param_;
+    //! Vertices vector
+    std::vector<std::shared_ptr<Point<3>>> vertex_;
 
-  std::vector<std::unique_ptr<Point>> points_;
+    //! Element vector
+    std::vector<std::shared_ptr<Point<Tdim>>> element_;
+
 };
+#endif // MPM_MESH_H_
