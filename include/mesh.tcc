@@ -9,7 +9,7 @@
 //! \brief Open and read gmsh file
 //! \details read vertex id and coordinates
 template <unsigned Tdim>
-void Mesh<Tdim>::get_vertices(const std::string &filename) {
+void Mesh<Tdim>::get_vertices(const std::string& filename) {
 
   //! Tdim is constant 3, because max dimensions 3
 
@@ -21,7 +21,7 @@ void Mesh<Tdim>::get_vertices(const std::string &filename) {
 //! \details read element id and vertices
 //! \tparam Tdim = element type
 template <unsigned Tdim>
-void Mesh<Tdim>::get_elements(const std::string &filename) {
+void Mesh<Tdim>::get_elements(const std::string& filename) {
 
   std::unique_ptr<Input<Tdim>> inputelements(new Input<Tdim>());
   element_ = inputelements->read_elements(filename);
@@ -29,7 +29,8 @@ void Mesh<Tdim>::get_elements(const std::string &filename) {
 
 //! \brief Print Vertices Vector to text file
 //! \details to Check data entry correct
-template <unsigned Tdim> void Mesh<Tdim>::output_vertices() {
+template <unsigned Tdim>
+void Mesh<Tdim>::output_vertices() {
 
   const std::string outputfilename = "vertexcheck.txt";
   std::fstream inputcheck;
@@ -38,7 +39,7 @@ template <unsigned Tdim> void Mesh<Tdim>::output_vertices() {
   if (inputcheck.is_open()) {
 
     //! Iterate through vector and print
-    for (const auto &point : vertex_) {
+    for (const auto& point : vertex_) {
       inputcheck << point->id() << '\t';
       inputcheck << point->coordinates().at(0) << " "
                  << point->coordinates().at(1) << " "
@@ -51,7 +52,8 @@ template <unsigned Tdim> void Mesh<Tdim>::output_vertices() {
 
 //! \brief Print Element Vector to text file
 //! \details to Check data entry correct
-template <unsigned Tdim> void Mesh<Tdim>::output_elements() {
+template <unsigned Tdim>
+void Mesh<Tdim>::output_elements() {
 
   const std::string outputfilename = "elementcheck.txt";
   std::fstream elementcheck;
@@ -60,7 +62,7 @@ template <unsigned Tdim> void Mesh<Tdim>::output_elements() {
   if (elementcheck.is_open()) {
 
     //! Iterate through vector and print
-    for (const auto &point : element_) {
+    for (const auto& point : element_) {
       elementcheck << point->id() << '\t';
       elementcheck << point->coordinates().at(0) << " "
                    << point->coordinates().at(1) << " "

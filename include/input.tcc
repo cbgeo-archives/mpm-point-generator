@@ -1,8 +1,8 @@
 #include "input.h"
 
 template <unsigned Tdim>
-std::vector<std::shared_ptr<Point<Tdim>>>
-Input<Tdim>::read_vertices(const std::string &filename) {
+std::vector<std::shared_ptr<Point<Tdim>>> Input<Tdim>::read_vertices(
+    const std::string& filename) {
 
   //! \brief  Vector coordinate and id container
   std::vector<std::shared_ptr<Point<Tdim>>> vertices_;
@@ -52,8 +52,8 @@ Input<Tdim>::read_vertices(const std::string &filename) {
 }
 
 template <unsigned Tdim>
-std::vector<std::shared_ptr<Point<Tdim>>>
-Input<Tdim>::read_elements(const std::string &filename) {
+std::vector<std::shared_ptr<Point<Tdim>>> Input<Tdim>::read_elements(
+    const std::string& filename) {
 
   //! Element Coordinate and id container
   std::vector<std::shared_ptr<Point<Tdim>>> elements_;
