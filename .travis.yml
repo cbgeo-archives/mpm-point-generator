@@ -14,6 +14,16 @@ sudo: required
 ##################
 before_install:
   - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+
+###################
+# global settings #
+###################
+
+env:
+  global:
+   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
+   #   via the "travis encrypt" command using the project repo's public key
+   - secure: "RapSH0k4aHUamEm7P2LOAA"
   
 ################
 # build matrix #
@@ -85,16 +95,29 @@ matrix:
         - valgrind --error-exitcode=1 --leak-check=full ./lemtest
         - cd .. && cppcheck --enable=warning --inconclusive --force --std=c++11 src/*.cc include/*.h include/*.tcc --error-exitcode=1
 
-    # OSX / Clang
-    - os: osx
-      osx_image: xcode7.3
-      before_install:
-        - brew update
 
-    - os: osx
-      osx_image: xcode8
-      before_install:
-        - brew update
+    # Coverity scan 
+    - os: linux
+      compiler: gcc-5
+      env:
+        - COMPILER=g++-5
+        - SPECIAL=coverity
+      before_install: 
+        - echo -n | openssl s_client -connect scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-certificates.crt
+      before_script: export CXX=g++-5
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-5', 'libeigen3-dev']
+        coverity_scan:
+          project:
+            name: "cw646/mpm-point-generator"
+            description: "MPM Point Generator Coverity scan build submitted via Travis CI"
+          notification_email: cued.geomechanics@gmail.com
+          build_command_prepend: "sudo ln -sf /usr/bin/g++-5 /usr/bin/g++ && export CXX=g++ && g++ --version && cmake . && make clean"
+          build_command: "make"
+          branch_pattern: coverity_scan
+
 
 ################
 # build script #
@@ -104,5 +127,4 @@ script:
     - mkdir build
     - cd build
     - cmake ..
-    - ls
-    - make
+    - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then make ; fi
