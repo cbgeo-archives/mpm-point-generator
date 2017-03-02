@@ -45,7 +45,6 @@ void Mesh<Tdim>::output_vertices() {
                  << point->coordinates().at(1) << " "
                  << point->coordinates().at(2) << '\n';
     }
-    inputcheck << "Am I the same as input.txt?";
     inputcheck.close();
   }
 }

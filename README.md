@@ -1,7 +1,9 @@
 # MPM Point Generator
 > Christopher Wilkes
 
-[![Build Status](https://travis-ci.org/cw646/mpm-point-generator.svg?branch=master)](https://travis-ci.org/cw646/mpm-point-generator)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/cw646/mpm-point-generator/develop/license.md)
+[![Build Status](https://travis-ci.org/cw646/mpm-point-generator.svg?branch=develop)](https://travis-ci.org/cw646/mpm-point-generator)
+[![Coverity Scan Build Status](https://scan.coverity.com/projects/11832/badge.svg)](https://scan.coverity.com/projects/cw646-mpm-point-generator)
 
 ## Compile and Run
 
