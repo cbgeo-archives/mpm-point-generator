@@ -14,23 +14,23 @@
 template <unsigned Tdim> class Mesh {
 
 public:
-    //! Read from file
-    void get_vertices(const std::string &filename);
+  //! Read from file
+  void get_vertices(const std::string &filename);
 
-    //! Text output to check contents of vertices vector match input
-    void output_vertices();
+  //! Text output to check contents of vertices vector match input
+  void output_vertices();
 
-    //! Read from file
-    void get_elements(const std::string &filename);
+  //! Read from file
+  void get_elements(const std::string &filename);
 
-    //! Text output to check contents of element vector match input
-    void output_elements();
+  //! Text output to check contents of element vector match input
+  void output_elements();
 
 private:
-    //! Vertices vector
-    std::vector<std::shared_ptr<Point<3>>> vertex_;
+  //! Vertices vector
+  std::vector<std::shared_ptr<Point<3>>> vertex_;
 
-    //! Element vector
-    std::vector<std::shared_ptr<Point<Tdim>>> element_;
+  //! Element vector
+  std::vector<std::shared_ptr<Point<Tdim>>> element_;
 };
 #endif // MPM_MESH_H_

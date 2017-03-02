@@ -9,5 +9,5 @@
 
 1. Run `make clean && make -jN` (where N is the number of cores)
 
-3. Run lem `./mpm-point-gen`
+3. Run lem `./mpm-point-generator /path/to/mesh.msh`
 

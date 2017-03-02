@@ -15,15 +15,15 @@
 template <unsigned Tdim> class Input {
 
 public:
-    //! \brief Read and return vertices
-    //! \details returned vector stores vertices read in from gmsh file
-    std::vector<std::shared_ptr<Point<Tdim>>>
-    read_vertices(const std::string &filename);
+  //! \brief Read and return vertices
+  //! \details returned vector stores vertices read in from gmsh file
+  std::vector<std::shared_ptr<Point<Tdim>>>
+  read_vertices(const std::string &filename);
 
-    //! \brief Read and return elements
-    //! \details returned vector stores vertices read in from gmsh file
-    std::vector<std::shared_ptr<Point<Tdim>>>
-    read_elements(const std::string &filename);
+  //! \brief Read and return elements
+  //! \details returned vector stores vertices read in from gmsh file
+  std::vector<std::shared_ptr<Point<Tdim>>>
+  read_elements(const std::string &filename);
 
 private:
 };

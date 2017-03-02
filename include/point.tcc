@@ -4,6 +4,6 @@
 //! \param[in] coord Coordinates of the point
 template <unsigned Tdim>
 Point<Tdim>::Point(unsigned id, const std::array<double, Tdim> &coord)
-        : id_{id} {
+    : id_{id} {
   coordinates_ = coord;
 }
