@@ -29,7 +29,7 @@ class Mesh {
 
  private:
   //! Vertices vector
-  std::vector<std::shared_ptr<Point<Tdim>>> vertex_;
+  std::vector<std::shared_ptr<Point<3>>> vertex_;
 
   //! Element vector
   std::vector<std::shared_ptr<Point<Tdim>>> element_;
