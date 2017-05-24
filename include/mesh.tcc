@@ -27,6 +27,7 @@ void Mesh<Tdim>::get_elements(const std::string& filename) {
   element_ = inputelements->read_elements(filename);
 }
 
+
 //! \brief Print Vertices Vector to text file
 //! \details to Check data entry correct
 template <unsigned Tdim>
@@ -39,15 +40,17 @@ void Mesh<Tdim>::output_vertices() {
   if (inputcheck.is_open()) {
 
     //! Iterate through vector and print
-    for (const auto& point : vertex_) {
-      inputcheck << point->id() << '\t';
-      inputcheck << point->coordinates().at(0) << " "
-                 << point->coordinates().at(1) << " "
-                 << point->coordinates().at(2) << '\n';
-    }
+    inputcheck << vertex_.size() << '\n';
+
+      for (const auto& point : vertex_) {
+                  inputcheck << point->coordinates().at(0) << '\t'
+                             << point->coordinates().at(1) << '\t'
+                             << point->coordinates().at(2) << '\n';
+      }
     inputcheck.close();
   }
 }
+
 
 //! \brief Print Element Vector to text file
 //! \details to Check data entry correct
@@ -71,4 +74,60 @@ void Mesh<Tdim>::output_elements() {
     elementcheck << "Am I the same as input.txt?";
     elementcheck.close();
   }
+}
+
+template <unsigned Tdim>
+void Mesh<Tdim>::output_stresses() {
+
+    const std::string outputfilename = "stresscheck.txt";
+    std::fstream stresscheck;
+    stresscheck.open(outputfilename, std::ios::out);
+
+    if (stresscheck.is_open()) {
+
+        //! Iterate through vector and print
+
+        for (const auto& point : vertex_) {
+            stresscheck.setf( std::ios::fixed, std::ios::floatfield );
+            //! horizontal 2d stress
+            stresscheck << point->id()-1 << '\t';
+            stresscheck << (0.5*(0 - (10*((3 - point->coordinates().at(1))*22))))<< '\t'
+                        //! vertical 2d stress
+                        << (0 - (10*((3 - point->coordinates().at(1))*22))) << '\t'
+                        << point->coordinates().at(2) << '\t'
+                        << point->coordinates().at(2) << '\t'
+                        << point->coordinates().at(2) << '\t'
+                        << point->coordinates().at(2) << '\n';
+        }
+        stresscheck.close();
+    }
+
+}
+
+template <unsigned Tdim>
+void Mesh<Tdim>::output_3d_stresses() {
+
+    const std::string outputfilename = "stresscheck.txt";
+    std::fstream stresscheck;
+    stresscheck.open(outputfilename, std::ios::out);
+
+    if (stresscheck.is_open()) {
+
+        //! Iterate through vector and print
+
+        for (const auto& point : vertex_) {
+            stresscheck.setf( std::ios::fixed, std::ios::floatfield );
+            //! horizontal 3d stress
+            stresscheck << point->id()-1 << '\t';
+            stresscheck << "0" << '\t'
+                        << "0" << '\t'
+                        //! vertical 3d stress
+                        << "0" << '\t'
+                        << "0" << '\t'
+                        << "0" << '\t'
+                        << "0" << '\n';
+        }
+        stresscheck.close();
+    }
+
 }

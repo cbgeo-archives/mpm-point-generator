@@ -16,7 +16,7 @@ class Mesh {
 
  public:
   //! Read from file
-  void get_vertices(const std::string& filename);
+  void get_vertices(const std::string& filename);  //! Read from file
 
   //! Text output to check contents of vertices vector match input
   void output_vertices();
@@ -26,6 +26,11 @@ class Mesh {
 
   //! Text output to check contents of element vector match input
   void output_elements();
+
+  //! Text output to check contents of element vector match input
+  void output_stresses();
+
+  void output_3d_stresses();
 
  private:
   //! Vertices vector
