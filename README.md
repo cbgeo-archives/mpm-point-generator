@@ -1,9 +1,8 @@
 # MPM Point Generator
-> Christopher Wilkes
 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/cw646/mpm-point-generator/develop/license.md)
-[![Build Status](https://travis-ci.org/cw646/mpm-point-generator.svg?branch=develop)](https://travis-ci.org/cw646/mpm-point-generator)
-[![Coverity Scan Build Status](https://scan.coverity.com/projects/11832/badge.svg)](https://scan.coverity.com/projects/cw646-mpm-point-generator)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/cb-geo/mpm-point-generator/develop/license.md)
+[![Build Status](https://api.travis-ci.org/cb-geo/mpm-point-generator.svg?branch=develop)](https://api.travis-ci.org/cb-geo/mpm-point-generator.svg?branch=develop)
+[![CLA assistant](https://cla-assistant.io/readme/badge/cb-geo/mpm-point-generator)](https://cla-assistant.io/cb-geo/mpm-point-generator)
 
 ## Compile and Run
 
