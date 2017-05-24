@@ -1,13 +1,13 @@
 #include <iostream>
 #include <memory>
 
-#include "GMSH.cc"
+#include "gmsh.h"
 
 int main(int argc, char** argv) {
   try {
     if (argc != 3) {
-      std::cout << "Usage: ./mpm-point-generator /path/to/mesh_file.msh\n"
-                   "Dimenssion 2 or 3\n";
+      std::cout << "Usage: ./mpm-point-generator /path/to/mesh_file.msh\t"
+                   "Dimension 2 or 3\n";
       throw std::runtime_error("Incorrect number of input arguments");
     }
 

@@ -2,8 +2,8 @@
 #include <sstream>
 #include <string>
 
-#include "GMSH.h"
-#include "point.tcc"
+#include "gmsh.h"
+#include "point.h"
 
 //! \brief Open and read gmsh file
 //! \details read vertex id and coordinates

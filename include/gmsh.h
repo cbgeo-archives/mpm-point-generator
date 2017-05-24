@@ -1,3 +1,5 @@
+#ifndef MPM_GMSH_H_
+#define MPM_GMSH_H_
 
 #include <array>
 #include <fstream>
@@ -29,3 +31,7 @@ class GMSH : public Mesh {
   //! Vertices vector
   std::vector<std::shared_ptr<Point<3>>> vertices_;
 };
+
+#include "gmsh.tcc"
+
+#endif  // MPM_GMSH_H_
