@@ -6,37 +6,19 @@
 #include <memory>
 #include <vector>
 
-#include "point.h"
-
-//! \brief Template class to read gmsh file
-//! \details Stores id and coordinates in vector
-//! \tparam Tdim Element Type
-template <unsigned Tdim>
+//! \brief Abstract class for reading files for mesh
 class Mesh {
 
  public:
   //! Read from file
-  void get_vertices(const std::string& filename);  //! Read from file
+  virtual void get_vertices(const std::string& filename) = 0;
 
-  //! Text output to check contents of vertices vector match input
-  void output_vertices();
+  //! Text output
+  virtual void output_vertices() = 0;
 
-  //! Read from file
-  void get_elements(const std::string& filename);
+  //! Text output
+  virtual void output_stresses() = 0;
 
-  //! Text output to check contents of element vector match input
-  void output_elements();
-
-  //! Text output to check contents of element vector match input
-  void output_stresses();
-
-  void output_3d_stresses();
-
- private:
-  //! Vertices vector
-  std::vector<std::shared_ptr<Point<3>>> vertex_;
-
-  //! Element vector
-  std::vector<std::shared_ptr<Point<Tdim>>> element_;
+  virtual void output_3d_stresses() = 0;
 };
 #endif  // MPM_MESH_H_
