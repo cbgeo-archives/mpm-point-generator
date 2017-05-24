@@ -1,7 +1,7 @@
 version: 2
 jobs:
   build:
-    working_directory: /home/cbgeo/research/
+    working_directory: /home/cbgeo/research/mpm-point-generator
     docker:
       - image: quay.io/cbgeo/mpm
     steps:
