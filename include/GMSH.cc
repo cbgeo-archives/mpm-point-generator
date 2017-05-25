@@ -74,35 +74,39 @@ void GMSH::output_vertices() {
   }
 }
 
+//! \brief    Generate initial stress of each point and store
+//! \details  Get ver_stress, hor_stress, and shear (not used), write output
 void GMSH::output_stresses() {
 
-  const std::string outputfilename = "stresscheck.txt";
-  std::fstream stresscheck;
-  stresscheck.open(outputfilename, std::ios::out);
+  //! Declare temp value of horizontal and vertical stresses;
+  double ver_stress;
+  double hor_stress;
 
-  if (stresscheck.is_open()) {
+  //! ycoord contains a vector of the y-coordinates (vertical) of each point
+  std::vector<double> ycoord;
 
-    //! Iterate through vector and print
-
-    for (const auto& point : vertices_) {
-      stresscheck.setf(std::ios::fixed, std::ios::floatfield);
-      //! horizontal 2d stress
-      stresscheck << point->id() - 1 << '\t';
-      stresscheck << (0.5 *
-                      (0 - (10 * ((3 - point->coordinates().at(1)) * 22))))
-                  << '\t'
-                  //! vertical 2d stress
-                  << (0 - (10 * ((3 - point->coordinates().at(1)) * 22)))
-                  << '\t' << point->coordinates().at(2) << '\t'
-                  << point->coordinates().at(2) << '\t'
-                  << point->coordinates().at(2) << '\t'
-                  << point->coordinates().at(2) << '\n';
-    }
-    stresscheck.close();
+  for (auto const& point : vertices_) {
+    ycoord.push_back(point->coordinates().at(1));
   }
-}
 
-void GMSH::output_3d_stresses() {
+  //! Get the maximum height for each point
+  double max_height = *std::max_element(ycoord.begin(), ycoord.end());
+
+  //! Make two soil parameters for stress calculation
+  double density = 22;
+  double K0 = 0.5;
+
+  //! Loop through the points to get vertical and horizontal stresses
+  //! Note that tau (shear stress) is assumed 0
+  unsigned l = 0;
+  for (double coord : ycoord) {
+    ver_stress = (-(max_height - coord) * density);
+    hor_stress = (-(max_height - coord) * density * K0);
+    std::array<double, 6> stress{hor_stress, ver_stress, hor_stress, 0, 0, 0};
+    stresses_.emplace_back(
+        std::unique_ptr<InitStress>(new InitStress(l, stress)));
+    ++l;
+  }
 
   const std::string outputfilename = "stresscheck.txt";
   std::fstream stresscheck;
@@ -110,17 +114,18 @@ void GMSH::output_3d_stresses() {
 
   if (stresscheck.is_open()) {
 
-    //! Iterate through vector and print
+    //! Write the total number of points generated
+    stresscheck << vertices_.size() << '\n';
 
-    for (const auto& point : vertices_) {
-      stresscheck.setf(std::ios::fixed, std::ios::floatfield);
-      //! horizontal 3d stress
-      stresscheck << point->id() - 1 << '\t';
-      stresscheck << "0" << '\t' << "0"
-                  << '\t'
-                  //! vertical 3d stress
-                  << "0" << '\t' << "0" << '\t' << "0" << '\t' << "0" << '\n';
+    //! Write the stress on the points generated
+    for (auto const& point : stresses_) {
+      stresscheck << point->id() << "\t";
+      for (double stress : point->stress()) {
+        stresscheck << stress << "\t";
+      }
+      stresscheck << "\n";
     }
+
     stresscheck.close();
   }
 }

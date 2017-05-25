@@ -19,6 +19,5 @@ class Mesh {
   //! Text output
   virtual void output_stresses() = 0;
 
-  virtual void output_3d_stresses() = 0;
 };
 #endif  // MPM_MESH_H_

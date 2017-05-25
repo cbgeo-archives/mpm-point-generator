@@ -17,11 +17,7 @@ int main(int argc, char** argv) {
     std::unique_ptr<GMSH> mesh(new GMSH());
     mesh->get_vertices(filename);
     mesh->output_vertices();
-    if (dimension == 2) {
-      mesh->output_stresses();
-    } else {
-      mesh->output_3d_stresses();
-    }
+    mesh->output_stresses();
 
   } catch (std::exception& except) {
     std::cout << "Caught exception: " << except.what() << '\n';
