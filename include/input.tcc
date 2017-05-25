@@ -1,5 +1,3 @@
-#include "input.h"
-
 template <unsigned Tdim>
 std::vector<std::shared_ptr<Point<Tdim>>> Input<Tdim>::read_vertices(
     const std::string& filename) {
@@ -7,9 +5,9 @@ std::vector<std::shared_ptr<Point<Tdim>>> Input<Tdim>::read_vertices(
   //! \brief  Vector coordinate and id container
   std::vector<std::shared_ptr<Point<Tdim>>> vertices_;
   //! Number of vertices
-  double nvertices, toplines;
+  double nvertices = 0, toplines =0;
   //! Vertices id
-  unsigned vertid;
+  unsigned vertid = std::numeric_limits<unsigned>::max();
   toplines = 4;
   //! Array to store vertices coordinates
   std::array<double, Tdim> verticesarray;
@@ -57,10 +55,18 @@ std::vector<std::shared_ptr<Point<Tdim>>> Input<Tdim>::read_elements(
 
     //! Element Coordinate and id container
     std::vector<std::shared_ptr<Point<Tdim>>> elements_;
-    //! Vertices id
-    double nvertices, nelements;
-    double elementtype, physical, elementry;
-    unsigned elementid;
+    //! Number of vertices
+    double nvertices = std::numeric_limits<double>::max();
+    //! Number of elements
+    double nelements = std::numeric_limits<double>::max();
+    //! Element type
+    double elementtype = std::numeric_limits<double>::max();
+    
+    double physical = std::numeric_limits<double>::max();
+    double elementry = std::numeric_limits<double>::max();
+    //! Element id
+    unsigned elementid =  = std::numeric_limits<unsigned>::max();
+    
     //! Array to store vertices coordinates
     std::array<double, Tdim> elementarray;
 

@@ -4,6 +4,7 @@
 #include <array>
 #include <fstream>
 #include <iostream>
+#include <limits>
 #include <memory>
 #include <numeric>
 #include <sstream>
@@ -31,5 +32,7 @@ class Input {
  private:
 
 };
+
+#include "input.tcc"
 
 #endif  // MPM_POINT_GEN_INPUT_H

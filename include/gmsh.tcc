@@ -10,10 +10,10 @@
 void GMSH::get_vertices(const std::string& filename) {
 
   //! Number of vertices
-  double nvertices, toplines;
+  double nvertices = std::numeric_limits<double>::max();
+  const double toplines = 4;
   //! Vertices id
   unsigned vertid;
-  toplines = 4;
   //! Array to store vertices coordinates
   std::array<double, 3> verticesarray;
 
