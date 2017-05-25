@@ -4,6 +4,7 @@
 [![Build Status](https://api.travis-ci.org/cb-geo/mpm-point-generator.svg?branch=develop)](https://api.travis-ci.org/cb-geo/mpm-point-generator.svg?branch=develop)
 [![CLA assistant](https://cla-assistant.io/readme/badge/cb-geo/mpm-point-generator)](https://cla-assistant.io/cb-geo/mpm-point-generator)
 [![CircleCI](https://circleci.com/gh/cb-geo/mpm-point-generator.svg?style=svg)](https://circleci.com/gh/cb-geo/mpm-point-generator)
+[![codecov](https://codecov.io/gh/cb-geo/mpm-point-generator/branch/develop/graph/badge.svg)](https://codecov.io/gh/cb-geo/mpm-point-generator)
 
 ## Compile and Run
 
