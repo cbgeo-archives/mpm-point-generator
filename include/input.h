@@ -10,6 +10,7 @@
 #include <vector>
 
 #include "point.h"
+#include "IO.h"
 
 //! Class to input coordinates from text file
 template <unsigned Tdim>

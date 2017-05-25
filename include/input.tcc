@@ -1,4 +1,4 @@
-#include "input.h"
+#include "IO.h"
 
 template <unsigned Tdim>
 std::vector<std::shared_ptr<Point<Tdim>>> Input<Tdim>::read_vertices(
