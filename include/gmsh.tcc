@@ -116,8 +116,7 @@ void GMSH::output_3d_stresses() {
       stresscheck.setf(std::ios::fixed, std::ios::floatfield);
       //! horizontal 3d stress
       stresscheck << point->id() - 1 << '\t';
-      stresscheck << "0" << '\t' << "0"
-                  << '\t'
+      stresscheck << "0" << '\t' << "0" << '\t'
                   //! vertical 3d stress
                   << "0" << '\t' << "0" << '\t' << "0" << '\t' << "0" << '\n';
     }

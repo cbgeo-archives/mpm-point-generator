@@ -24,6 +24,4 @@ class Point {
   std::array<double, Tdim> coordinates_;
 };
 
-#include "point.tcc"
-
 #endif  // MPM_MESH_POINT_H_
