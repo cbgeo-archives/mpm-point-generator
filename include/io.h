@@ -4,7 +4,6 @@
 #include <fstream>
 #include <iostream>
 #include <memory>
-#include <numeric>
 #include <sstream>
 
 #include "json.hpp"
@@ -16,7 +15,7 @@ class IO {
  public:
   //! \brief Make constructor for input and output files
   IO(const std::string& pathfile_name) {
-
+    
     //! Open path file
     std::ifstream pathfile(pathfile_name);
     pathfile.exceptions(std::ifstream::badbit);
@@ -32,13 +31,13 @@ class IO {
   //! \brief Get the private properties
 
   //! return input file name
-  const std::string inputfilename() { return inputfilename_; }
+  const std::string inputfilename() const { return inputfilename_; }
 
   //! return output file name for point
-  const std::string outputfilename_point() { return outputfilename_point_; }
+  const std::string outputfilename_point() const { return outputfilename_point_; }
 
   //! return output file name for stress
-  const std::string outputfilename_stress() { return outputfilename_stress_; }
+  const std::string outputfilename_stress() const { return outputfilename_stress_; }
 
  private:
   //! inputfilename_ is the filename of the input
