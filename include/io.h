@@ -7,18 +7,26 @@
 #include <numeric>
 #include <sstream>
 
+#include "json.hpp"
+
 //! \brief Class to store input/output options
 //! \details Includes input, output for points and stress
 
 class IO {
  public:
   //! \brief Make constructor for input and output files
-  IO(const std::string& inputfile, const std::string& output_point,
-     const std::string& output_stress) {
+  IO(const std::string& pathfile_name) {
 
-    inputfilename_ = inputfile;
-    outputfilename_point_ = output_point;
-    outputfilename_stress_ = output_stress;
+    //! Open path file
+    std::ifstream pathfile(pathfile_name);
+    pathfile.exceptions(std::ifstream::badbit);
+
+    //! Read file and store to private variables
+    nlohmann::json j;
+    pathfile >> j;
+    inputfilename_ = j["inputfile"].get<std::string>();
+    outputfilename_point_ = j["outputfile_point"].get<std::string>();
+    outputfilename_stress_ = j["outputfile_stress"].get<std::string>();
   }
 
   //! \brief Get the private properties

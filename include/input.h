@@ -4,15 +4,15 @@
 #include <array>
 #include <fstream>
 #include <iostream>
+#include <limits>
 #include <memory>
 #include <numeric>
 #include <sstream>
 #include <vector>
 
-#include "io.h"
 #include "point.h"
 
-//! Input coordinates from text file
+//! Class to input coordinates from text file
 template <unsigned Tdim>
 class Input {
 
@@ -29,5 +29,7 @@ class Input {
 
  private:
 };
+
+#include "input.tcc"
 
 #endif  // MPM_POINT_GEN_INPUT_H

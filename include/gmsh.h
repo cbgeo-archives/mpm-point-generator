@@ -20,17 +20,25 @@ class GMSH : public Mesh {
   //! Read from file
   void get_vertices(const std::string& filename);
 
-  //! Text output
-  void output_vertices();
+  //! \brief Read and return elements
+  //! \details returned vector stores elements read in from gmsh file
+  void read_elements(const std::string& filename);
 
   //! Text output
-  void output_stresses();
+  void output_vertices(const std::string& outputfilename);
 
-  void output_3d_stresses();
+  //! Text output
+  void output_stresses(const std::string& outputfilename);
 
  private:
+  //! the total number of points generated
+  unsigned tot_points_;
+
   //! Vertices vector
   std::vector<std::shared_ptr<Point<3>>> vertices_;
+
+  //! Elements vector
+  std::vector<std::shared_ptr<Point<3>>> elements_;
 };
 
 #include "gmsh.tcc"
