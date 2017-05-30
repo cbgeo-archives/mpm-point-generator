@@ -12,13 +12,13 @@ void GMSH::get_vertices(const std::string& filename) {
   //! Number of vertices
   double nvertices = std::numeric_limits<double>::max();
   const unsigned toplines = 4;
-  const unsigned vertex_array_size = 3;
+  const unsigned ndimension = 3;
 
   //! Vertices id
   unsigned vertid;
 
   //! Array to store vertices coordinates
-  std::array<double, vertex_array_size> verticesarray;
+  std::array<double, ndimension> verticesarray;
 
   std::fstream infile;
   infile.open(filename, std::ios::in);
@@ -45,7 +45,7 @@ void GMSH::get_vertices(const std::string& filename) {
         istream >> vertid;
         istream >> verticesarray.at(0) >> verticesarray.at(1) >>
             verticesarray.at(2);
-        vertices_.emplace_back(new Point<vertex_array_size>(vertid, verticesarray));
+        vertices_.emplace_back(new Point<ndimension>(vertid, verticesarray));
       }
     }
     infile.close();
@@ -54,7 +54,7 @@ void GMSH::get_vertices(const std::string& filename) {
   }
   std::cout << "Number of Vertices: " << vertices_.size() << '\n';
 
-  tot_points_ = vertices_.size();
+  tot_vertices_ = vertices_.size();
 }
 
 //! \brief Open and read gmsh file
@@ -74,10 +74,10 @@ void GMSH::read_elements(const std::string& filename) {
   unsigned elementid = std::numeric_limits<unsigned>::max();
 
   const unsigned toplines = 4;
-  const unsigned vertex_array_size = 3;
+  const unsigned ndimension = 3;
 
   //! Array to store vertices coordinates
-  std::array<double, vertex_array_size> elementarray;
+  std::array<double, ndimension> elementarray;
 
   std::fstream infile;
   infile.open(filename, std::ios::in);
@@ -118,12 +118,13 @@ void GMSH::read_elements(const std::string& filename) {
 
         //! \brief Check element type
         //! \details If element type not == to Tdim, skip element
-        if (elementtype != vertex_array_size) {
+        if (elementtype != ndimension) {
           istream >> line;
         } else {
           istream >> elementarray.at(0) >> elementarray.at(1) >>
               elementarray.at(2) >> elementarray.at(3);
-          elements_.emplace_back(new Point<3>(elementid, elementarray));
+          elements_.emplace_back(
+              new Point<ndimension>(elementid, elementarray));
         }
       }
     }
@@ -135,52 +136,29 @@ void GMSH::read_elements(const std::string& filename) {
   std::cout << "Number of Elements: " << elements_.size() << '\n';
 }
 
-//! \brief Print Vertices Vector to text file
-//! \details to Check data entry correct
-void GMSH::output_vertices(const std::string& outputfilename) {
-
-  std::fstream outputfile;
-  outputfile.open(outputfilename, std::ios::out);
-
-  if (outputfile.is_open()) {
-
-    //! Iterate through vector and print
-    outputfile << tot_points_ << '\n';
-
-    for (const auto& point : vertices_) {
-      outputfile << point->coordinates().at(0) << '\t'
-                 << point->coordinates().at(1) << '\t'
-                 << point->coordinates().at(2) << '\n';
-    }
-    outputfile.close();
-  }
-
-  std::cout << "The output file for soil particles has been generated."
-            << "\n";
-}
-
 void GMSH::output_stresses(const std::string& outputfilename) {
 
   std::fstream outputfile;
   outputfile.open(outputfilename, std::ios::out);
 
-  double density = 22;
-  double K0 = 0.5;
+  const double density = 22;
+  const double K0 = 0.5;
 
   if (outputfile.is_open()) {
 
     //! Iterate through vector and print
-    outputfile << tot_points_ << '\n';
+    outputfile << tot_vertices_ << '\n';
 
     for (const auto& point : vertices_) {
       outputfile.setf(std::ios::fixed, std::ios::floatfield);
       //! horizontal 2d stress
       outputfile << point->id() - 1 << '\t';
-      outputfile << (K0 * (0 - (10 * ((3 - point->coordinates().at(1)) * density))))
+      outputfile << (K0 *
+                     (0 - (10 * ((3 - point->coordinates().at(1)) * density))))
                  << '\t'
                  //! vertical 2d stress
-                 << (0 - (10 * ((3 - point->coordinates().at(1)) * density))) << '\t'
-                 << point->coordinates().at(2) << '\t'
+                 << (0 - (10 * ((3 - point->coordinates().at(1)) * density)))
+                 << '\t' << point->coordinates().at(2) << '\t'
                  << point->coordinates().at(2) << '\t'
                  << point->coordinates().at(2) << '\t'
                  << point->coordinates().at(2) << '\n';

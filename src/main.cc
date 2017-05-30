@@ -1,5 +1,6 @@
 #include <iostream>
 #include <memory>
+#include <vector>
 
 #include "gmsh.h"
 #include "io.h"
@@ -11,8 +12,8 @@ int main(int argc, char** argv) {
                    "Dimension 2 or 3\n";
       throw std::runtime_error("Incorrect number of input arguments");
     }
-    //! Get Tdim
-    int Tdim = std::atoi(argv[2]);
+    //! Get ndimension
+    const unsigned ndimension = std::atoi(argv[2]);
 
     //! Get path file location including directory
     const std::string pathfile_name = argv[1];
@@ -23,7 +24,15 @@ int main(int argc, char** argv) {
     //! Main functions
     std::unique_ptr<GMSH> mesh(new GMSH());
     mesh->get_vertices(file->inputfilename());
-    mesh->output_vertices(file->outputfilename_point());
+    // std::cout << file->outputfilename_vertex() << "\n";
+    // std::cout << file->outputfilename_stress() << "\n";
+    // std::cout << mesh->vertices().at(0)->id() << "\n";
+    // std::cout << mesh->tot_points() << "\n";
+
+    file->write_output_vertices(file->outputfilename_vertex(), mesh->vertices(),
+                                mesh->tot_vertices());
+    // file->write_output_stress(file->outputfilename_stress());
+
     mesh->output_stresses(file->outputfilename_stress());
 
   } catch (std::exception& except) {

@@ -5,6 +5,10 @@
 #include <iostream>
 #include <memory>
 #include <sstream>
+#include <vector>
+
+#include <mesh.h>
+#include <point.h>
 
 #include "json.hpp"
 
@@ -14,40 +18,61 @@
 class IO {
  public:
   //! \brief Make constructor for input and output files
-  IO(const std::string& pathfile_name) {
-    
-    //! Open path file
-    std::ifstream pathfile(pathfile_name);
-    pathfile.exceptions(std::ifstream::badbit);
+  //! Explicit to protect against implicit casting
+  explicit IO(const std::string& pathfile_name) {
 
-    //! Read file and store to private variables
-    nlohmann::json j;
-    pathfile >> j;
-    inputfilename_ = j["inputfile"].get<std::string>();
-    outputfilename_point_ = j["outputfile_point"].get<std::string>();
-    outputfilename_stress_ = j["outputfile_stress"].get<std::string>();
+    try {
+      //! Open path file
+      std::ifstream pathfile(pathfile_name);
+      pathfile.exceptions(std::ifstream::badbit);
+
+      //! Read file and store to private variables
+      path_input_ = nlohmann::json::parse(pathfile);
+      inputfilename_ = path_input_["inputfile"].get<std::string>();
+      outputfilename_vertex_ =
+          path_input_["outputfile_vertex"].get<std::string>();
+      outputfilename_stress_ =
+          path_input_["outputfile_stress"].get<std::string>();
+
+    } catch (std::exception& except) {
+      std::cout << "Caught exception: " << except.what() << '\n'
+                << "Please check the path file.\n";
+    }
   }
 
-  //! \brief Get the private properties
+  //! \brief Write output file for point
+  void write_output_vertices(
+      const std::string& outputfilename,
+      const std::vector<std::shared_ptr<Point<3>>> vertices,
+      const unsigned& tot_points);
 
+  //! \brief Write output file for stress
+  void write_output_stress(const std::string& outputfilename);
+
+  //! \brief Get the private properties
   //! return input file name
-  const std::string inputfilename() const { return inputfilename_; }
+  std::string inputfilename() const { return inputfilename_; }
 
   //! return output file name for point
-  const std::string outputfilename_point() const { return outputfilename_point_; }
+  std::string outputfilename_vertex() const { return outputfilename_vertex_; }
 
   //! return output file name for stress
-  const std::string outputfilename_stress() const { return outputfilename_stress_; }
+  std::string outputfilename_stress() const { return outputfilename_stress_; }
 
  private:
-  //! inputfilename_ is the filename of the input
+  //! json for the input data to contain paths to other inputs and outputs
+  nlohmann::json path_input_;
+
+  //! filename of the input
   std::string inputfilename_;
 
-  //! outputfilename_point_ is the filename of the output for point
-  std::string outputfilename_point_;
+  //! filename of the output for point
+  std::string outputfilename_vertex_;
 
-  //! outputfilename_stress_ is the filename of the output for stress
+  //! filename of the output for stress
   std::string outputfilename_stress_;
 };
+
+#include "io.tcc"
 
 #endif  // MPM_POINT_GEN_IO_H_

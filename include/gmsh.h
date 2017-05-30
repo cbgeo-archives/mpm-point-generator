@@ -25,20 +25,28 @@ class GMSH : public Mesh {
   void read_elements(const std::string& filename);
 
   //! Text output
-  void output_vertices(const std::string& outputfilename);
-
-  //! Text output
   void output_stresses(const std::string& outputfilename);
+
+  //! Functions to call private variables
+
+  unsigned tot_vertices() const { return tot_vertices_; }
+
+  std::vector<std::shared_ptr<Point<3>>> vertices() const { return vertices_; }
+
+  std::vector<std::shared_ptr<Point<3>>> elements() const { return elements_; }
 
  private:
   //! the total number of points generated
-  unsigned tot_points_;
+  unsigned tot_vertices_;
 
   //! Vertices vector
   std::vector<std::shared_ptr<Point<3>>> vertices_;
 
   //! Elements vector
   std::vector<std::shared_ptr<Point<3>>> elements_;
+
+  //! Stress vector
+  std::vector<std::shared_ptr<Point<3>>> stress_;
 };
 
 #include "gmsh.tcc"
