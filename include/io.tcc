@@ -3,55 +3,53 @@
 void IO::write_vertices(
     const std::vector<std::shared_ptr<Point<3>>>& vertices) {
 
-  //! Open file to write output
-  std::fstream outputfile;
-  outputfile.open(outputfilename_vertex_, std::ios::out);
-  if (outputfile.is_open()) {
+  //! Output vertices file
+  std::fstream vertices_file;
+  vertices_file.open(vertices_filename_, std::ios::out);
+  
+  if (vertices_file.is_open()) {
+    //! Write the total number of vertices
+    vertices_file << vertices.size() << "\n";
 
-    //! Write the total number of vertices generated
-    outputfile << vertices.size() << "\n";
-
-    //! Write the coordinates of the vertices generated
+    //! Write the coordinates of the vertices
     //! [X] [Y] [Z]
     //! Note that for 2D, z values are 0
     //! For 1D, both y and z values are 0
-    for (auto const& point : vertices) {
-      for (double coordinate : point->coordinates()) {
-        outputfile << coordinate << "\t";
+    for (auto const& vertex : vertices) {
+      for (double coordinate : vertex->coordinates()) {
+        vertices_file << coordinate << "\t";
       }
-      outputfile << "\n";
+      vertices_file << "\n";
     }
-    outputfile.close();
+    vertices_file.close();
   }
 
-  std::cout << "The output file for soil particles has been generated.\n";
+  std::cout << "Wrote material points id and coordinates\n";
 }
 
-//! \brief Write output file for stress
-//! \details get stress vector of Voigt stress, and number of vertices
-//! \brief Write output file for stress
-void IO::write_stresses(const std::vector<std::array<double, 6>>& stress) {
+//! \brief Write initial stresses of material points
+//! \param[in[ stresses Initial stress of material points
+void IO::write_stresses(const std::vector<std::array<double, 6>>& stresses) {
 
-  //! Open file to write output
-  std::fstream outputfile;
-  outputfile.open(outputfilename_stress_, std::ios::out);
+  //! Output stress file
+  std::fstream stress_file;
+  stress_file.open(stress_filename_, std::ios::out);
 
-  if (outputfile.is_open()) {
-
+  if (stress_file.is_open()) {
     //! Write the total number of vertices generated
-    outputfile << stress.size() << "\n";
+    stress_file << stresses.size() << "\n";
 
-    //! stress_ is the array of stresses in Voigt Notation
-    //! id  sig_x  sig_y  sig_z  tau_yz  tau_zx  tau_xy
-    for (const auto& point : stress) {
-      outputfile.setf(std::ios::fixed, std::ios::floatfield);
-      for (double stress_component : point) {
-        outputfile << stress_component << '\t';
+    //! Stresses in Voigt Notation
+    //! $\sigma_{xx}$ $\sigma_{yy}$ $\sigma_{zz}$
+    //! $\tau_{yz}$ $\tau_{zx}$ $\tau_{xy}$
+    for (const auto& stress : stresses) {
+      stress_file.setf(std::ios::fixed, std::ios::floatfield);
+      for (double stress_component : stress) {
+        stress_file << stress_component << '\t';
       }
-      outputfile << "\n";
+      stress_file << "\n";
     }
-    outputfile.close();
+    stress_file.close();
   }
-  std::cout << "The output file for initial stresses of particles has been "
-               "generated.\n";
+  std::cout << "Wrote initial stresses\n";
 }

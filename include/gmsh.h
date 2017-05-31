@@ -47,7 +47,7 @@ class GMSH : public Mesh {
   std::vector<std::shared_ptr<Point<3>>> elements_;
 
   //! Stress vector in Voigt Notation
-  //! id  sig_x  sig_y  sig_z  tau_yz  tau_zx  tau_xy
+  //! $\sigma_{xx}$ $\sigma_{yy}$ $\sigma_{zz}$ $\tau_{yz}$ $\tau_{zx}$ $\tau_{xy}$
   std::vector<std::array<double, 6>> stress_;
 };
 

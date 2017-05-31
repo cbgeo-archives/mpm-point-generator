@@ -11,7 +11,7 @@ void GMSH::read_vertices(const std::string& filename) {
   unsigned vertid;
 
   //! Array to store vertices coordinates
-  std::array<double, ndimension> verticesarray;
+  std::array<double, ndimension> vertex;
 
   std::fstream infile;
   infile.open(filename, std::ios::in);
@@ -36,9 +36,8 @@ void GMSH::read_vertices(const std::string& filename) {
       std::istringstream istream(line);
       if (line.find('#') == std::string::npos && line != "") {
         istream >> vertid;
-        istream >> verticesarray.at(0) >> verticesarray.at(1) >>
-            verticesarray.at(2);
-        vertices_.emplace_back(new Point<ndimension>(vertid, verticesarray));
+        istream >> vertex.at(0) >> vertex.at(1) >> vertex.at(2);
+        vertices_.emplace_back(new Point<ndimension>(vertid, vertex));
       }
     }
     infile.close();
@@ -149,5 +148,5 @@ void GMSH::compute_stresses() {
     stress_.emplace_back(stress);
   }
 
-  std::cout << "The stress has been computed.\n";
+  std::cout << "Compute initial stresses for material points.\n";
 }
