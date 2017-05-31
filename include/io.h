@@ -10,32 +10,16 @@
 #include "mesh.h"
 #include "point.h"
 
-#include "json.hpp"
-
 //! \brief Input/Output handler
 class IO {
  public:
   //! Constructor with input file
-  //! \param[in] pathfile_name Input file name
-  explicit IO(const std::string& pathfile_name) {
-
-    try {
-      //! Open path file
-      std::ifstream pathfile(pathfile_name);
-      pathfile.exceptions(std::ifstream::badbit);
-
-      //! Read file and store to private variables
-      path_input_ = nlohmann::json::parse(pathfile);
-      inputfilename_ = path_input_["inputfile"].get<std::string>();
-      outputfilename_vertex_ =
-          path_input_["outputfile_vertex"].get<std::string>();
-      outputfilename_stress_ =
-          path_input_["outputfile_stress"].get<std::string>();
-
-    } catch (std::exception& except) {
-      std::cout << "Caught exception: " << except.what() << '\n'
-                << "Please check the path file.\n";
-    }
+  //! \param[in] mesh_file Input mesh file name
+  explicit IO(const std::string& mesh_file)
+      : mesh_file_name_{mesh_file} {
+    //! Material point and stresses
+    outputfilename_vertex_ = "material_points.txt";
+    outputfilename_stress_ = "initial_stresses.txt";
   }
 
   //! Write vertices
@@ -44,21 +28,17 @@ class IO {
   //! Write stresses
   void write_stresses(const std::vector<std::array<double, 6>>& stress);
 
-  //! \brief Get the private properties
-  //! return input file name
-  std::string inputfilename() const { return inputfilename_; }
+  //! Return mesh file name
+  std::string mesh_file_name() const { return mesh_file_name_; }
 
  private:
-  //! json for the input data to contain paths to other inputs and outputs
-  nlohmann::json path_input_;
+  //! Input mesh file name
+  std::string mesh_file_name_;
 
-  //! filename of the input
-  std::string inputfilename_;
-
-  //! filename of the output for vertex
+  //! File name of vertices
   std::string outputfilename_vertex_;
 
-  //! filename of the output for stress
+  //! Filename of material point stresses
   std::string outputfilename_stress_;
 };
 

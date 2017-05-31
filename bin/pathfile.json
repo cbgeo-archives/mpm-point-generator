@@ -1,5 +1,0 @@
-{
-	"inputfile" : "../bin/cone1.msh",
-	"outputfile_vertex" : "../bin/soilParticles.smf",
-	"outputfile_stress" : "../bin/initStressSoilP.dat"
-}
