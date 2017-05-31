@@ -25,16 +25,19 @@ class GMSH : public Mesh {
   void read_elements(const std::string& filename);
 
   //! Text output
-  void output_stresses(const std::string& outputfilename);
+  void compute_stresses();
 
   //! call total number of vertices generated
-  unsigned tot_vertices() const { return nvertices_; }
+  unsigned nvertices() const { return nvertices_; }
 
   //! call the vector containing shared pointer of vertices
   std::vector<std::shared_ptr<Point<3>>> vertices() const { return vertices_; }
 
   //! call the vector containing elements
   std::vector<std::shared_ptr<Point<3>>> elements() const { return elements_; }
+
+  //! call the vector containing stress
+  std::vector<std::array<double, 6>> stress() const { return stress_; }
 
  private:
   //! the total number of points generated
@@ -46,8 +49,9 @@ class GMSH : public Mesh {
   //! Elements vector
   std::vector<std::shared_ptr<Point<3>>> elements_;
 
-  //! Stress vector
-  std::vector<std::shared_ptr<Point<3>>> stress_;
+  //! Stress vector in Voigt Notation
+  //! id  sig_x  sig_y  sig_z  tau_yz  tau_zx  tau_xy
+  std::vector<std::array<double, 6>> stress_;
 };
 
 #include "gmsh.tcc"

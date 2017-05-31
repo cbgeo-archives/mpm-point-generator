@@ -25,7 +25,7 @@ void GMSH::get_vertices(const std::string& filename) {
 
   //! Open input file
   if (infile.is_open()) {
-    std::cout << "vertices file found" << '\n';
+    std::cout << "Vertices file found" << '\n';
 
     std::string line;
 
@@ -136,37 +136,24 @@ void GMSH::read_elements(const std::string& filename) {
   std::cout << "Number of Elements: " << elements_.size() << '\n';
 }
 
-void GMSH::output_stresses(const std::string& outputfilename) {
-
-  std::fstream outputfile;
-  outputfile.open(outputfilename, std::ios::out);
+void GMSH::compute_stresses() {
 
   double density = 22;
   double k0 = 0.5;
   double max_height = 3;
+  double conv_factor = 10;
+  double ver_stress;
+  double hor_stress;
 
-  if (outputfile.is_open()) {
-
-    //! Iterate through vector and print
-    outputfile << nvertices_ << '\n';
-
-    for (const auto& point : vertices_) {
-      outputfile.setf(std::ios::fixed, std::ios::floatfield);
-      //! horizontal 2d stress
-      outputfile << point->id() - 1 << '\t';
-      outputfile << (k0 *
-                     (0 - (10 * ((max_height - point->coordinates().at(1)) * density))))
-                 << '\t'
-                 //! vertical 2d stress
-                 << (0 - (10 * ((max_height - point->coordinates().at(1)) * density)))
-                 << '\t' << point->coordinates().at(2) << '\t'
-                 << point->coordinates().at(2) << '\t'
-                 << point->coordinates().at(2) << '\t'
-                 << point->coordinates().at(2) << '\n';
-    }
-    outputfile.close();
+  //! Loop through the points to get vertical and horizontal stresses
+  //! Note that tau (shear stress) is assumed 0
+  for (const auto& point : vertices_) {
+    ver_stress =
+        conv_factor * (-(max_height - point->coordinates().at(2))) * density;
+    hor_stress = ver_stress * k0;
+    std::array<double, 6> stress{hor_stress, hor_stress, ver_stress, 0, 0, 0};
+    stress_.emplace_back(stress);
   }
-  std::cout
-      << "The output file for initial stresses of particles has been generated."
-      << "\n";
+
+  std::cout << "The stress has been computed.\n";
 }

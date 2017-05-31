@@ -1,28 +1,16 @@
-#include <fstream>
-#include <iostream>
-#include <memory>
-#include <sstream>
-#include <vector>
-
-#include "gmsh.h"
-#include "point.h"
-
-#include "json.hpp"
-
 //! \brief Write output file for point
-//! \details Get vectors from gmsh.h and output to file here
+//! \details Get stress vector of vertex coordinates, and number of vertices
 void IO::write_output_vertices(
-    const std::string& outputfilename,
     const std::vector<std::shared_ptr<Point<3>>>& vertices,
-    const unsigned tot_vertices) {
+    const unsigned nvertices) {
 
   //! Open file to write output
   std::fstream outputfile;
-  outputfile.open(outputfilename, std::ios::out);
+  outputfile.open(outputfilename_vertex_, std::ios::out);
   if (outputfile.is_open()) {
 
     //! Write the total number of vertices generated
-    outputfile << tot_vertices << "\n";
+    outputfile << nvertices << "\n";
 
     //! Write the coordinates of the vertices generated
     //! [X] [Y] [Z]
@@ -37,17 +25,35 @@ void IO::write_output_vertices(
     outputfile.close();
   }
 
-  std::cout << "The output file for soil particles has been generated."
-            << "\n";
+  std::cout << "The output file for soil particles has been generated.\n";
 }
 
 //! \brief Write output file for stress
-//! \details Get vectors from gmsh.h and output to file here
+//! \details get stress vector of Voigt stress, and number of vertices
 //! \brief Write output file for stress
-void IO::write_output_stress(
-    const std::string& outputfilename,
-    const std::vector<std::shared_ptr<Point<3>>>& stress,
-    const unsigned tot_points) {
-  
+void IO::write_output_stresses(const std::vector<std::array<double, 6>>& stress,
+                               unsigned nvertices) {
 
+  //! Open file to write output
+  std::fstream outputfile;
+  outputfile.open(outputfilename_stress_, std::ios::out);
+
+  if (outputfile.is_open()) {
+
+    //! Write the total number of vertices generated
+    outputfile << nvertices << "\n";
+
+    //! stress_ is the array of stresses in Voigt Notation
+    //! id  sig_x  sig_y  sig_z  tau_yz  tau_zx  tau_xy
+    for (const auto& point : stress) {
+      outputfile.setf(std::ios::fixed, std::ios::floatfield);
+      for (double stress_component : point) {
+        outputfile << stress_component << '\t';
+      }
+      outputfile << "\n";
+    }
+    outputfile.close();
+  }
+  std::cout << "The output file for initial stresses of particles has been "
+               "generated.\n";
 }

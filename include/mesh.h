@@ -14,6 +14,6 @@ class Mesh {
   virtual void get_vertices(const std::string& filename) = 0;
 
   //! Text output
-  virtual void output_stresses(const std::string& outputfilename) = 0;
+  virtual void compute_stresses() = 0;
 };
 #endif  // MPM_MESH_H_
