@@ -12,13 +12,11 @@
 
 #include "json.hpp"
 
-//! \brief Class to store input/output options
-//! \details Includes input, output for points and stress
-
+//! \brief Input/Output handler
 class IO {
  public:
-  //! \brief Make constructor for input and output files
-  //! Explicit to protect against implicit casting
+  //! Constructor with input file
+  //! \param[in] pathfile_name Input file name
   explicit IO(const std::string& pathfile_name) {
 
     try {
@@ -40,14 +38,11 @@ class IO {
     }
   }
 
-  //! \brief Write output file for point
-  void write_output_vertices(
-      const std::vector<std::shared_ptr<Point<3>>>& vertices,
-      const unsigned tot_points);
+  //! Write vertices
+  void write_vertices(const std::vector<std::shared_ptr<Point<3>>>& vertices);
 
-  //! \brief Write output file for stress
-  void write_output_stresses(const std::vector<std::array<double, 6>>& stress,
-                             unsigned nvertices);
+  //! Write stresses
+  void write_stresses(const std::vector<std::array<double, 6>>& stress);
 
   //! \brief Get the private properties
   //! return input file name

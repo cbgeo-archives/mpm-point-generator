@@ -1,8 +1,7 @@
 //! \brief Write output file for point
 //! \details Get stress vector of vertex coordinates, and number of vertices
-void IO::write_output_vertices(
-    const std::vector<std::shared_ptr<Point<3>>>& vertices,
-    const unsigned nvertices) {
+void IO::write_vertices(
+    const std::vector<std::shared_ptr<Point<3>>>& vertices) {
 
   //! Open file to write output
   std::fstream outputfile;
@@ -10,7 +9,7 @@ void IO::write_output_vertices(
   if (outputfile.is_open()) {
 
     //! Write the total number of vertices generated
-    outputfile << nvertices << "\n";
+    outputfile << vertices.size() << "\n";
 
     //! Write the coordinates of the vertices generated
     //! [X] [Y] [Z]
@@ -31,8 +30,7 @@ void IO::write_output_vertices(
 //! \brief Write output file for stress
 //! \details get stress vector of Voigt stress, and number of vertices
 //! \brief Write output file for stress
-void IO::write_output_stresses(const std::vector<std::array<double, 6>>& stress,
-                               unsigned nvertices) {
+void IO::write_stresses(const std::vector<std::array<double, 6>>& stress) {
 
   //! Open file to write output
   std::fstream outputfile;
@@ -41,7 +39,7 @@ void IO::write_output_stresses(const std::vector<std::array<double, 6>>& stress,
   if (outputfile.is_open()) {
 
     //! Write the total number of vertices generated
-    outputfile << nvertices << "\n";
+    outputfile << stress.size() << "\n";
 
     //! stress_ is the array of stresses in Voigt Notation
     //! id  sig_x  sig_y  sig_z  tau_yz  tau_zx  tau_xy

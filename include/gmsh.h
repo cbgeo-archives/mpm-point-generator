@@ -1,5 +1,5 @@
-#ifndef MPM_GMSH_H_
-#define MPM_GMSH_H_
+#ifndef MPM_POINT_GEN_GMSH_H_
+#define MPM_POINT_GEN_GMSH_H_
 
 #include <array>
 #include <fstream>
@@ -11,42 +11,39 @@
 #include "mesh.h"
 #include "point.h"
 
-//! \brief class to read gmsh file, child of Mesh class
-//! \details Stores id and coordinates in a vector
-
+//! \brief Generate Material Points from GMSH file
 class GMSH : public Mesh {
 
  public:
-  //! Read from file
-  void get_vertices(const std::string& filename);
+  //! Read vertices in GMSH
+  void read_vertices(const std::string& filename);
 
-  //! \brief Read and return elements
-  //! \details returned vector stores elements read in from gmsh file
+  //! Read elements in GMSH
   void read_elements(const std::string& filename);
 
-  //! Text output
+  //! Compute stresses
   void compute_stresses();
 
   //! call total number of vertices generated
   unsigned nvertices() const { return nvertices_; }
 
-  //! call the vector containing shared pointer of vertices
+  //! Return a vector of vertices
   std::vector<std::shared_ptr<Point<3>>> vertices() const { return vertices_; }
 
-  //! call the vector containing elements
+  //! Return a vector of elements
   std::vector<std::shared_ptr<Point<3>>> elements() const { return elements_; }
 
-  //! call the vector containing stress
+  //! Return a vector of stresses
   std::vector<std::array<double, 6>> stress() const { return stress_; }
 
  private:
-  //! the total number of points generated
+  //! Number of vertices
   unsigned nvertices_;
 
-  //! Vertices vector
+  //! Vector of vertices 
   std::vector<std::shared_ptr<Point<3>>> vertices_;
 
-  //! Elements vector
+  //! Vector of elements
   std::vector<std::shared_ptr<Point<3>>> elements_;
 
   //! Stress vector in Voigt Notation
@@ -56,4 +53,4 @@ class GMSH : public Mesh {
 
 #include "gmsh.tcc"
 
-#endif  // MPM_GMSH_H_
+#endif  // MPM_POINT_GEN_GMSH_H_

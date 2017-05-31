@@ -1,19 +1,21 @@
-#ifndef MPM_MESH_H_
-#define MPM_MESH_H_
+#ifndef MPM_POINT_GEN_MESH_H_
+#define MPM_POINT_GEN_MESH_H_
+
 #include <array>
 #include <fstream>
+#include <sstream>
 #include <iostream>
 #include <memory>
 #include <vector>
 
-//! \brief Abstract class for reading files for mesh
+//! \brief Abstract class for handling mesh
 class Mesh {
 
  public:
-  //! Read from file
-  virtual void get_vertices(const std::string& filename) = 0;
+  //! Read vertices from mesh
+  virtual void read_vertices(const std::string& filename) = 0;
 
-  //! Text output
+  //! Compute initial stresses for material points
   virtual void compute_stresses() = 0;
 };
-#endif  // MPM_MESH_H_
+#endif  // MPM_POINT_GEN_MESH_H_

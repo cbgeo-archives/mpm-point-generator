@@ -1,13 +1,6 @@
-#include <numeric>
-#include <sstream>
-#include <string>
-
-#include "gmsh.h"
-#include "point.h"
-
-//! \brief Open and read gmsh file
-//! \details read vertex id and coordinates
-void GMSH::get_vertices(const std::string& filename) {
+//! Read vertex id and coordinates in GMSH
+//! \param[in] filename Input GMSH file
+void GMSH::read_vertices(const std::string& filename) {
 
   //! Number of vertices
   double nvertices = std::numeric_limits<double>::max();
@@ -57,8 +50,8 @@ void GMSH::get_vertices(const std::string& filename) {
   nvertices_ = vertices_.size();
 }
 
-//! \brief Open and read gmsh file
-//! \details read elements
+//! Read GMSH elements
+//! \param[in] filename Input GMSH file
 void GMSH::read_elements(const std::string& filename) {
 
   //! Number of vertices
@@ -136,6 +129,7 @@ void GMSH::read_elements(const std::string& filename) {
   std::cout << "Number of Elements: " << elements_.size() << '\n';
 }
 
+//! Compute stresses
 void GMSH::compute_stresses() {
 
   double density = 22;
