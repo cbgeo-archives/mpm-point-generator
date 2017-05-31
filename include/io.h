@@ -17,6 +17,18 @@ class IO {
   //! \param[in] mesh_file Input mesh file name
   explicit IO(const std::string& mesh_file)
       : mesh_file_name_{mesh_file} {
+
+    // Check if mesh file is present
+    std::ifstream meshfile;
+    meshfile.exceptions ( std::ifstream::failbit | std::ifstream::badbit );
+    try {
+      meshfile.open (mesh_file);
+    }
+    catch (const std::ifstream::failure& except) {
+      std::cerr << "Exception opening/reading mesh file";
+    }
+    meshfile.close();
+    
     //! Material point and stresses
     vertices_filename_ = "material_points.txt";
     stress_filename_ = "initial_stresses.txt";

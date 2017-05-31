@@ -10,14 +10,11 @@ void GMSH::read_vertices(const std::string& filename) {
   //! Vertices id
   unsigned vertid;
 
-  //! Array to store vertices coordinates
-  std::array<double, ndimension> vertex;
-
   std::fstream infile;
   infile.open(filename, std::ios::in);
 
-  //! Open input file
-  if (infile.is_open()) {
+  //! Check if input file is good
+  if (infile.good()) {
     std::cout << "Vertices file found" << '\n';
 
     std::string line;
@@ -26,26 +23,28 @@ void GMSH::read_vertices(const std::string& filename) {
     for (unsigned i = 0; i < toplines; ++i) {
       std::getline(infile, line);
     }
-    //! Get number of vertices
+    //! Read number of vertices
     infile >> nvertices;
     getline(infile, line);
 
-    //! Get vertex coordinates & id
+    //! Read vertex coordinates & id
     for (int i = 0; i < nvertices; ++i) {
       std::getline(infile, line);
       std::istringstream istream(line);
+
       if (line.find('#') == std::string::npos && line != "") {
+        //! Coordinates of vertex
+        std::array<double, ndimension> vertex;
+        
         istream >> vertid;
         istream >> vertex.at(0) >> vertex.at(1) >> vertex.at(2);
+
         vertices_.emplace_back(new Point<ndimension>(vertid, vertex));
       }
     }
     infile.close();
-  } else {
-    throw std::runtime_error("Vertices file not found");
   }
   std::cout << "Number of Vertices: " << vertices_.size() << '\n';
-
   nvertices_ = vertices_.size();
 }
 
@@ -73,8 +72,9 @@ void GMSH::read_elements(const std::string& filename) {
 
   std::fstream infile;
   infile.open(filename, std::ios::in);
-  //! Open input file
-  if (infile.is_open()) {
+
+  //! Check if input msh file is good
+  if (infile.good()) {
     std::cout << "Element file found" << '\n';
 
     std::string line;
@@ -121,8 +121,6 @@ void GMSH::read_elements(const std::string& filename) {
       }
     }
     infile.close();
-  } else {
-    throw std::runtime_error("Element file not found");
   }
 
   std::cout << "Number of Elements: " << elements_.size() << '\n';
