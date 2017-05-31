@@ -2,26 +2,29 @@
 #include <memory>
 
 #include "gmsh.h"
+#include "io.h"
 
 int main(int argc, char** argv) {
   try {
-    if (argc != 3) {
-      std::cout << "Usage: ./mpm-point-generator /path/to/mesh_file.msh\t"
-                   "Dimension 2 or 3\n";
+    //! Check the number of arguments
+    if (argc != 2) {
+      std::cout << "Usage: ./mpm-point-generator /path/to/meshfile.msh\n";
       throw std::runtime_error("Incorrect number of input arguments");
     }
 
-    int dimension = std::atoi(argv[2]);
-    std::string filename = argv[1];
+    //! IO handler
+    std::unique_ptr<IO> io(new IO(argv[1]));
 
+    //! Mesh handler
     std::unique_ptr<GMSH> mesh(new GMSH());
-    mesh->get_vertices(filename);
-    mesh->output_vertices();
-    if (dimension == 2) {
-      mesh->output_stresses();
-    } else {
-      mesh->output_3d_stresses();
-    }
+
+    //! Read mesh and compute stresses
+    mesh->read_vertices(io->mesh_file_name());
+    mesh->compute_stresses();
+
+    //! Write vertices and stresses
+    io->write_vertices(mesh->vertices());
+    io->write_stresses(mesh->stress());
 
   } catch (std::exception& except) {
     std::cout << "Caught exception: " << except.what() << '\n';

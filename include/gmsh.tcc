@@ -1,28 +1,21 @@
-#include <numeric>
-#include <sstream>
-#include <string>
-
-#include "gmsh.h"
-#include "point.h"
-
-//! \brief Open and read gmsh file
-//! \details read vertex id and coordinates
-void GMSH::get_vertices(const std::string& filename) {
+//! Read vertex id and coordinates in GMSH
+//! \param[in] filename Input GMSH file
+void GMSH::read_vertices(const std::string& filename) {
 
   //! Number of vertices
   double nvertices = std::numeric_limits<double>::max();
-  const double toplines = 4;
+  const unsigned toplines = 4;
+  const unsigned ndimension = 3;
+
   //! Vertices id
   unsigned vertid;
-  //! Array to store vertices coordinates
-  std::array<double, 3> verticesarray;
 
   std::fstream infile;
   infile.open(filename, std::ios::in);
 
-  //! Open input file
-  if (infile.is_open()) {
-    std::cout << "vertices file found" << '\n';
+  //! Check if input file is good
+  if (infile.good()) {
+    std::cout << "Vertices file found" << '\n';
 
     std::string line;
 
@@ -30,97 +23,128 @@ void GMSH::get_vertices(const std::string& filename) {
     for (unsigned i = 0; i < toplines; ++i) {
       std::getline(infile, line);
     }
-    //! Get number of vertices
+    //! Read number of vertices
     infile >> nvertices;
     getline(infile, line);
 
-    //! Get vertex coordinates & id
+    //! Read vertex coordinates & id
     for (int i = 0; i < nvertices; ++i) {
       std::getline(infile, line);
       std::istringstream istream(line);
+
       if (line.find('#') == std::string::npos && line != "") {
+        //! Coordinates of vertex
+        std::array<double, ndimension> vertex;
+        
         istream >> vertid;
-        istream >> verticesarray.at(0) >> verticesarray.at(1) >>
-            verticesarray.at(2);
-        vertices_.emplace_back(new Point<3>(vertid, verticesarray));
+        istream >> vertex.at(0) >> vertex.at(1) >> vertex.at(2);
+
+        vertices_.emplace_back(new Point<ndimension>(vertid, vertex));
       }
     }
     infile.close();
-  } else {
-    throw std::runtime_error("Vertices file not found");
   }
   std::cout << "Number of Vertices: " << vertices_.size() << '\n';
+  nvertices_ = vertices_.size();
 }
 
-//! \brief Print Vertices Vector to text file
-//! \details to Check data entry correct
-void GMSH::output_vertices() {
+//! Read GMSH elements
+//! \param[in] filename Input GMSH file
+void GMSH::read_elements(const std::string& filename) {
 
-  const std::string outputfilename = "vertexcheck.txt";
-  std::fstream inputcheck;
-  inputcheck.open(outputfilename, std::ios::out);
+  //! Number of vertices
+  double nvertices = std::numeric_limits<double>::max();
+  //! Number of elements
+  double nelements = std::numeric_limits<double>::max();
+  //! Element type
+  double elementtype = std::numeric_limits<double>::max();
 
-  if (inputcheck.is_open()) {
+  double physical = std::numeric_limits<double>::max();
+  double elementry = std::numeric_limits<double>::max();
+  //! Element id
+  unsigned elementid = std::numeric_limits<unsigned>::max();
 
-    //! Iterate through vector and print
-    inputcheck << vertices_.size() << '\n';
+  const unsigned toplines = 4;
+  const unsigned ndimension = 3;
 
-    for (const auto& point : vertices_) {
-      inputcheck << point->coordinates().at(0) << '\t'
-                 << point->coordinates().at(1) << '\t'
-                 << point->coordinates().at(2) << '\n';
+  //! Array to store vertices coordinates
+  std::array<double, ndimension> elementarray;
+
+  std::fstream infile;
+  infile.open(filename, std::ios::in);
+
+  //! Check if input msh file is good
+  if (infile.good()) {
+    std::cout << "Element file found" << '\n';
+
+    std::string line;
+
+    //! Ignore first 4 lines
+    for (unsigned k = 0; k < toplines; ++k) {
+      std::getline(infile, line);
     }
-    inputcheck.close();
+    //! Get number of vertices
+    infile >> nvertices;
+    getline(infile, line);
+    //! Skip past vertices section
+    for (int i = 0; i < nvertices; ++i) {
+      std::getline(infile, line);
+    }
+    //! Skip past element headers
+    for (unsigned l = 0; l < 2; ++l) {
+      std::getline(infile, line);
+    }
+
+    infile >> nelements;
+    getline(infile, line);
+
+    for (int i = 0; i < nelements; ++i) {
+      std::getline(infile, line);
+      std::istringstream istream(line);
+      if (line.find('#') == std::string::npos && line != "") {
+        istream >> elementid;
+        istream >> elementtype;
+        istream >> elementry;
+        istream >> physical;
+        istream >> elementry;
+
+        //! \brief Check element type
+        //! \details If element type not == to Tdim, skip element
+        if (elementtype != ndimension) {
+          istream >> line;
+        } else {
+          istream >> elementarray.at(0) >> elementarray.at(1) >>
+              elementarray.at(2) >> elementarray.at(3);
+          elements_.emplace_back(
+              new Point<ndimension>(elementid, elementarray));
+        }
+      }
+    }
+    infile.close();
   }
+
+  std::cout << "Number of Elements: " << elements_.size() << '\n';
 }
 
-void GMSH::output_stresses() {
+//! Compute stresses
+void GMSH::compute_stresses() {
 
-  const std::string outputfilename = "stresscheck.txt";
-  std::fstream stresscheck;
-  stresscheck.open(outputfilename, std::ios::out);
+  double density = 22;
+  double k0 = 0.5;
+  double max_height = 3;
+  double conv_factor = 10;
+  double ver_stress;
+  double hor_stress;
 
-  if (stresscheck.is_open()) {
-
-    //! Iterate through vector and print
-
-    for (const auto& point : vertices_) {
-      stresscheck.setf(std::ios::fixed, std::ios::floatfield);
-      //! horizontal 2d stress
-      stresscheck << point->id() - 1 << '\t';
-      stresscheck << (0.5 *
-                      (0 - (10 * ((3 - point->coordinates().at(1)) * 22))))
-                  << '\t'
-                  //! vertical 2d stress
-                  << (0 - (10 * ((3 - point->coordinates().at(1)) * 22)))
-                  << '\t' << point->coordinates().at(2) << '\t'
-                  << point->coordinates().at(2) << '\t'
-                  << point->coordinates().at(2) << '\t'
-                  << point->coordinates().at(2) << '\n';
-    }
-    stresscheck.close();
+  //! Loop through the points to get vertical and horizontal stresses
+  //! Note that tau (shear stress) is assumed 0
+  for (const auto& point : vertices_) {
+    ver_stress =
+        conv_factor * (-(max_height - point->coordinates().at(2))) * density;
+    hor_stress = ver_stress * k0;
+    std::array<double, 6> stress{hor_stress, hor_stress, ver_stress, 0, 0, 0};
+    stress_.emplace_back(stress);
   }
-}
 
-void GMSH::output_3d_stresses() {
-
-  const std::string outputfilename = "stresscheck.txt";
-  std::fstream stresscheck;
-  stresscheck.open(outputfilename, std::ios::out);
-
-  if (stresscheck.is_open()) {
-
-    //! Iterate through vector and print
-
-    for (const auto& point : vertices_) {
-      stresscheck.setf(std::ios::fixed, std::ios::floatfield);
-      //! horizontal 3d stress
-      stresscheck << point->id() - 1 << '\t';
-      stresscheck << "0" << '\t' << "0"
-                  << '\t'
-                  //! vertical 3d stress
-                  << "0" << '\t' << "0" << '\t' << "0" << '\t' << "0" << '\n';
-    }
-    stresscheck.close();
-  }
+  std::cout << "Compute initial stresses for material points.\n";
 }

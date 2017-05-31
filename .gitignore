@@ -8,3 +8,5 @@ build/*
 *cmake_install.cmake*
 *coord.txt*
 *docs/*
+*bin/*.dat
+*bin/*.smf
