@@ -54,7 +54,7 @@ void GMSH::get_vertices(const std::string& filename) {
   }
   std::cout << "Number of Vertices: " << vertices_.size() << '\n';
 
-  tot_vertices_ = vertices_.size();
+  nvertices_ = vertices_.size();
 }
 
 //! \brief Open and read gmsh file
@@ -141,23 +141,24 @@ void GMSH::output_stresses(const std::string& outputfilename) {
   std::fstream outputfile;
   outputfile.open(outputfilename, std::ios::out);
 
-  const double density = 22;
-  const double K0 = 0.5;
+  double density = 22;
+  double k0 = 0.5;
+  double max_height = 3;
 
   if (outputfile.is_open()) {
 
     //! Iterate through vector and print
-    outputfile << tot_vertices_ << '\n';
+    outputfile << nvertices_ << '\n';
 
     for (const auto& point : vertices_) {
       outputfile.setf(std::ios::fixed, std::ios::floatfield);
       //! horizontal 2d stress
       outputfile << point->id() - 1 << '\t';
-      outputfile << (K0 *
-                     (0 - (10 * ((3 - point->coordinates().at(1)) * density))))
+      outputfile << (k0 *
+                     (0 - (10 * ((max_height - point->coordinates().at(1)) * density))))
                  << '\t'
                  //! vertical 2d stress
-                 << (0 - (10 * ((3 - point->coordinates().at(1)) * density)))
+                 << (0 - (10 * ((max_height - point->coordinates().at(1)) * density)))
                  << '\t' << point->coordinates().at(2) << '\t'
                  << point->coordinates().at(2) << '\t'
                  << point->coordinates().at(2) << '\t'

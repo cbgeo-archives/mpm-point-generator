@@ -7,8 +7,9 @@
 #include <sstream>
 #include <vector>
 
-#include <mesh.h>
-#include <point.h>
+#include "gmsh.h"
+#include "mesh.h"
+#include "point.h"
 
 #include "json.hpp"
 
@@ -43,17 +44,19 @@ class IO {
   //! \brief Write output file for point
   void write_output_vertices(
       const std::string& outputfilename,
-      const std::vector<std::shared_ptr<Point<3>>> vertices,
-      const unsigned& tot_points);
+      const std::vector<std::shared_ptr<Point<3>>>& vertices,
+      const unsigned tot_points);
 
   //! \brief Write output file for stress
-  void write_output_stress(const std::string& outputfilename);
+  void write_output_stress(const std::string& outputfilename,
+                           const std::vector<std::shared_ptr<Point<3>>>& stress,
+                           const unsigned tot_points);
 
   //! \brief Get the private properties
   //! return input file name
   std::string inputfilename() const { return inputfilename_; }
 
-  //! return output file name for point
+  //! return output file name for vertex
   std::string outputfilename_vertex() const { return outputfilename_vertex_; }
 
   //! return output file name for stress
@@ -66,7 +69,7 @@ class IO {
   //! filename of the input
   std::string inputfilename_;
 
-  //! filename of the output for point
+  //! filename of the output for vertex
   std::string outputfilename_vertex_;
 
   //! filename of the output for stress
