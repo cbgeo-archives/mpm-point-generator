@@ -24,6 +24,9 @@ class GMSH : public Mesh {
   //! Compute stresses
   void compute_stresses();
 
+  //! Make vector of point class
+  void generate_points();
+
   //! call total number of vertices generated
   unsigned nvertices() const { return nvertices_; }
 
@@ -33,21 +36,25 @@ class GMSH : public Mesh {
   //! Return a vector of elements
   std::vector<std::shared_ptr<Point<3>>> elements() const { return elements_; }
 
-  //! Return a vector of stresses
-  std::vector<std::array<double, 6>> stress() const { return stress_; }
-
  private:
   //! Number of vertices
   unsigned nvertices_;
 
-  //! Vector of vertices 
+  //! Vector of id
+  std::vector<unsigned> vertid_;
+
+  //! Vector of coordinates of vertices
+  std::vector<std::array<double, 3>> coords_;
+
+  //! Vector of vertices
   std::vector<std::shared_ptr<Point<3>>> vertices_;
 
   //! Vector of elements
   std::vector<std::shared_ptr<Point<3>>> elements_;
 
   //! Stress vector in Voigt Notation
-  //! $\sigma_{xx}$ $\sigma_{yy}$ $\sigma_{zz}$ $\tau_{yz}$ $\tau_{zx}$ $\tau_{xy}$
+  //! $\sigma_{xx}$ $\sigma_{yy}$ $\sigma_{zz}$ $\tau_{yz}$ $\tau_{zx}$
+  //! $\tau_{xy}$
   std::vector<std::array<double, 6>> stress_;
 };
 

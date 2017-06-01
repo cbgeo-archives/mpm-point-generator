@@ -6,7 +6,7 @@ void IO::write_vertices(
   //! Output vertices file
   std::fstream vertices_file;
   vertices_file.open(vertices_filename_, std::ios::out);
-  
+
   if (vertices_file.is_open()) {
     //! Write the total number of vertices
     vertices_file << vertices.size() << "\n";
@@ -28,8 +28,9 @@ void IO::write_vertices(
 }
 
 //! \brief Write initial stresses of material points
-//! \param[in[ stresses Initial stress of material points
-void IO::write_stresses(const std::vector<std::array<double, 6>>& stresses) {
+//! \param[in] stresses Initial stress of material points
+void IO::write_stresses(
+    const std::vector<std::shared_ptr<Point<3>>>& vertices) {
 
   //! Output stress file
   std::fstream stress_file;
@@ -37,15 +38,16 @@ void IO::write_stresses(const std::vector<std::array<double, 6>>& stresses) {
 
   if (stress_file.is_open()) {
     //! Write the total number of vertices generated
-    stress_file << stresses.size() << "\n";
+    stress_file << vertices.size() << "\n";
 
     //! Stresses in Voigt Notation
     //! $\sigma_{xx}$ $\sigma_{yy}$ $\sigma_{zz}$
     //! $\tau_{yz}$ $\tau_{zx}$ $\tau_{xy}$
-    for (const auto& stress : stresses) {
+    for (const auto& vertex : vertices) {
       stress_file.setf(std::ios::fixed, std::ios::floatfield);
-      for (double stress_component : stress) {
-        stress_file << stress_component << '\t';
+      stress_file << vertex->id() << "\t";
+      for (double stress_component : vertex->stress()) {
+        stress_file << stress_component << "\t";
       }
       stress_file << "\n";
     }

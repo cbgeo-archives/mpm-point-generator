@@ -21,10 +21,11 @@ int main(int argc, char** argv) {
     //! Read mesh and compute stresses
     mesh->read_vertices(io->mesh_file_name());
     mesh->compute_stresses();
+    mesh->generate_points();
 
     //! Write vertices and stresses
     io->write_vertices(mesh->vertices());
-    io->write_stresses(mesh->stress());
+    io->write_stresses(mesh->vertices());
 
   } catch (std::exception& except) {
     std::cout << "Caught exception: " << except.what() << '\n';
