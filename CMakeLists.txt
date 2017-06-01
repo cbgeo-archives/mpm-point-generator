@@ -46,7 +46,8 @@ add_executable(mpm_point_generator ${mpm_point_gen_src})
 # Unit test
 SET(test_src
   ${PROJECT_SOURCE_DIR}/tests/test.cc
-  ${PROJECT_SOURCE_DIR}/tests/point_test.cc
+  ${PROJECT_SOURCE_DIR}/tests/point_test_2d.cc
+  ${PROJECT_SOURCE_DIR}/tests/point_test_3d.cc
 )
 add_executable(mpm_point_generator_test ${test_src})
 
