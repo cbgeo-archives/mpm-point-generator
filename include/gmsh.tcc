@@ -24,6 +24,10 @@ void GMSH::read_vertices(const std::string& filename) {
     infile >> nvertices;
     getline(infile, line);
 
+    //! Initialize two variables for the loop
+    std::array<double, ndimension> coord;
+    unsigned vertid = 0;
+
     //! Read vertex coordinates & id
     for (int i = 0; i < nvertices; ++i) {
       std::getline(infile, line);
@@ -31,16 +35,13 @@ void GMSH::read_vertices(const std::string& filename) {
 
       if (line.find('#') == std::string::npos && line != "") {
         //! Coordinates of vertex
-        //! Initialize two variables for the loop
-        std::array<double, ndimension> coord;
-        unsigned vertid;
-
         istream >> vertid;
         istream >> coord.at(0) >> coord.at(1) >> coord.at(2);
 
-        //! change from 1 base to 0 base  
+        //! change from 1 base to 0 base
         vertid -= 1;
 
+        //! Store to member variables
         vertid_.push_back(vertid);
         coords_.push_back(coord);
       }
