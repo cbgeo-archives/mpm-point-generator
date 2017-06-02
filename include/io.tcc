@@ -29,8 +29,7 @@ void IO::write_vertices(
 
 //! \brief Write initial stresses of material points
 //! \param[in] stresses Initial stress of material points
-void IO::write_stresses(
-    const std::vector<std::shared_ptr<Point<3>>>& vertices) {
+void IO::write_stresses(const std::vector<std::array<double, 6>>& stresses) {
 
   //! Output stress file
   std::fstream stress_file;
@@ -38,15 +37,14 @@ void IO::write_stresses(
 
   if (stress_file.is_open()) {
     //! Write the total number of vertices generated
-    stress_file << vertices.size() << "\n";
+    stress_file << stresses.size() << "\n";
 
     //! Stresses in Voigt Notation
     //! $\sigma_{xx}$ $\sigma_{yy}$ $\sigma_{zz}$
     //! $\tau_{yz}$ $\tau_{zx}$ $\tau_{xy}$
-    for (const auto& vertex : vertices) {
+    for (const auto& stress : stresses) {
       stress_file.setf(std::ios::fixed, std::ios::floatfield);
-      stress_file << vertex->id() << "\t";
-      for (double stress_component : vertex->stress()) {
+      for (double stress_component : stress) {
         stress_file << stress_component << "\t";
       }
       stress_file << "\n";

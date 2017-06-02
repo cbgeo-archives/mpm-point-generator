@@ -134,10 +134,10 @@ void GMSH::read_elements(const std::string& filename) {
 //! \brief compute initial stress from points
 void GMSH::compute_stresses() {
 
-  double density = 22;
-  double k0 = 0.5;
-  double max_height = 3;
-  double conv_factor = 10;
+  const double density = 22;
+  const double k0 = 0.5;
+  const double max_height = 3;
+  const double conv_factor = 10;
   double ver_stress;
   double hor_stress;
 
@@ -146,8 +146,8 @@ void GMSH::compute_stresses() {
   for (const auto& point : coords_) {
     ver_stress = conv_factor * (-(max_height - point.at(2))) * density;
     hor_stress = ver_stress * k0;
-    std::array<double, 6> stress{hor_stress, hor_stress, ver_stress, 0, 0, 0};
-    stress_.push_back(stress);
+    stress_.push_back(
+        std::array<double, 6>{hor_stress, hor_stress, ver_stress, 0, 0, 0});
   }
 
   std::cout << "Computed initial stresses.\n";
@@ -159,7 +159,7 @@ void GMSH::generate_points() {
   const unsigned ndimension = 3;
 
   for (unsigned i = 0; i < nvertices_; ++i) {
-    vertices_.emplace_back(
+    points_.emplace_back(
         new Point<ndimension>(vertid_.at(i), coords_.at(i), stress_.at(i)));
   }
 

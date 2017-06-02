@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
 
     //! Write vertices and stresses
     io->write_vertices(mesh->vertices());
-    io->write_stresses(mesh->vertices());
+    io->write_stresses(mesh->stress());
 
   } catch (std::exception& except) {
     std::cout << "Caught exception: " << except.what() << '\n';

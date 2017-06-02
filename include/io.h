@@ -28,15 +28,15 @@ class IO {
     meshfile.close();
 
     //! Material point and stresses
-    vertices_filename_ = "../bin/material_points.txt";
-    stress_filename_ = "../bin/initial_stresses.txt";
+    vertices_filename_ = "material_points.txt";
+    stress_filename_ = "initial_stresses.txt";
   }
 
   //! Write vertices
   void write_vertices(const std::vector<std::shared_ptr<Point<3>>>& vertices);
 
   //! Write stresses
-  void write_stresses(const std::vector<std::shared_ptr<Point<3>>>& vertices);
+  void write_stresses(const std::vector<std::array<double, 6>>& stress);
 
   //! Return mesh file name
   std::string mesh_file_name() const { return mesh_file_name_; }
