@@ -10,7 +10,7 @@ TEST_CASE("Point base is checked in 2D and 3D", "[Point][2D][3D]") {
 
   const double tol = 1.E-12;
 
-  //! 2D Test
+  //! 2D Test of Point Class
   SECTION("2D test") {
     const unsigned DIM = 2;
 
@@ -57,7 +57,7 @@ TEST_CASE("Point base is checked in 2D and 3D", "[Point][2D][3D]") {
     }
   }
 
-  //! 3D Test
+  //! 3D Test of Point Class
   SECTION("3D test") {
     const unsigned DIM = 3;
 
