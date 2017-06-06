@@ -8,7 +8,7 @@ void GMSH::read_vertices(const std::string& filename) {
   const unsigned ndimension = 3;
 
   //! Vertices id
-  unsigned vertid;
+  double vertid;
 
   std::fstream infile;
   infile.open(filename, std::ios::in);
@@ -28,18 +28,20 @@ void GMSH::read_vertices(const std::string& filename) {
     getline(infile, line);
 
     //! Read vertex coordinates & id
-    for (int i = 0; i < nvertices; ++i) {
+    for (unsigned i = 0; i < nvertices; ++i) {
       std::getline(infile, line);
       std::istringstream istream(line);
 
       if (line.find('#') == std::string::npos && line != "") {
         //! Coordinates of vertex
         std::array<double, ndimension> vertex;
-        
+
         istream >> vertid;
         istream >> vertex.at(0) >> vertex.at(1) >> vertex.at(2);
 
         vertices_.emplace_back(new Point<ndimension>(vertid, vertex));
+
+        verticesmap_.insert(std::make_pair(vertid, vertex));
       }
     }
     infile.close();
@@ -66,9 +68,13 @@ void GMSH::read_elements(const std::string& filename) {
 
   const unsigned toplines = 4;
   const unsigned ndimension = 3;
+  // specify element type 4 = tetrahedral
+  const unsigned elementype_ = 4;
+  // specify element vertices 4 = tetrahedral
+  const unsigned elementvertices = 4;
 
   //! Array to store vertices coordinates
-  std::array<double, ndimension> elementarray;
+  std::array<double, elementvertices> elementarray;
 
   std::fstream infile;
   infile.open(filename, std::ios::in);
@@ -109,20 +115,22 @@ void GMSH::read_elements(const std::string& filename) {
         istream >> elementry;
 
         //! \brief Check element type
-        //! \details If element type not == to Tdim, skip element
-        if (elementtype != ndimension) {
+        //! \details If element type not == to specified elementtype_, skip
+        //! element
+        if (elementtype != elementype_) {
           istream >> line;
         } else {
           istream >> elementarray.at(0) >> elementarray.at(1) >>
               elementarray.at(2) >> elementarray.at(3);
           elements_.emplace_back(
-              new Point<ndimension>(elementid, elementarray));
+              new Point<elementvertices>(elementid, elementarray));
+
+          elementmap_.insert(std::make_pair(elementid, elementarray));
         }
       }
     }
     infile.close();
   }
-
   std::cout << "Number of Elements: " << elements_.size() << '\n';
 }
 

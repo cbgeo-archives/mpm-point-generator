@@ -21,6 +21,7 @@ int main(int argc, char** argv) {
     //! Read mesh and compute stresses
     mesh->read_vertices(io->mesh_file_name());
     mesh->compute_stresses();
+    mesh->read_elements(io->mesh_file_name());
 
     //! Write vertices and stresses
     io->write_vertices(mesh->vertices());
