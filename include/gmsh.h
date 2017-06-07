@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iostream>
 #include <limits>
+#include <map>
 #include <memory>
 #include <vector>
 
@@ -30,11 +31,11 @@ class GMSH : public Mesh {
   //! call total number of vertices generated
   unsigned nvertices() const { return nvertices_; }
 
-  //! Return a vector of vertices
+  //! Return a vector of mesh element vertices
   std::vector<std::shared_ptr<Point<3>>> vertices() const { return vertices_; }
 
-  //! Return a vector of elements
-  std::vector<std::shared_ptr<Point<3>>> elements() const { return elements_; }
+  //! Return a vector of element ID & verices ID
+  std::vector<std::shared_ptr<Point<4>>> elements() const { return elements_; }
 
   //! Return a vector of stress
   std::vector<std::array<double, 6>> stress() const { return stress_; }
@@ -43,17 +44,21 @@ class GMSH : public Mesh {
   //! Number of vertices
   unsigned nvertices_;
 
+<<<<<<< HEAD
   //! Vector of vertex ids
   std::vector<unsigned> vertid_;
 
   //! Vector of coordinates of vertices
   std::vector<std::array<double, 3>> coords_;
 
+=======
+>>>>>>> b5070a96d5cc9fb391999dcdd857ecdb93babc75
   //! Vector of vertices
   std::vector<std::shared_ptr<Point<3>>> vertices_;
 
   //! Vector of elements
-  std::vector<std::shared_ptr<Point<3>>> elements_;
+  // 4 = element vertices
+  std::vector<std::shared_ptr<Point<4>>> elements_;
 
   //! Vector of points
   std::vector<std::shared_ptr<Point<3>>> points_;
@@ -62,6 +67,13 @@ class GMSH : public Mesh {
   //! $\sigma_{xx}$ $\sigma_{yy}$ $\sigma_{zz}$ $\tau_{yz}$ $\tau_{zx}$
   //! $\tau_{xy}$
   std::vector<std::array<double, 6>> stress_;
+
+  //! Map to store id and vertices coordinates
+  std::map<double, std::array<double, 3>> verticesmap_;
+
+  //! Map to store element ID and vertices ID
+  // 4 = element vertices
+  std::map<double, std::array<double, 4>> elementmap_;
 };
 
 #include "gmsh.tcc"

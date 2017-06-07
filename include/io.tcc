@@ -24,7 +24,7 @@ void IO::write_vertices(
     vertices_file.close();
   }
 
-  std::cout << "Wrote material points id and coordinates\n";
+  std::cout << "Wrote material point coordinates\n";
 }
 
 //! \brief Write initial stresses of material points
