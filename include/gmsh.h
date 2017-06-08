@@ -8,9 +8,13 @@
 #include <map>
 #include <memory>
 #include <vector>
-
 #include "mesh.h"
 #include "point.h"
+
+//libraries
+#include <Eigen/Dense>
+using Eigen::MatrixXd;
+
 
 //! \brief Generate Material Points from GMSH file
 class GMSH : public Mesh {
@@ -22,17 +26,26 @@ class GMSH : public Mesh {
   //! Read elements in GMSH
   void read_elements(const std::string& filename);
 
+  //!Store element id and vertices coordinates as map
+  void store_element_vertices();
+
+  //!Compute material points from element coordinate map
+  void compute_material_points();
+
   //! Compute stresses
   void compute_stresses();
 
   //! call total number of vertices generated
   unsigned nvertices() const { return nvertices_; }
 
-  //! Return a vector of mesh element vertices
-  std::vector<std::shared_ptr<Point<3>>> vertices() const { return vertices_; }
+  //Return a vector of material points
+  std::vector<std::shared_ptr<Point<3>>>material_points() {return materialpoints_;}
 
-  //! Return a vector of element ID & verices ID
-  std::vector<std::shared_ptr<Point<4>>> elements() const { return elements_; }
+  //! Return a map of mesh element vertices
+  std::map<double, std::array<double, 3>> vertices() const { return vertices_; }
+
+  //! Return a map of element id & vertices id
+  std::map<double, std::array<double, 4>> elements() const { return elements_; }
 
   //! Return a vector of stresses
   std::vector<std::array<double, 6>> stress() const { return stress_; }
@@ -41,12 +54,8 @@ class GMSH : public Mesh {
   //! Number of vertices
   unsigned nvertices_;
 
-  //! Vector of vertices
-  std::vector<std::shared_ptr<Point<3>>> vertices_;
 
-  //! Vector of elements
-  // 4 = element vertices
-  std::vector<std::shared_ptr<Point<4>>> elements_;
+  std::vector<std::shared_ptr<Point<3>>> materialpoints_;
 
   //! Stress vector in Voigt Notation
   //! $\sigma_{xx}$ $\sigma_{yy}$ $\sigma_{zz}$ $\tau_{yz}$ $\tau_{zx}$
@@ -54,11 +63,12 @@ class GMSH : public Mesh {
   std::vector<std::array<double, 6>> stress_;
 
   //! Map to store id and vertices coordinates
-  std::map<double, std::array<double, 3>> verticesmap_;
+  std::map<double, std::array<double, 3>> vertices_;
 
   //! Map to store element ID and vertices ID
   // 4 = element vertices
-  std::map<double, std::array<double, 4>> elementmap_;
+  std::map<double, std::array<double, 4>> elements_;
+  std::map<double, std::array<double, 12>> elementcoordinates_;
 };
 
 #include "gmsh.tcc"

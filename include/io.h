@@ -28,14 +28,14 @@ class IO {
       std::cerr << "Exception opening/reading mesh file";
     }
     meshfile.close();
-    
+
     //! Material point and stresses
     vertices_filename_ = "material_points.txt";
     stress_filename_ = "initial_stresses.txt";
   }
 
   //! Write vertices
-  void write_vertices(const std::vector<std::shared_ptr<Point<3>>>& vertices);
+  void write_vertices(const std::vector<std::shared_ptr<Point<3>>>& materialpoints);
 
   //! Write stresses
   void write_stresses(const std::vector<std::array<double, 6>>& stresses);
