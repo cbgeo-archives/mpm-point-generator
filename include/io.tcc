@@ -30,7 +30,7 @@ void IO::write_vertices(
 //! \brief Write initial stresses of material points
 //! \param[in[ stresses Initial stress of material points
 void IO::write_stresses(const std::vector<std::array<double, 6>>& stresses) {
-  double id = 1;
+  unsigned id = 1;
 
   //! Output stress file
   std::fstream stress_file;
@@ -48,7 +48,7 @@ void IO::write_stresses(const std::vector<std::array<double, 6>>& stresses) {
       stress_file.setf(std::ios::fixed, std::ios::floatfield);
       stress_file << id << '\t';
       for (double stress_component : stress) {
-        stress_file << 0 << '\t';
+        stress_file << stress_component << '\t';
       }
       stress_file << "\n";
       ++id;
