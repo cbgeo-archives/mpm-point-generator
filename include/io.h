@@ -15,16 +15,14 @@ class IO {
  public:
   //! Constructor with input file
   //! \param[in] mesh_file Input mesh file name
-  explicit IO(const std::string& mesh_file)
-      : mesh_file_name_{mesh_file} {
+  explicit IO(const std::string& mesh_file) : mesh_file_name_{mesh_file} {
 
     // Check if mesh file is present
     std::ifstream meshfile;
-    meshfile.exceptions ( std::ifstream::failbit | std::ifstream::badbit );
+    meshfile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
     try {
-      meshfile.open (mesh_file);
-    }
-    catch (const std::ifstream::failure& except) {
+      meshfile.open(mesh_file);
+    } catch (const std::ifstream::failure& except) {
       std::cerr << "Exception opening/reading mesh file";
     }
     meshfile.close();
@@ -35,7 +33,8 @@ class IO {
   }
 
   //! Write vertices
-  void write_vertices(const std::vector<std::shared_ptr<Point<3>>>& materialpoints);
+  void write_vertices(
+      const std::vector<std::shared_ptr<Point<3>>>& materialpoints);
 
   //! Write stresses
   void write_stresses(const std::vector<std::array<double, 6>>& stresses);

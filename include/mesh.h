@@ -3,9 +3,9 @@
 
 #include <array>
 #include <fstream>
-#include <sstream>
 #include <iostream>
 #include <memory>
+#include <sstream>
 #include <vector>
 
 //! \brief Abstract class for handling mesh
@@ -26,6 +26,5 @@ class Mesh {
 
   //! Compute stresses
   virtual void compute_stresses() = 0;
-
 };
 #endif  // MPM_POINT_GEN_MESH_H_

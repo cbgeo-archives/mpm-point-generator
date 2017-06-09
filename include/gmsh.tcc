@@ -1,6 +1,6 @@
 //! Read vertex id and coordinates in GMSH
 //! \param[in] filename Input GMSH file
-
+//! \Param[in] Tdim = Dimension, Tvert = n vertices in element
 template <unsigned Tdim, unsigned Tvertices>
 void GMSH<Tdim, Tvertices>::read_vertices(const std::string& filename) {
 
@@ -49,6 +49,7 @@ void GMSH<Tdim, Tvertices>::read_vertices(const std::string& filename) {
 
 //! Read GMSH elements
 //! \param[in] filename Input GMSH file
+//! \Param[in] Tdim = Dimension, Tvert = n vertices in element
 template <unsigned Tdim, unsigned Tvertices>
 void GMSH<Tdim, Tvertices>::read_elements(const std::string& filename) {
 
@@ -127,13 +128,17 @@ void GMSH<Tdim, Tvertices>::read_elements(const std::string& filename) {
   //! Get the coordinates for each vertex of each element
   GMSH::store_element_vertices();
 }
+
+//! \brief store each coordinates of an element
+//! \Param[in] Tdim = Dimension, Tvert = n vertices in element
 template <unsigned Tdim, unsigned Tvertices>
 void GMSH<Tdim, Tvertices>::store_element_vertices() {
 
   const unsigned firstelement = elements_.begin()->first;
   const unsigned lastelement = elements_.rbegin()->first;
 
-  typename std::map<double, std::array<double, Tvertices>>::iterator elementfind;
+  typename std::map<double, std::array<double, Tvertices>>::iterator
+      elementfind;
   typename std::map<double, std::array<double, Tdim>>::iterator verticesfind;
 
   std::array<double, Tvertices> elementkeyvalues;
@@ -167,6 +172,8 @@ void GMSH<Tdim, Tvertices>::store_element_vertices() {
       << "The coordinates for vertices of each element have been stored.\n";
 }
 
+//! \brief generate material points from elements
+//! \Param[in] Tdim = Dimension, Tvert = n vertices in element
 template <unsigned Tdim, unsigned Tvertices>
 void GMSH<Tdim, Tvertices>::compute_material_points() {
 
@@ -208,7 +215,9 @@ void GMSH<Tdim, Tvertices>::compute_material_points() {
   }
   std::cout << "Number of Material Points: " << materialpoints_.size() << '\n';
 }
-//! Compute stresses
+
+//! \brief Compute stresses
+//! \Param[in] Tdim = Dimension, Tvert = n vertices in element
 template <unsigned Tdim, unsigned Tvertices>
 void GMSH<Tdim, Tvertices>::compute_stresses() {
 
@@ -226,7 +235,8 @@ void GMSH<Tdim, Tvertices>::compute_stresses() {
     ver_stress =
         conv_factor * (-(max_height - point->coordinates().at(2))) * density;
     hor_stress = ver_stress * k0;
-    std::array<double, stress_comp> stress{hor_stress, hor_stress, ver_stress, 0, 0, 0};
+    std::array<double, stress_comp> stress{hor_stress, hor_stress, ver_stress,
+                                           0,          0,          0};
     stress_.emplace_back(stress);
   }
 

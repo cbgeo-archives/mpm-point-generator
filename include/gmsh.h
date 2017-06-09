@@ -62,8 +62,8 @@ class GMSH : public Mesh {
   std::vector<std::shared_ptr<Point<Tdim>>> materialpoints_;
 
   //! Stress vector in Voigt Notation
-  //! $\sigma_{xx}$ $\sigma_{yy}$ $\sigma_{zz}$ $\tau_{yz}$ $\tau_{zx}$
-  //! $\tau_{xy}$
+  //! $\sigma_{xx}$ $\sigma_{yy}$ $\sigma_{zz}$
+  //! $\tau_{yz}$ $\tau_{zx}$ $\tau_{xy}$
   std::vector<std::array<double, 6>> stress_;
 
   //! Map to store id and vertices coordinates
