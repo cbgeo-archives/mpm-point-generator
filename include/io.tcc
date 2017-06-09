@@ -15,8 +15,8 @@ void IO::write_vertices(
     //! [X] [Y] [Z]
     //! Note that for 2D, z values are 0
     //! For 1D, both y and z values are 0
-    for (auto const& vertex : materialpoints) {
-      for (double coordinate : vertex->coordinates()) {
+    for (auto const& points : materialpoints) {
+      for (double coordinate : points->coordinates()) {
         vertices_file << coordinate << "\t";
       }
       vertices_file << "\n";
@@ -30,7 +30,7 @@ void IO::write_vertices(
 //! \brief Write initial stresses of material points
 //! \param[in[ stresses Initial stress of material points
 void IO::write_stresses(const std::vector<std::array<double, 6>>& stresses) {
-  unsigned id = 1;
+  unsigned id = 0;
 
   //! Output stress file
   std::fstream stress_file;
