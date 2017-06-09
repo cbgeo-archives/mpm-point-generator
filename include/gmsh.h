@@ -8,9 +8,11 @@
 #include <map>
 #include <memory>
 #include <vector>
-// libraries
+
+//! libraries
 #include <Eigen/Dense>
-// local
+
+//! local
 #include "mesh.h"
 #include "point.h"
 

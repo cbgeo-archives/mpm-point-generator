@@ -142,8 +142,8 @@ void GMSH<Tdim, Tvert, Tncoords>::store_element_vertices() {
   std::array<double, Tncoords> verticesarray;
 
   //! Iterate through element_
-  for (unsigned q = firstelement; q <= lastelement; ++q) {
-    elementfind = elements_.find(q);
+  for (unsigned i = firstelement; i <= lastelement; ++i) {
+    elementfind = elements_.find(i);
     if (elementfind != elements_.end()) {
 
       //! In each element, iterate to get vertices id's of the element
@@ -151,13 +151,13 @@ void GMSH<Tdim, Tvert, Tncoords>::store_element_vertices() {
         elementkeyvalues[j] = elementfind->second[j];
       }
       //! Iterate through the vertices to get coordinates (4 for tetrahedral)
-      for (unsigned q = 0; q <= 3; ++q) {
+      for (unsigned j = 0; j <= 3; ++j) {
         //! Get the vertex wanted from the id
-        verticesfind = vertices_.find(elementkeyvalues[q]);
+        verticesfind = vertices_.find(elementkeyvalues[j]);
         //! For each vertex, store the coordinates
-        //! j = 0 -> [X], j = 1 -> [Y], j = 2 -> [Z]
-        for (unsigned j = 0; j <= 2; ++j) {
-          verticesarray[q * 3 + j] = verticesfind->second[j];
+        //! k = 0 -> [X], k = 1 -> [Y], k = 2 -> [Z]
+        for (unsigned k = 0; k <= 2; ++k) {
+          verticesarray[j * 3 + k] = verticesfind->second[k];
         }
       }
 
@@ -174,7 +174,6 @@ void GMSH<Tdim, Tvert, Tncoords>::compute_material_points() {
 
   unsigned arrayposition = 0;
 
-  std::array<double, Tdim> pointsarray;
   typename std::map<double, std::array<double, Tncoords>>::iterator
       coordinatesfind;
 
@@ -186,17 +185,23 @@ void GMSH<Tdim, Tvert, Tncoords>::compute_material_points() {
     if (coordinatesfind != elementcoordinates_.end()) {
       //! Store coordinates in 3x4 matrix
       Eigen::MatrixXd m(3, 4);
-      for (unsigned i = 0; i <= 3; ++i) {
-        for (unsigned j = 0; j <= 2; ++j) {
-          arrayposition = (i * 3) + j;
-          m(j, i) = coordinatesfind->second[arrayposition];
+      for (unsigned i = 0; i <= 2; ++i) {
+        for (unsigned j = 0; j <= 3; ++j) {
+          arrayposition = (j * 3) + i;
+          m(i, j) = coordinatesfind->second[arrayposition];
         }
       }
-      // Centroid test
+
+      //! Initialize array to contain points
+      std::array<double, Tdim> pointsarray{0, 0, 0};
+
+      //! Centroid test
       //++++++++++++++++++++++++++++++++++++++
-      pointsarray[0] = 0.25 * (m(0, 0) + m(0, 1) + m(0, 2) + m(0, 3));
-      pointsarray[1] = 0.25 * (m(1, 0) + m(1, 1) + m(1, 2) + m(1, 3));
-      pointsarray[2] = 0.25 * (m(2, 0) + m(2, 1) + m(2, 2) + m(2, 3));
+      for (unsigned i = 0; i <= 2; ++i) {
+        for (unsigned j = 0; j <= 3; j++) {
+          pointsarray[i] += 0.25 * m(i, j);
+        }
+      }
       //++++++++++++++++++++++++++++++++++++++
 
       materialpoints_.emplace_back(
