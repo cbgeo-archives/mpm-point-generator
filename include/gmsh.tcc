@@ -1,8 +1,8 @@
 //! Read vertex id and coordinates in GMSH
 //! \param[in] filename Input GMSH file
 
-template <unsigned Tdim, unsigned Tvert, unsigned Tncoords>
-void GMSH<Tdim, Tvert, Tncoords>::read_vertices(const std::string& filename) {
+template <unsigned Tdim, unsigned Tvertices>
+void GMSH<Tdim, Tvertices>::read_vertices(const std::string& filename) {
 
   //! Number of vertices
   double nvertices = std::numeric_limits<double>::max();
@@ -49,8 +49,8 @@ void GMSH<Tdim, Tvert, Tncoords>::read_vertices(const std::string& filename) {
 
 //! Read GMSH elements
 //! \param[in] filename Input GMSH file
-template <unsigned Tdim, unsigned Tvert, unsigned Tncoords>
-void GMSH<Tdim, Tvert, Tncoords>::read_elements(const std::string& filename) {
+template <unsigned Tdim, unsigned Tvertices>
+void GMSH<Tdim, Tvertices>::read_elements(const std::string& filename) {
 
   //! Number of vertices
   double nvertices = std::numeric_limits<double>::max();
@@ -65,11 +65,9 @@ void GMSH<Tdim, Tvert, Tncoords>::read_elements(const std::string& filename) {
   unsigned elementid = std::numeric_limits<unsigned>::max();
 
   const unsigned toplines = 4;
-  // specify element type 4 = tetrahedral
-  const unsigned element_type = 4;
 
   //! Array to store vertices coordinates
-  std::array<double, Tvert> elementarray;
+  std::array<double, Tvertices> elementarray;
 
   std::fstream infile;
   infile.open(filename, std::ios::in);
@@ -110,9 +108,9 @@ void GMSH<Tdim, Tvert, Tncoords>::read_elements(const std::string& filename) {
         istream >> elementry;
 
         //! \brief Check element type
-        //! \details If element type not == to specified element_type, skip
+        //! \details If element type not == to specified Tvertices, skip
         //! element
-        if (elementtype != element_type) {
+        if (elementtype != Tvertices) {
           istream >> line;
         } else {
           istream >> elementarray.at(0) >> elementarray.at(1) >>
@@ -129,17 +127,17 @@ void GMSH<Tdim, Tvert, Tncoords>::read_elements(const std::string& filename) {
   //! Get the coordinates for each vertex of each element
   GMSH::store_element_vertices();
 }
-template <unsigned Tdim, unsigned Tvert, unsigned Tncoords>
-void GMSH<Tdim, Tvert, Tncoords>::store_element_vertices() {
+template <unsigned Tdim, unsigned Tvertices>
+void GMSH<Tdim, Tvertices>::store_element_vertices() {
 
   const unsigned firstelement = elements_.begin()->first;
   const unsigned lastelement = elements_.rbegin()->first;
 
-  typename std::map<double, std::array<double, Tvert>>::iterator elementfind;
+  typename std::map<double, std::array<double, Tvertices>>::iterator elementfind;
   typename std::map<double, std::array<double, Tdim>>::iterator verticesfind;
 
-  std::array<double, Tvert> elementkeyvalues;
-  std::array<double, Tncoords> verticesarray;
+  std::array<double, Tvertices> elementkeyvalues;
+  std::array<double, Tdim * Tvertices> verticesarray;
 
   //! Iterate through element_
   for (unsigned i = firstelement; i <= lastelement; ++i) {
@@ -147,11 +145,11 @@ void GMSH<Tdim, Tvert, Tncoords>::store_element_vertices() {
     if (elementfind != elements_.end()) {
 
       //! In each element, iterate to get vertices id's of the element
-      for (unsigned j = 0; j <= 3; ++j) {
+      for (unsigned j = 0; j < 4; ++j) {
         elementkeyvalues[j] = elementfind->second[j];
       }
       //! Iterate through the vertices to get coordinates (4 for tetrahedral)
-      for (unsigned j = 0; j <= 3; ++j) {
+      for (unsigned j = 0; j < 4; ++j) {
         //! Get the vertex wanted from the id
         verticesfind = vertices_.find(elementkeyvalues[j]);
         //! For each vertex, store the coordinates
@@ -169,12 +167,12 @@ void GMSH<Tdim, Tvert, Tncoords>::store_element_vertices() {
       << "The coordinates for vertices of each element have been stored.\n";
 }
 
-template <unsigned Tdim, unsigned Tvert, unsigned Tncoords>
-void GMSH<Tdim, Tvert, Tncoords>::compute_material_points() {
+template <unsigned Tdim, unsigned Tvertices>
+void GMSH<Tdim, Tvertices>::compute_material_points() {
 
   unsigned arrayposition = 0;
 
-  typename std::map<double, std::array<double, Tncoords>>::iterator
+  typename std::map<double, std::array<double, Tdim * Tvertices>>::iterator
       coordinatesfind;
 
   const unsigned firstelementcoord = elementcoordinates_.begin()->first;
@@ -185,39 +183,40 @@ void GMSH<Tdim, Tvert, Tncoords>::compute_material_points() {
     if (coordinatesfind != elementcoordinates_.end()) {
       //! Store coordinates in 3x4 matrix
       Eigen::MatrixXd m(3, 4);
-      for (unsigned i = 0; i <= 2; ++i) {
-        for (unsigned j = 0; j <= 3; ++j) {
+      for (unsigned i = 0; i < 3; ++i) {
+        for (unsigned j = 0; j < 4; ++j) {
           arrayposition = (j * 3) + i;
           m(i, j) = coordinatesfind->second[arrayposition];
         }
       }
 
-      //! Initialize array to contain points
+      //! Initialize array to contain points (need re-initialize as 0)
       std::array<double, Tdim> pointsarray{0, 0, 0};
 
       //! Centroid test
       //++++++++++++++++++++++++++++++++++++++
-      for (unsigned i = 0; i <= 2; ++i) {
-        for (unsigned j = 0; j <= 3; j++) {
+      for (unsigned i = 0; i < 3; ++i) {
+        for (unsigned j = 0; j < 4; j++) {
           pointsarray[i] += 0.25 * m(i, j);
         }
       }
       //++++++++++++++++++++++++++++++++++++++
 
       materialpoints_.emplace_back(
-          new Point<3>(coordinatesfind->first, pointsarray));
+          new Point<Tdim>(coordinatesfind->first, pointsarray));
     }
   }
   std::cout << "Number of Material Points: " << materialpoints_.size() << '\n';
 }
 //! Compute stresses
-template <unsigned Tdim, unsigned Tvert, unsigned Tncoords>
-void GMSH<Tdim, Tvert, Tncoords>::compute_stresses() {
+template <unsigned Tdim, unsigned Tvertices>
+void GMSH<Tdim, Tvertices>::compute_stresses() {
 
-  double density = 22;
-  double k0 = 0.5;
-  double max_height = 3;
-  double conv_factor = 10;
+  const double density = 22;
+  const double k0 = 0.5;
+  const double max_height = 3;
+  const double conv_factor = 10;
+  const unsigned stress_comp = 6;
   double ver_stress;
   double hor_stress;
 
@@ -227,7 +226,7 @@ void GMSH<Tdim, Tvert, Tncoords>::compute_stresses() {
     ver_stress =
         conv_factor * (-(max_height - point->coordinates().at(2))) * density;
     hor_stress = ver_stress * k0;
-    std::array<double, 6> stress{hor_stress, hor_stress, ver_stress, 0, 0, 0};
+    std::array<double, stress_comp> stress{hor_stress, hor_stress, ver_stress, 0, 0, 0};
     stress_.emplace_back(stress);
   }
 

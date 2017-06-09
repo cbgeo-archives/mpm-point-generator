@@ -9,15 +9,13 @@
 #include <memory>
 #include <vector>
 
-//! libraries
 #include <Eigen/Dense>
 
-//! local
 #include "mesh.h"
 #include "point.h"
 
 //! \brief Generate Material Points from GMSH file
-template <unsigned Tdim, unsigned Tvert, unsigned Tncoords>
+template <unsigned Tdim, unsigned Tvertices>
 class GMSH : public Mesh {
 
  public:
@@ -50,7 +48,7 @@ class GMSH : public Mesh {
   }
 
   //! Return a map of element id & vertices id
-  std::map<double, std::array<unsigned, Tvert>> elements() const {
+  std::map<double, std::array<unsigned, Tvertices>> elements() const {
     return elements_;
   }
 
@@ -58,7 +56,7 @@ class GMSH : public Mesh {
   std::vector<std::array<double, 6>> stress() const { return stress_; }
 
  private:
-  //! Number of vertices in total
+  //! Total number of vertices
   unsigned nvertices_;
 
   std::vector<std::shared_ptr<Point<Tdim>>> materialpoints_;
@@ -72,8 +70,8 @@ class GMSH : public Mesh {
   std::map<double, std::array<double, Tdim>> vertices_;
 
   //! Map to store element ID and vertices ID
-  std::map<double, std::array<double, Tvert>> elements_;
-  std::map<double, std::array<double, Tncoords>> elementcoordinates_;
+  std::map<double, std::array<double, Tvertices>> elements_;
+  std::map<double, std::array<double, Tdim * Tvertices>> elementcoordinates_;
 };
 
 #include "gmsh.tcc"
