@@ -21,7 +21,6 @@ int main(int argc, char** argv) {
     //! Read mesh and compute material points & stresses
     mesh->read_vertices(io->mesh_file_name());
     mesh->read_elements(io->mesh_file_name());
-    mesh->store_element_vertices();
     mesh->compute_material_points();
     mesh->compute_stresses();
     //! Write material points and stresses

@@ -126,6 +126,9 @@ void GMSH::read_elements(const std::string& filename) {
     infile.close();
   }
   std::cout << "Number of Elements: " << elements_.size() << '\n';
+
+  //! Get the coordinates for each vertex of each element
+  GMSH::store_element_vertices();
 }
 
 void GMSH::store_element_vertices() {
@@ -143,58 +146,27 @@ void GMSH::store_element_vertices() {
     elementfind = elements_.find(q);
     if (elementfind != elements_.end()) {
 
-      elementkeyvalues[0] = elementfind->second[0];
-      elementkeyvalues[1] = elementfind->second[1];
-      elementkeyvalues[2] = elementfind->second[2];
-      elementkeyvalues[3] = elementfind->second[3];
+      //! In each element, iterate to get vertices id of the element 
+      for (unsigned j = 0; j <= 3; ++j) {
+        elementkeyvalues[j] = elementfind->second[j];  
+      }
 
-      for (unsigned q = 0; q < 4; ++q) {
-        if (q == 0) {
-          verticesfind = vertices_.find(elementkeyvalues[0]);
-          if (elementfind != elements_.end()) {
-            verticesarray[0] = verticesfind->second[0];
-            verticesarray[1] = verticesfind->second[1];
-            verticesarray[2] = verticesfind->second[2];
-          } else {
-          }
-        } else {
-        }
-        if (q == 1) {
-          verticesfind = vertices_.find(elementkeyvalues[1]);
-          if (elementfind != elements_.end()) {
-            verticesarray[3] = verticesfind->second[0];
-            verticesarray[4] = verticesfind->second[1];
-            verticesarray[5] = verticesfind->second[2];
-          } else {
-          }
-        } else {
-        }
-        if (q == 2) {
-          verticesfind = vertices_.find(elementkeyvalues[2]);
-          if (elementfind != elements_.end()) {
-            verticesarray[6] = verticesfind->second[0];
-            verticesarray[7] = verticesfind->second[1];
-            verticesarray[8] = verticesfind->second[2];
-          } else {
-          }
-        } else {
-        }
-        if (q == 3) {
-          verticesfind = vertices_.find(elementkeyvalues[3]);
-          if (elementfind != elements_.end()) {
-            verticesarray[9] = verticesfind->second[0];
-            verticesarray[10] = verticesfind->second[1];
-            verticesarray[11] = verticesfind->second[2];
-          } else {
-          }
-        } else {
+      //! Iterate through the 4 vertices to get coordinates
+      for (unsigned q = 0; q <= 3; ++q) {
+        //! Get the vertex wanted from the id 
+        verticesfind = vertices_.find(elementkeyvalues[q]);
+        //! For each vertex, store the coordinates
+        //! j = 0 -> [X], j = 0 -> [Y], j = 0 -> [Z]
+        for (unsigned j = 0; j <= 2; ++j) {
+          verticesarray[q * 3 + j] = verticesfind->second[j];
         }
       }
+          
       elementcoordinates_.insert(
           std::make_pair(elementfind->first, verticesarray));
-    } else {
     }
   }
+  std::cout << "The coordinates for vertices of each element have been stored.\n";
 }
 
 void GMSH::compute_material_points() {
@@ -246,7 +218,7 @@ void GMSH::compute_material_points() {
           new Point<3>(coordinatesfind->first, pointsarray));
     }
   }
-    std::cout << "Number of material points: " << materialpoints_.size() << '\n';
+    std::cout << "Number of Material Points: " << materialpoints_.size() << '\n';
 }
 //! Compute stresses
 void GMSH::compute_stresses() {
