@@ -16,7 +16,9 @@ int main(int argc, char** argv) {
     std::unique_ptr<IO> io(new IO(argv[1]));
 
     //! Mesh handler
-    std::unique_ptr<GMSH> mesh(new GMSH());
+    //! \Param[in] Tdim = Dimension, Tvert = n vertices in element, Tcoord =
+    //! Tdim*Tvert
+    std::unique_ptr<GMSH<3, 4, 12>> mesh(new GMSH<3, 4, 12>());
 
     //! Read mesh and compute material points & stresses
     mesh->read_vertices(io->mesh_file_name());
