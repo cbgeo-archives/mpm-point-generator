@@ -28,24 +28,22 @@ void GMSH::read_vertices(const std::string& filename) {
     getline(infile, line);
 
     //! Read vertex coordinates & id
-    for (int i = 0; i < nvertices; ++i) {
+    for (unsigned i = 0; i < nvertices; ++i) {
       std::getline(infile, line);
       std::istringstream istream(line);
 
       if (line.find('#') == std::string::npos && line != "") {
         //! Coordinates of vertex
         std::array<double, ndimension> vertex;
-        
+
         istream >> vertid;
         istream >> vertex.at(0) >> vertex.at(1) >> vertex.at(2);
-
-        vertices_.emplace_back(new Point<ndimension>(vertid, vertex));
+        vertices_.insert(std::make_pair(vertid, vertex));
       }
     }
     infile.close();
   }
   std::cout << "Number of Vertices: " << vertices_.size() << '\n';
-  nvertices_ = vertices_.size();
 }
 
 //! Read GMSH elements
@@ -66,9 +64,13 @@ void GMSH::read_elements(const std::string& filename) {
 
   const unsigned toplines = 4;
   const unsigned ndimension = 3;
+  // specify element type 4 = tetrahedral
+  const unsigned element_type = 4;
+  // specify element vertices 4 = tetrahedral
+  const unsigned elementvertices = 4;
 
   //! Array to store vertices coordinates
-  std::array<double, ndimension> elementarray;
+  std::array<double, elementvertices> elementarray;
 
   std::fstream infile;
   infile.open(filename, std::ios::in);
@@ -109,23 +111,107 @@ void GMSH::read_elements(const std::string& filename) {
         istream >> elementry;
 
         //! \brief Check element type
-        //! \details If element type not == to Tdim, skip element
-        if (elementtype != ndimension) {
+        //! \details If element type not == to specified element_type, skip
+        //! element
+        if (elementtype != element_type) {
           istream >> line;
         } else {
           istream >> elementarray.at(0) >> elementarray.at(1) >>
               elementarray.at(2) >> elementarray.at(3);
-          elements_.emplace_back(
-              new Point<ndimension>(elementid, elementarray));
+
+          elements_.insert(std::make_pair(elementid, elementarray));
         }
       }
     }
     infile.close();
   }
-
   std::cout << "Number of Elements: " << elements_.size() << '\n';
+
+  //! Get the coordinates for each vertex of each element
+  GMSH::store_element_vertices();
 }
 
+void GMSH::store_element_vertices() {
+
+  //! Length of coordinate array
+  const unsigned ncoordinates = 12;
+  //! Number of vertices in element
+  const unsigned n_vertices = 4;
+  const unsigned firstelement = elements_.begin()->first;
+  const unsigned lastelement = elements_.rbegin()->first;
+
+  std::map<double, std::array<double, 4>>::iterator elementfind;
+  std::map<double, std::array<double, 3>>::iterator verticesfind;
+
+  std::array<double, n_vertices> elementkeyvalues;
+  std::array<double, ncoordinates> verticesarray;
+
+  //! Iterate through element_
+  for (unsigned q = firstelement; q <= lastelement; ++q) {
+    elementfind = elements_.find(q);
+    if (elementfind != elements_.end()) {
+
+      //! In each element, iterate to get vertices id's of the element
+      for (unsigned j = 0; j <= 3; ++j) {
+        elementkeyvalues[j] = elementfind->second[j];
+      }
+      //! Iterate through the vertices to get coordinates (4 for tetrahedral)
+      for (unsigned k = 0; k <= 3; ++k) {
+        //! Get the vertex wanted from the id
+        verticesfind = vertices_.find(elementkeyvalues[k]);
+        //! For each vertex, store the coordinates
+        //! j = 0 -> [X], j = 1 -> [Y], j = 2 -> [Z]
+        for (unsigned l = 0; l <= 2; ++l) {
+          verticesarray[k * 3 + l] = verticesfind->second[l];
+        }
+      }
+
+      elementcoordinates_.insert(
+          std::make_pair(elementfind->first, verticesarray));
+    }
+  }
+  std::cout
+      << "The coordinates for vertices of each element have been stored.\n";
+}
+
+void GMSH::compute_material_points() {
+  //! Length of coordinate array
+  const unsigned ncoordinates = 12;
+  //! Number of vertices in element
+  const unsigned n_vertices = 4;
+  const unsigned ndimensions = 3;
+  unsigned arrayposition = 0;
+
+  std::array<double, ndimensions> pointsarray;
+  std::map<double, std::array<double, ncoordinates>>::iterator coordinatesfind;
+
+  const unsigned firstelementcoord = elementcoordinates_.begin()->first;
+  const unsigned lastelementcoord = elementcoordinates_.rbegin()->first;
+
+  for (unsigned t = firstelementcoord; t < lastelementcoord + 1; ++t) {
+    coordinatesfind = elementcoordinates_.find(t);
+    if (coordinatesfind != elementcoordinates_.end()) {
+      //! Store coordinates in 3x4 matrix
+      Eigen::MatrixXd m(3, 4);
+      for (unsigned i = 0; i <= 3; ++i) {
+        for (unsigned j = 0; j <= 2; ++j) {
+          arrayposition = (i * 3) + j;
+          m(j, i) = coordinatesfind->second[arrayposition];
+        }
+      }
+      // Centroid test
+      //++++++++++++++++++++++++++++++++++++++
+      pointsarray[0] = 0.25 * (m(0, 0) + m(0, 1) + m(0, 2) + m(0, 3));
+      pointsarray[1] = 0.25 * (m(1, 0) + m(1, 1) + m(1, 2) + m(1, 3));
+      pointsarray[2] = 0.25 * (m(2, 0) + m(2, 1) + m(2, 2) + m(2, 3));
+      //++++++++++++++++++++++++++++++++++++++
+
+      materialpoints_.emplace_back(
+          new Point<3>(coordinatesfind->first, pointsarray));
+    }
+  }
+  std::cout << "Number of Material Points: " << materialpoints_.size() << '\n';
+}
 //! Compute stresses
 void GMSH::compute_stresses() {
 
@@ -138,7 +224,7 @@ void GMSH::compute_stresses() {
 
   //! Loop through the points to get vertical and horizontal stresses
   //! Note that tau (shear stress) is assumed 0
-  for (const auto& point : vertices_) {
+  for (const auto& point : materialpoints_) {
     ver_stress =
         conv_factor * (-(max_height - point->coordinates().at(2))) * density;
     hor_stress = ver_stress * k0;
@@ -146,5 +232,5 @@ void GMSH::compute_stresses() {
     stress_.emplace_back(stress);
   }
 
-  std::cout << "Compute initial stresses for material points.\n";
+  std::cout << "Initial stresses for material points computed.\n";
 }

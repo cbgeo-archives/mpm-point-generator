@@ -18,12 +18,13 @@ int main(int argc, char** argv) {
     //! Mesh handler
     std::unique_ptr<GMSH> mesh(new GMSH());
 
-    //! Read mesh and compute stresses
+    //! Read mesh and compute material points & stresses
     mesh->read_vertices(io->mesh_file_name());
+    mesh->read_elements(io->mesh_file_name());
+    mesh->compute_material_points();
     mesh->compute_stresses();
-
-    //! Write vertices and stresses
-    io->write_vertices(mesh->vertices());
+    //! Write material points and stresses
+    io->write_vertices(mesh->material_points());
     io->write_stresses(mesh->stress());
 
   } catch (std::exception& except) {

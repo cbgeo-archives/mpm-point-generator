@@ -63,3 +63,8 @@ add_coverage(mpm_point_generator_test)
 
 
 install(TARGETS mpm_point_generator mpm_point_generator_test RUNTIME DESTINATION bin)
+
+# Eigen
+find_package(Eigen3 REQUIRED)
+include_directories(${EIGEN3_INCLUDE_DIR})
+option(EIGEN3_HEADER_PATH "path to eigen3 header files,  command line option" "")
