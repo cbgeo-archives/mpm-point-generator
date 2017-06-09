@@ -6,7 +6,7 @@ void IO::write_vertices(
   //! Output vertices file
   std::fstream vertices_file;
   vertices_file.open(vertices_filename_, std::ios::out);
-  
+
   if (vertices_file.is_open()) {
     //! Write the total number of vertices
     vertices_file << vertices.size() << "\n";
@@ -24,11 +24,11 @@ void IO::write_vertices(
     vertices_file.close();
   }
 
-  std::cout << "Wrote material points id and coordinates\n";
+  std::cout << "Wrote material point coordinates\n";
 }
 
 //! \brief Write initial stresses of material points
-//! \param[in[ stresses Initial stress of material points
+//! \param[in] stresses Initial stress of material points
 void IO::write_stresses(const std::vector<std::array<double, 6>>& stresses) {
 
   //! Output stress file
@@ -45,7 +45,7 @@ void IO::write_stresses(const std::vector<std::array<double, 6>>& stresses) {
     for (const auto& stress : stresses) {
       stress_file.setf(std::ios::fixed, std::ios::floatfield);
       for (double stress_component : stress) {
-        stress_file << stress_component << '\t';
+        stress_file << stress_component << "\t";
       }
       stress_file << "\n";
     }

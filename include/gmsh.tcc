@@ -7,9 +7,12 @@ void GMSH::read_vertices(const std::string& filename) {
   const unsigned toplines = 4;
   const unsigned ndimension = 3;
 
+<<<<<<< HEAD
+=======
   //! Vertices id
-  unsigned vertid;
+  double vertid;
 
+>>>>>>> b5070a96d5cc9fb391999dcdd857ecdb93babc75
   std::fstream infile;
   infile.open(filename, std::ios::in);
 
@@ -27,25 +30,44 @@ void GMSH::read_vertices(const std::string& filename) {
     infile >> nvertices;
     getline(infile, line);
 
+    //! Initialize two variables for the loop
+    std::array<double, ndimension> coord;
+    unsigned vertid = 0;
+
     //! Read vertex coordinates & id
-    for (int i = 0; i < nvertices; ++i) {
+    for (unsigned i = 0; i < nvertices; ++i) {
       std::getline(infile, line);
       std::istringstream istream(line);
 
       if (line.find('#') == std::string::npos && line != "") {
         //! Coordinates of vertex
+<<<<<<< HEAD
+=======
         std::array<double, ndimension> vertex;
-        
-        istream >> vertid;
-        istream >> vertex.at(0) >> vertex.at(1) >> vertex.at(2);
 
+>>>>>>> b5070a96d5cc9fb391999dcdd857ecdb93babc75
+        istream >> vertid;
+        istream >> coord.at(0) >> coord.at(1) >> coord.at(2);
+
+        //! change from 1 base to 0 base
+        vertid -= 1;
+
+<<<<<<< HEAD
+        //! Store to member variables
+        vertid_.push_back(vertid);
+        coords_.push_back(coord);
+=======
         vertices_.emplace_back(new Point<ndimension>(vertid, vertex));
+
+        verticesmap_.insert(std::make_pair(vertid, vertex));
+>>>>>>> b5070a96d5cc9fb391999dcdd857ecdb93babc75
       }
     }
     infile.close();
   }
-  std::cout << "Number of Vertices: " << vertices_.size() << '\n';
-  nvertices_ = vertices_.size();
+  std::cout << "Number of Vertices: " << coords_.size() << '\n';
+  nvertices_ = coords_.size();
+  std::cout << "Read vertices.\n";
 }
 
 //! Read GMSH elements
@@ -66,9 +88,13 @@ void GMSH::read_elements(const std::string& filename) {
 
   const unsigned toplines = 4;
   const unsigned ndimension = 3;
+  // specify element type 4 = tetrahedral
+  const unsigned elementype_ = 4;
+  // specify element vertices 4 = tetrahedral
+  const unsigned elementvertices = 4;
 
   //! Array to store vertices coordinates
-  std::array<double, ndimension> elementarray;
+  std::array<double, elementvertices> elementarray;
 
   std::fstream infile;
   infile.open(filename, std::ios::in);
@@ -109,42 +135,68 @@ void GMSH::read_elements(const std::string& filename) {
         istream >> elementry;
 
         //! \brief Check element type
+<<<<<<< HEAD
         //! \details If element type not == to Tdim, skip element
-        if (elementtype != ndimension) {
+        // if (elementtype != ndimension) {
+        //   istream >> line;
+        // } else {
+        //   istream >> elementarray.at(0) >> elementarray.at(1) >>
+        //       elementarray.at(2) >> elementarray.at(3);
+        //   elements_.emplace_back(
+        //       new Point<ndimension>(elementid, elementarray));
+        // }
+=======
+        //! \details If element type not == to specified elementtype_, skip
+        //! element
+        if (elementtype != elementype_) {
           istream >> line;
         } else {
           istream >> elementarray.at(0) >> elementarray.at(1) >>
               elementarray.at(2) >> elementarray.at(3);
           elements_.emplace_back(
-              new Point<ndimension>(elementid, elementarray));
+              new Point<elementvertices>(elementid, elementarray));
+
+          elementmap_.insert(std::make_pair(elementid, elementarray));
         }
+>>>>>>> b5070a96d5cc9fb391999dcdd857ecdb93babc75
       }
     }
     infile.close();
   }
-
   std::cout << "Number of Elements: " << elements_.size() << '\n';
 }
 
-//! Compute stresses
+//! \brief compute initial stress from points
 void GMSH::compute_stresses() {
 
-  double density = 22;
-  double k0 = 0.5;
-  double max_height = 3;
-  double conv_factor = 10;
+  const double density = 22;
+  const double k0 = 0.5;
+  const double max_height = 3;
+  const double conv_factor = 10;
   double ver_stress;
   double hor_stress;
 
   //! Loop through the points to get vertical and horizontal stresses
   //! Note that tau (shear stress) is assumed 0
-  for (const auto& point : vertices_) {
-    ver_stress =
-        conv_factor * (-(max_height - point->coordinates().at(2))) * density;
+  for (const auto& point : coords_) {
+    ver_stress = conv_factor * (-(max_height - point.at(2))) * density;
     hor_stress = ver_stress * k0;
-    std::array<double, 6> stress{hor_stress, hor_stress, ver_stress, 0, 0, 0};
-    stress_.emplace_back(stress);
+    stress_.push_back(
+        std::array<double, 6>{hor_stress, hor_stress, ver_stress, 0, 0, 0});
   }
 
-  std::cout << "Compute initial stresses for material points.\n";
+  std::cout << "Computed initial stresses.\n";
+}
+
+//! \brief generate material points
+void GMSH::generate_points() {
+
+  const unsigned ndimension = 3;
+
+  for (unsigned i = 0; i < nvertices_; ++i) {
+    points_.emplace_back(
+        new Point<ndimension>(vertid_.at(i), coords_.at(i), stress_.at(i)));
+  }
+
+  std::cout << "Generated material points.\n";
 }
