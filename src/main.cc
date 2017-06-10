@@ -3,6 +3,7 @@
 
 #include "gmsh.h"
 #include "io.h"
+#include "mesh.h"
 
 int main(int argc, char** argv) {
   try {
@@ -17,7 +18,8 @@ int main(int argc, char** argv) {
 
     //! Mesh handler
     //! \Param[in] Tdim = Dimension, Tvert = n vertices in element
-    std::unique_ptr<GMSH<3, 4>> mesh(new GMSH<3, 4>());
+    GMSH<3, 4> gmsh;
+    Mesh<3, 4>* mesh = &gmsh;
 
     //! Read mesh and compute material points & stresses
     mesh->read_vertices(io->mesh_file_name());

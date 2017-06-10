@@ -16,7 +16,7 @@
 
 //! \brief Generate Material Points from GMSH file
 template <unsigned Tdim, unsigned Tvertices>
-class GMSH : public Mesh {
+class GMSH : public Mesh<Tdim, Tvertices> {
 
  public:
   //! Read vertices in GMSH
@@ -35,43 +35,27 @@ class GMSH : public Mesh {
   void compute_stresses();
 
   //! call total number of vertices generated
-  unsigned nvertices() const { return nvertices_; }
+  unsigned nvertices() const { return Mesh<Tdim, Tvertices>::nvertices_; }
 
   //! Return a vector of material points
   std::vector<std::shared_ptr<Point<Tdim>>> material_points() {
-    return materialpoints_;
+    return Mesh<Tdim, Tvertices>::materialpoints_;
   }
 
   //! Return a map of mesh element vertices
-  std::map<double, std::array<unsigned, Tdim>> vertices() const {
-    return vertices_;
+  std::map<unsigned, std::array<double, Tdim>> vertices() const {
+    return Mesh<Tdim, Tvertices>::vertices_;
   }
 
   //! Return a map of element id & vertices id
-  std::map<double, std::array<unsigned, Tvertices>> elements() const {
-    return elements_;
+  std::map<unsigned, std::array<double, Tvertices>> elements() const {
+    return Mesh<Tdim, Tvertices>::elements_;
   }
 
   //! Return a vector of stresses
-  std::vector<std::array<double, 6>> stress() const { return stress_; }
-
- private:
-  //! Total number of vertices
-  unsigned nvertices_;
-
-  std::vector<std::shared_ptr<Point<Tdim>>> materialpoints_;
-
-  //! Stress vector in Voigt Notation
-  //! $\sigma_{xx}$ $\sigma_{yy}$ $\sigma_{zz}$
-  //! $\tau_{yz}$ $\tau_{zx}$ $\tau_{xy}$
-  std::vector<std::array<double, 6>> stress_;
-
-  //! Map to store id and vertices coordinates
-  std::map<double, std::array<double, Tdim>> vertices_;
-
-  //! Map to store element ID and vertices ID
-  std::map<double, std::array<double, Tvertices>> elements_;
-  std::map<double, std::array<double, Tdim * Tvertices>> elementcoordinates_;
+  std::vector<std::array<double, 6>> stress() const {
+    return Mesh<Tdim, Tvertices>::stress_;
+  }
 };
 
 #include "gmsh.tcc"
