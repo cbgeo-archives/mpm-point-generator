@@ -1,6 +1,6 @@
 //! Read vertex id and coordinates in GMSH
+//! \tparam Tdim Dimension, Tvert Number of vertices in element
 //! \param[in] filename Input GMSH file
-//! \Param[in] Tdim = Dimension, Tvert = n vertices in element
 template <unsigned Tdim, unsigned Tvertices>
 void GMSH<Tdim, Tvertices>::read_vertices(const std::string& filename) {
 
@@ -49,8 +49,8 @@ void GMSH<Tdim, Tvertices>::read_vertices(const std::string& filename) {
 }
 
 //! Read GMSH elements
+//! \tparam Tdim Dimension, Tvert Number of vertices in element
 //! \param[in] filename Input GMSH file
-//! \Param[in] Tdim = Dimension, Tvert = n vertices in element
 template <unsigned Tdim, unsigned Tvertices>
 void GMSH<Tdim, Tvertices>::read_elements(const std::string& filename) {
 
@@ -109,9 +109,7 @@ void GMSH<Tdim, Tvertices>::read_elements(const std::string& filename) {
         istream >> physical;
         istream >> elementry;
 
-        //! \brief Check element type
-        //! \details If element type not == to specified Tvertices, skip
-        //! element
+        //! If element type not == to specified Tvertices, skip element
         if (elementtype != Tvertices) {
           istream >> line;
         } else {
@@ -133,7 +131,7 @@ void GMSH<Tdim, Tvertices>::read_elements(const std::string& filename) {
 }
 
 //! \brief store each coordinates of an element
-//! \Param[in] Tdim = Dimension, Tvert = n vertices in element
+//! \tparam Tdim Dimension, Tvert Number of vertices in element
 template <unsigned Tdim, unsigned Tvertices>
 void GMSH<Tdim, Tvertices>::store_element_vertices() {
 
@@ -144,7 +142,6 @@ void GMSH<Tdim, Tvertices>::store_element_vertices() {
       elementfind;
   typename std::map<unsigned, std::array<double, Tdim>>::iterator verticesfind;
 
-  std::array<double, Tvertices> elementkeyvalues;
   std::array<double, Tdim * Tvertices> verticesarray;
 
   //! Iterate through element_
@@ -153,18 +150,15 @@ void GMSH<Tdim, Tvertices>::store_element_vertices() {
     if (elementfind != Mesh<Tdim, Tvertices>::elements_.end()) {
 
       //! In each element, iterate to get vertices id's of the element
-      for (unsigned j = 0; j < 4; ++j) {
-        elementkeyvalues[j] = elementfind->second[j];
-      }
       //! Iterate through the vertices to get coordinates (4 for tetrahedral)
-      for (unsigned j = 0; j < 4; ++j) {
+      for (unsigned j = 0; j < Tvertices; ++j) {
         //! Get the vertex wanted from the id
         verticesfind =
-            Mesh<Tdim, Tvertices>::vertices_.find(elementkeyvalues[j]);
+            Mesh<Tdim, Tvertices>::vertices_.find(elementfind->second[j]);
         //! For each vertex, store the coordinates
         //! k = 0 -> [X], k = 1 -> [Y], k = 2 -> [Z]
-        for (unsigned k = 0; k <= 2; ++k) {
-          verticesarray[j * 3 + k] = verticesfind->second[k];
+        for (unsigned k = 0; k < Tdim; ++k) {
+          verticesarray[j * Tdim + k] = verticesfind->second[k];
         }
       }
 
@@ -177,7 +171,7 @@ void GMSH<Tdim, Tvertices>::store_element_vertices() {
 }
 
 //! \brief generate material points from elements
-//! \Param[in] Tdim = Dimension, Tvert = n vertices in element
+//! \tparam Tdim Dimension, Tvert Number of vertices in element
 template <unsigned Tdim, unsigned Tvertices>
 void GMSH<Tdim, Tvertices>::compute_material_points() {
 
@@ -195,10 +189,10 @@ void GMSH<Tdim, Tvertices>::compute_material_points() {
     coordinatesfind = Mesh<Tdim, Tvertices>::elementcoordinates_.find(t);
     if (coordinatesfind != Mesh<Tdim, Tvertices>::elementcoordinates_.end()) {
       //! Store coordinates in 3x4 matrix
-      Eigen::MatrixXd m(3, 4);
-      for (unsigned i = 0; i < 3; ++i) {
-        for (unsigned j = 0; j < 4; ++j) {
-          arrayposition = (j * 3) + i;
+      Eigen::MatrixXd m(Tdim, Tvertices);
+      for (unsigned i = 0; i < Tdim; ++i) {
+        for (unsigned j = 0; j < Tvertices; ++j) {
+          arrayposition = (j * Tdim) + i;
           m(i, j) = coordinatesfind->second[arrayposition];
         }
       }
@@ -208,8 +202,8 @@ void GMSH<Tdim, Tvertices>::compute_material_points() {
 
       //! Centroid test
       //++++++++++++++++++++++++++++++++++++++
-      for (unsigned i = 0; i < 3; ++i) {
-        for (unsigned j = 0; j < 4; j++) {
+      for (unsigned i = 0; i < Tdim; ++i) {
+        for (unsigned j = 0; j < Tvertices; j++) {
           pointsarray[i] += 0.25 * m(i, j);
         }
       }
@@ -224,7 +218,7 @@ void GMSH<Tdim, Tvertices>::compute_material_points() {
 }
 
 //! \brief Compute stresses
-//! \Param[in] Tdim = Dimension, Tvert = n vertices in element
+//! \tparam Tdim Dimension, Tvert Number of vertices in element
 template <unsigned Tdim, unsigned Tvertices>
 void GMSH<Tdim, Tvertices>::compute_stresses() {
 
@@ -232,7 +226,6 @@ void GMSH<Tdim, Tvertices>::compute_stresses() {
   const double k0 = 0.5;
   const double max_height = 3;
   const double conv_factor = 10;
-  const unsigned stress_comp = 6;
   double ver_stress;
   double hor_stress;
 
@@ -242,8 +235,8 @@ void GMSH<Tdim, Tvertices>::compute_stresses() {
     ver_stress =
         conv_factor * (-(max_height - point->coordinates().at(2))) * density;
     hor_stress = ver_stress * k0;
-    std::array<double, stress_comp> stress{hor_stress, hor_stress, ver_stress,
-                                           0,          0,          0};
+    std::array<double, Tdim * 2> stress{hor_stress, hor_stress, ver_stress,
+                                        0,          0,          0};
     Mesh<Tdim, Tvertices>::stress_.emplace_back(stress);
   }
 

@@ -16,10 +16,6 @@ template <unsigned Tdim, unsigned Tvertices>
 class Mesh {
 
  public:
-  //! \brief constructor for a mesh class
-  // Mesh() {
-  // };
-
   //! Read vertices in GMSH
   virtual void read_vertices(const std::string& filename) = 0;
 

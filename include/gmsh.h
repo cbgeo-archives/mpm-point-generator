@@ -53,7 +53,7 @@ class GMSH : public Mesh<Tdim, Tvertices> {
   }
 
   //! Return a vector of stresses
-  std::vector<std::array<double, 6>> stress() const {
+  std::vector<std::array<double, Tdim * 2>> stress() const {
     return Mesh<Tdim, Tvertices>::stress_;
   }
 };
