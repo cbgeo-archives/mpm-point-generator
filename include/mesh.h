@@ -1,76 +1,47 @@
 #ifndef MPM_POINT_GEN_MESH_H_
 #define MPM_POINT_GEN_MESH_H_
 
+#include "point.h"
 #include <array>
 #include <fstream>
 #include <iostream>
-#include <map>
 #include <memory>
 #include <sstream>
 #include <vector>
 
-#include "point.h"
-
 //! \brief Abstract class for handling mesh
-template <unsigned Tdim, unsigned Tvertices>
+template <unsigned Tdim>
 class Mesh {
 
  public:
-  //! Read vertices in GMSH
+  //! Read vertices from mesh
   virtual void read_vertices(const std::string& filename) = 0;
 
-  //! Read elements in GMSH
+  //!
   virtual void read_elements(const std::string& filename) = 0;
 
-  //! Store element id and vertices coordinates as map
-  virtual void store_element_vertices() = 0;
-
-  //! Compute material points from element coordinate map
+  //!
   virtual void compute_material_points() = 0;
 
-  //! Compute stresses
+  //! Compute initial stresses for material points
   virtual void compute_stresses() = 0;
 
-  //! call total number of vertices generated
-  virtual unsigned nvertices() const { return 0; }
-
   //! Return a vector of material points
-  virtual std::vector<std::shared_ptr<Point<Tdim>>> material_points() {
-    return std::vector<std::shared_ptr<Point<Tdim>>>{};
-  }
-
-  //! Return a map of mesh element vertices
-  virtual std::map<unsigned, std::array<double, Tdim>> vertices() const {
-    return std::map<unsigned, std::array<double, Tdim>>{};
-  }
-
-  //! Return a map of element id & vertices id
-  virtual std::map<unsigned, std::array<double, Tvertices>> elements() const {
-    return std::map<unsigned, std::array<double, Tvertices>>{};
+  std::vector<std::shared_ptr<Point<Tdim>>> write_material_points() {
+    return materialpoints_;
   }
 
   //! Return a vector of stresses
-  virtual std::vector<std::array<double, 6>> stress() const {
-    return std::vector<std::array<double, 6>>{};
+  std::vector<std::array<double, Tdim * 2>> write_stresses() const {
+    return stress_;
   }
 
- protected:
-  //! Total number of vertices
-  unsigned nvertices_;
-
+  //! Container for storing material points
   std::vector<std::shared_ptr<Point<Tdim>>> materialpoints_;
 
-  //! Stress vector in Voigt Notation
-  //! $\sigma_{xx}$ $\sigma_{yy}$ $\sigma_{zz}$
-  //! $\tau_{yz}$ $\tau_{zx}$ $\tau_{xy}$
-  std::vector<std::array<double, 6>> stress_;
+  //! Container for storing stresses
+  std::vector<std::array<double, Tdim * 2>> stress_;
 
-  //! Map to store id and vertices coordinates
-  std::map<unsigned, std::array<double, Tdim>> vertices_;
-
-  //! Map to store element ID and vertices ID
-  std::map<unsigned, std::array<double, Tvertices>> elements_;
-
-  std::map<unsigned, std::array<double, Tdim * Tvertices>> elementcoordinates_;
+ private:
 };
 #endif  // MPM_POINT_GEN_MESH_H_

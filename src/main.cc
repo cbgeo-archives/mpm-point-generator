@@ -3,7 +3,6 @@
 
 #include "gmsh.h"
 #include "io.h"
-#include "mesh.h"
 
 int main(int argc, char** argv) {
   try {
@@ -14,22 +13,21 @@ int main(int argc, char** argv) {
     }
 
     //! IO handler
-    std::unique_ptr<IO> io(new IO(argv[1]));
+    std::unique_ptr<IO<3>> io(new IO<3>(argv[1]));
 
     //! Mesh handler
     //! \Param[in] Tdim = Dimension, Tvert = n vertices in element
-    GMSH<3, 4> gmsh;
-    Mesh<3, 4>* mesh = &gmsh;
+
+    std::unique_ptr<Mesh<3>> mesh(new GMSH<3, 4>());
 
     //! Read mesh and compute material points & stresses
     mesh->read_vertices(io->mesh_file_name());
     mesh->read_elements(io->mesh_file_name());
     mesh->compute_material_points();
     mesh->compute_stresses();
-
     //! Write material points and stresses
-    io->write_vertices(mesh->material_points());
-    io->write_stresses(mesh->stress());
+    io->write_material_points(mesh->write_material_points());
+    io->write_stresses(mesh->write_stresses());
 
   } catch (std::exception& except) {
     std::cout << "Caught exception: " << except.what() << '\n';

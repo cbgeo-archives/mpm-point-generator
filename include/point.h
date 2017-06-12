@@ -4,7 +4,7 @@
 #include <array>
 
 //! \brief Point class to store vertex coordinates & id
-//! \tparam Tdim Dimension
+//! \tparam Tdim dimension
 template <unsigned Tdim>
 class Point {
  public:
