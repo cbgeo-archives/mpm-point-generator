@@ -18,7 +18,7 @@ int main(int argc, char** argv) {
     //! Mesh handler
     //! \Param[in] Tdim = Dimension, Tvert = n vertices in element
 
-    std::unique_ptr<Mesh<3>> mesh(new GMSH<3, 4>());
+    std::unique_ptr<Mesh<3,4>> mesh(new GMSH<3, 4>());
 
     //! Read mesh and compute material points & stresses
     mesh->read_vertices(io->mesh_file_name());
@@ -26,8 +26,8 @@ int main(int argc, char** argv) {
     mesh->compute_material_points();
     mesh->compute_stresses();
     //! Write material points and stresses
-    io->write_material_points(mesh->write_material_points());
-    io->write_stresses(mesh->write_stresses());
+    io->write_material_points(mesh->material_points());
+    io->write_stresses(mesh->stresses());
 
   } catch (std::exception& except) {
     std::cout << "Caught exception: " << except.what() << '\n';

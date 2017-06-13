@@ -46,7 +46,6 @@ void IO<Tdim>::write_stresses(
     stress_file << stresses.size() << "\n";
 
     //! Stresses in Voigt Notation
-    // Stress needs ID too
     //! $\sigma_{xx}$ $\sigma_{yy}$ $\sigma_{zz}$
     //! $\tau_{yz}$ $\tau_{zx}$ $\tau_{xy}$
     for (const auto& stress : stresses) {

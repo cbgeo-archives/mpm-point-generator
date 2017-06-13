@@ -14,7 +14,7 @@
 
 //! \brief Generate Material Points from GMSH file
 template <unsigned Tdim, unsigned Tvertices>
-class GMSH : public Mesh<Tdim> {
+class GMSH : public Mesh<Tdim,Tvertices> {
 
  public:
   //! Read vertices in GMSH
@@ -35,34 +35,17 @@ class GMSH : public Mesh<Tdim> {
   //! call total number of vertices generated
   unsigned nvertices() const { return nvertices_; }
 
-  //! Return a map of mesh element vertices
-  std::map<unsigned , std::array<unsigned, Tdim>> vertices() const {
-    return vertices_;
-  }
-
-  //! Return a map of element id & vertices id
-  std::map<unsigned, std::array<unsigned, Tvertices>> elements() const {
-    return elements_;
-  }
-
-  //! Return a vector of stresses
-  std::vector<std::array<double, Tdim * 2>> stress() const { return stress_; }
 
  private:
-  //! Number of vertices in total
+  //! Total number of vertices
   unsigned nvertices_;
 
-  //! Stress vector in Voigt Notation
-  //! $\sigma_{xx}$ $\sigma_{yy}$ $\sigma_{zz}$ $\tau_{yz}$ $\tau_{zx}$
-  //! $\tau_{xy}$
-  std::vector<std::array<double, Tdim * 2>> stress_;
+  using Mesh<Tdim, Tvertices>::vertices_;
+  using Mesh<Tdim, Tvertices>::elements_;
+  using Mesh<Tdim, Tvertices>::elementcoordinates_;
+  using Mesh<Tdim, Tvertices>::materialpoints_;
+  using Mesh<Tdim, Tvertices>::stress_;
 
-  //! Map to store id and vertices coordinates
-  std::map<double, std::array<double, Tdim>> vertices_;
-
-  //! Map to store element ID and vertices ID
-  std::map<double, std::array<double, Tvertices>> elements_;
-  std::map<double, std::array<double, Tdim * Tvertices>> elementcoordinates_;
 };
 
 #include "gmsh.tcc"
