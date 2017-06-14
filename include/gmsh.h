@@ -14,7 +14,7 @@
 
 //! \brief Generate Material Points from GMSH file
 template <unsigned Tdim, unsigned Tvertices>
-class GMSH : public Mesh<Tdim,Tvertices> {
+class GMSH : public Mesh<Tdim, Tvertices> {
 
  public:
   //! Read vertices in GMSH
@@ -35,7 +35,6 @@ class GMSH : public Mesh<Tdim,Tvertices> {
   //! call total number of vertices generated
   unsigned nvertices() const { return nvertices_; }
 
-
  private:
   //! Total number of vertices
   unsigned nvertices_;
@@ -45,7 +44,6 @@ class GMSH : public Mesh<Tdim,Tvertices> {
   using Mesh<Tdim, Tvertices>::elementcoordinates_;
   using Mesh<Tdim, Tvertices>::materialpoints_;
   using Mesh<Tdim, Tvertices>::stress_;
-
 };
 
 #include "gmsh.tcc"

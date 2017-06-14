@@ -5,8 +5,8 @@
 #include <array>
 #include <fstream>
 #include <iostream>
-#include <memory>
 #include <map>
+#include <memory>
 #include <sstream>
 #include <vector>
 
@@ -33,39 +33,34 @@ class Mesh {
   }
 
   //! Return a vector of stresses
-  std::vector<std::array<double, Tdim * 2>> stresses() const {
-    return stress_;
+  std::vector<std::array<double, Tdim * 2>> stresses() const { return stress_; }
+
+  //! Return a map of mesh element vertices
+  std::map<unsigned, std::array<unsigned, Tdim>> vertices() const {
+    return vertices_;
   }
 
+  //! Return a map of element id & vertices id
+  std::map<unsigned, std::array<unsigned, Tvertices>> elements() const {
+    return elements_;
+  }
 
-    //! Return a map of mesh element vertices
-    std::map<unsigned , std::array<unsigned, Tdim>> vertices() const {
-        return vertices_;
-    }
+ protected:
+  //! Stress vector in Voigt Notation
+  //! $\sigma_{xx}$ $\sigma_{yy}$ $\sigma_{zz}$ $\tau_{yz}$ $\tau_{zx}$
+  //! $\tau_{xy}$
+  std::vector<std::array<double, Tdim * 2>> stress_;
 
-    //! Return a map of element id & vertices id
-    std::map<unsigned, std::array<unsigned, Tvertices>> elements() const {
-        return elements_;
-    }
+  //! Map to store id and vertices coordinates
+  std::map<double, std::array<double, Tdim>> vertices_;
 
-protected:
+  //! Map to store element ID and vertices ID
+  std::map<double, std::array<double, Tvertices>> elements_;
 
-    //! Stress vector in Voigt Notation
-    //! $\sigma_{xx}$ $\sigma_{yy}$ $\sigma_{zz}$ $\tau_{yz}$ $\tau_{zx}$
-    //! $\tau_{xy}$
-    std::vector<std::array<double, Tdim * 2>> stress_;
-
-    //! Map to store id and vertices coordinates
-    std::map<double, std::array<double, Tdim>> vertices_;
-
-    //! Map to store element ID and vertices ID
-    std::map<double, std::array<double, Tvertices>> elements_;
-
-    //! Map to store element ID and vertices coordinates
-    std::map<double, std::array<double, Tdim * Tvertices>> elementcoordinates_;
+  //! Map to store element ID and vertices coordinates
+  std::map<double, std::array<double, Tdim * Tvertices>> elementcoordinates_;
 
   //! Container for storing material points
   std::vector<std::shared_ptr<Point<Tdim>>> materialpoints_;
-
 };
 #endif  // MPM_POINT_GEN_MESH_H_

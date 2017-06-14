@@ -140,7 +140,7 @@ void GMSH<Tdim, Tvertices>::store_element_vertices() {
 
   //! Iterate through element_
   for (unsigned i = firstelement; i <= lastelement; ++i) {
-     auto elementfind = elements_.find(i);
+    auto elementfind = elements_.find(i);
     if (elementfind != elements_.end()) {
 
       //! In each element, iterate to get vertices id's of the element
@@ -154,7 +154,7 @@ void GMSH<Tdim, Tvertices>::store_element_vertices() {
         //! For each vertex, store the coordinates
         //! j = 0 -> [X], j = 1 -> [Y], j = 2 -> [Z]
         for (unsigned l = 0; l < Tdim; ++l) {
-          verticesarray.at(k * Tdim + l ) = verticesfind->second[l];
+          verticesarray.at(k * Tdim + l) = verticesfind->second[l];
         }
       }
 
@@ -199,12 +199,11 @@ void GMSH<Tdim, Tvertices>::compute_material_points() {
       }
       //++++++++++++++++++++++++++++++++++++++
 
-     materialpoints_.emplace_back(
+      materialpoints_.emplace_back(
           new Point<Tdim>(coordinatesfind->first, pointsarray));
     }
   }
-  std::cout << "Number of Material Points: "
-            << materialpoints_.size() << '\n';
+  std::cout << "Number of Material Points: " << materialpoints_.size() << '\n';
 }
 //! Compute stresses
 //! \tparam Tdim Dimension, Tvert Number of vertices in element
