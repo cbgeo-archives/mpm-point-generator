@@ -17,7 +17,7 @@ ENDIF (NOT CMAKE_BUILD_TYPE)
 # GNU Specific settings
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
-  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -Wno-unused-variable -Wno-unused-parameter -Wno-missing-braces")
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -Wno-unused-variable -Wno-unused-parameter -Wno-missing-braces -Wno-misleading-indentation")
 endif()
 
 # OpenMP
@@ -30,6 +30,10 @@ endif()
 
 # CMake Modules
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
+
+# Eigen
+find_package(Eigen3 REQUIRED)
+include_directories(${EIGEN3_INCLUDE_DIR})
 
 # Include directories
 include_directories(
@@ -50,6 +54,9 @@ SET(test_src
 )
 add_executable(mpm_point_generator_test ${test_src})
 
+option(EIGEN3_HEADER_PATH "path to eigen3 header files,  command line option" "")
+
+
 add_test(NAME mpm_point_generator_test COMMAND $<TARGET_FILE:mpm_point_generator_test>)
 include(CTest)
 
@@ -63,8 +70,3 @@ add_coverage(mpm_point_generator_test)
 
 
 install(TARGETS mpm_point_generator mpm_point_generator_test RUNTIME DESTINATION bin)
-
-# Eigen
-find_package(Eigen3 REQUIRED)
-include_directories(${EIGEN3_INCLUDE_DIR})
-option(EIGEN3_HEADER_PATH "path to eigen3 header files,  command line option" "")

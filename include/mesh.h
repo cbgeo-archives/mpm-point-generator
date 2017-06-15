@@ -1,7 +1,6 @@
 #ifndef MPM_POINT_GEN_MESH_H_
 #define MPM_POINT_GEN_MESH_H_
 
-#include "point.h"
 #include <array>
 #include <fstream>
 #include <iostream>
@@ -9,6 +8,8 @@
 #include <memory>
 #include <sstream>
 #include <vector>
+
+#include "point.h"
 
 //! \brief Abstract class for handling mesh
 template <unsigned Tdim, unsigned Tvertices>
