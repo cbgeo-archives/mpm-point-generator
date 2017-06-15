@@ -17,10 +17,7 @@ class Mesh {
 
  public:
   //! Read vertices from mesh
-  virtual void read_vertices(const std::string& filename) = 0;
-
-  //!
-  virtual void read_elements(const std::string& filename) = 0;
+  virtual void read_mesh(const std::string& filename) = 0;
 
   //!
   virtual void compute_material_points() = 0;

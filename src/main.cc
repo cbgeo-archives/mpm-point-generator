@@ -21,8 +21,7 @@ int main(int argc, char** argv) {
     std::unique_ptr<Mesh<3, 4>> mesh(new GMSH<3, 4>());
 
     //! Read mesh and compute material points & stresses
-    mesh->read_vertices(io->mesh_file_name());
-    mesh->read_elements(io->mesh_file_name());
+    mesh->read_mesh(io->mesh_file_name());
     mesh->compute_material_points();
     mesh->compute_stresses();
     //! Write material points and stresses
