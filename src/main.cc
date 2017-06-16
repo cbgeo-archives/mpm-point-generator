@@ -13,18 +13,21 @@ int main(int argc, char** argv) {
     }
 
     //! IO handler
-    std::unique_ptr<IO> io(new IO(argv[1]));
+    std::unique_ptr<IO<3>> io(new IO<3>(argv[1]));
 
     //! Mesh handler
-    std::unique_ptr<GMSH> mesh(new GMSH());
+    std::unique_ptr<Mesh<3, 4>> mesh(new GMSH<3, 4>());
 
-    //! Read mesh and compute stresses
-    mesh->read_vertices(io->mesh_file_name());
+    //! Read mesh
+    mesh->read_mesh(io->mesh_file_name());
+
+    //! Compute material points & stresses
+    mesh->compute_material_points();
     mesh->compute_stresses();
-
-    //! Write vertices and stresses
-    io->write_vertices(mesh->vertices());
-    io->write_stresses(mesh->stress());
+    
+    //! Write material points and stresses
+    io->write_material_points(mesh->material_points());
+    io->write_stresses(mesh->stresses());
 
   } catch (std::exception& except) {
     std::cout << "Caught exception: " << except.what() << '\n';

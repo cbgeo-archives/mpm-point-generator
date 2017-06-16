@@ -5,50 +5,51 @@
 #include <fstream>
 #include <iostream>
 #include <limits>
+#include <map>
 #include <memory>
 #include <vector>
+
+#include <Eigen/Dense>
 
 #include "mesh.h"
 #include "point.h"
 
 //! \brief Generate Material Points from GMSH file
-class GMSH : public Mesh {
+template <unsigned Tdim, unsigned Tvertices>
+class GMSH : public Mesh<Tdim, Tvertices> {
 
  public:
+  //! Read GMSH file
+  void read_mesh(const std::string& filename);
+  
   //! Read vertices in GMSH
   void read_vertices(const std::string& filename);
 
   //! Read elements in GMSH
   void read_elements(const std::string& filename);
 
+  //! Store element id and vertices coordinates as map
+  void store_element_vertices();
+
+  //! Compute material points from element coordinate map
+  void compute_material_points();
+
   //! Compute stresses
   void compute_stresses();
 
-  //! call total number of vertices generated
-  unsigned nvertices() const { return nvertices_; }
-
-  //! Return a vector of vertices
-  std::vector<std::shared_ptr<Point<3>>> vertices() const { return vertices_; }
-
-  //! Return a vector of elements
-  std::vector<std::shared_ptr<Point<3>>> elements() const { return elements_; }
-
-  //! Return a vector of stresses
-  std::vector<std::array<double, 6>> stress() const { return stress_; }
-
  private:
-  //! Number of vertices
-  unsigned nvertices_;
-
-  //! Vector of vertices 
-  std::vector<std::shared_ptr<Point<3>>> vertices_;
-
-  //! Vector of elements
-  std::vector<std::shared_ptr<Point<3>>> elements_;
-
-  //! Stress vector in Voigt Notation
-  //! $\sigma_{xx}$ $\sigma_{yy}$ $\sigma_{zz}$ $\tau_{yz}$ $\tau_{zx}$ $\tau_{xy}$
-  std::vector<std::array<double, 6>> stress_;
+  //! Total number of vertices
+  using Mesh<Tdim, Tvertices>::nvertices_;
+  //! Map of vertex id to its coordinates
+  using Mesh<Tdim, Tvertices>::vertices_;
+  //! Map of elemnt id to its vertices
+  using Mesh<Tdim, Tvertices>::elements_;
+  //! Map of element ids to vertices coordinates
+  using Mesh<Tdim, Tvertices>::elementcoordinates_;
+  //! Vector of material points
+  using Mesh<Tdim, Tvertices>::materialpoints_;
+  //! Vector of material point stresses
+  using Mesh<Tdim, Tvertices>::stress_;
 };
 
 #include "gmsh.tcc"

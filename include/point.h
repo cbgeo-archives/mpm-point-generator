@@ -4,17 +4,21 @@
 #include <array>
 
 //! \brief Point class to store vertex coordinates & id
-//! \tparam Dimension
+//! \tparam Tdim dimension
 template <unsigned Tdim>
 class Point {
  public:
-  //! \brief Constructor with id and coordinates
-  Point(unsigned id, const std::array<double, Tdim>& coord);
+  //! Constructor with id and coordinates
+  //! \param[in] id index of the vertex
+  //! \param[in] coord Coordinates of the point
+  Point(unsigned id, const std::array<double, Tdim>& coord) : id_{id} {
+    coordinates_ = coord;
+  }
 
-  //! Returns the id of the vertex
+  //! Return the id of the point
   unsigned id() const { return id_; }
 
-  //! Returns coordinates of the vertex
+  //! Return coordinates of the point
   std::array<double, Tdim> coordinates() const { return coordinates_; }
 
  private:
@@ -23,7 +27,5 @@ class Point {
   //! Coordinates
   std::array<double, Tdim> coordinates_;
 };
-
-#include "point.tcc"
 
 #endif  // MPM_MESH_POINT_H_
