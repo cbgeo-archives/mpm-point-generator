@@ -34,17 +34,18 @@ class GMSH : public Mesh<Tdim, Tvertices> {
   //! Compute stresses
   void compute_stresses();
 
-  //! call total number of vertices generated
-  unsigned nvertices() const { return nvertices_; }
-
  private:
   //! Total number of vertices
-  unsigned nvertices_;
-
+  using Mesh<Tdim, Tvertices>::nvertices_;
+  //! Map of vertex id to its coordinates
   using Mesh<Tdim, Tvertices>::vertices_;
+  //! Map of elemnt id to its vertices
   using Mesh<Tdim, Tvertices>::elements_;
+  //! Map of element ids to vertices coordinates
   using Mesh<Tdim, Tvertices>::elementcoordinates_;
+  //! Vector of material points
   using Mesh<Tdim, Tvertices>::materialpoints_;
+  //! Vector of material point stresses
   using Mesh<Tdim, Tvertices>::stress_;
 };
 

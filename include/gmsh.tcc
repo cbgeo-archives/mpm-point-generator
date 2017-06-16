@@ -1,6 +1,7 @@
 //! Read vertex id and coordinates in GMSH
-//! \tparam Tdim Dimension, Tvertices Number of vertices in element
-
+//! \tparam Tdim Dimension
+//! \tparam Tvertices Number of vertices in element
+//! \param[in] filename Input mesh filename
 template <unsigned Tdim, unsigned Tvertices>
 void GMSH<Tdim, Tvertices>::read_mesh(const std::string& filename) {
 
@@ -9,7 +10,7 @@ void GMSH<Tdim, Tvertices>::read_mesh(const std::string& filename) {
   const unsigned toplines = 4;
 
   //! Vertices id
-  unsigned vertid;
+  unsigned vertid = 0;
 
   std::fstream infile;
   infile.open(filename, std::ios::in);
@@ -49,7 +50,9 @@ void GMSH<Tdim, Tvertices>::read_mesh(const std::string& filename) {
 }
 
 //! Read GMSH elements
-//! \tparam Tdim Dimension, Tvertices Number of vertices in element
+//! \tparam Tdim Dimension
+//! \tparam Tvertices Number of vertices in element
+//! \param[in] filename Input mesh filename
 template <unsigned Tdim, unsigned Tvertices>
 void GMSH<Tdim, Tvertices>::read_elements(const std::string& filename) {
 
@@ -129,7 +132,9 @@ void GMSH<Tdim, Tvertices>::read_elements(const std::string& filename) {
   GMSH::store_element_vertices();
 }
 
-//! \tparam Tdim Dimension, Tvert Number of vertices in element
+//! Store element vertices
+//! \tparam Tdim Dimension
+//! \tparam Tvertices Number of vertices in element
 template <unsigned Tdim, unsigned Tvertices>
 void GMSH<Tdim, Tvertices>::store_element_vertices() {
 
@@ -167,7 +172,9 @@ void GMSH<Tdim, Tvertices>::store_element_vertices() {
       << "The coordinates for vertices of each element have been stored.\n";
 }
 
-//! \tparam Tdim Dimension, Tvert Number of vertices in element
+//! Compute material points based on the centroid
+//! \tparam Tdim Dimension
+//! \tparam Tvertices Number of vertices in element
 template <unsigned Tdim, unsigned Tvertices>
 void GMSH<Tdim, Tvertices>::compute_material_points() {
 
@@ -190,15 +197,13 @@ void GMSH<Tdim, Tvertices>::compute_material_points() {
         }
       }
 
-      // Centroid test
-      //++++++++++++++++++++++++++++++++++++++
+      // Assign the centroid as the coordinate of the material point
       for (unsigned i = 0; i < Tdim; ++i) {
         pointsarray.at(i) = 0;
         for (unsigned j = 0; j < Tvertices; ++j) {
-          pointsarray[i] += 0.25 * m(i, j);
+          pointsarray.at(i) += (1. / Tvertices) * m(i, j);
         }
       }
-      //++++++++++++++++++++++++++++++++++++++
 
       materialpoints_.emplace_back(
           new Point<Tdim>(coordinatesfind->first, pointsarray));
@@ -206,26 +211,33 @@ void GMSH<Tdim, Tvertices>::compute_material_points() {
   }
   std::cout << "Number of Material Points: " << materialpoints_.size() << '\n';
 }
-//! Compute stresses
-//! \tparam Tdim Dimension, Tvert Number of vertices in element
+
+//! Compute stresses of the material points
+//! \tparam Tdim Dimension
+//! \tparam Tvertices Number of vertices in element
 template <unsigned Tdim, unsigned Tvertices>
 void GMSH<Tdim, Tvertices>::compute_stresses() {
 
+  // Material density
   const double density = 22;
+  // K0 static pressure coefficient
   const double k0 = 0.5;
+  
   const double max_height = 3;
   const double conv_factor = 10;
-  double ver_stress;
-  double hor_stress;
+
+  std::array<double, Tdim> stresses;
+
 
   //! Loop through the points to get vertical and horizontal stresses
   //! Note that tau (shear stress) is assumed 0
-  for (const auto& point : materialpoints_) {
-    ver_stress =
-        conv_factor * (-(max_height - point->coordinates().at(2))) * density;
-    hor_stress = ver_stress * k0;
-    std::array<double, Tdim * 2> stress{hor_stress, hor_stress, ver_stress,
-                                        0,          0,          0};
+  for (const auto& materialpoint : materialpoints_) {
+    std::array<double, Tdim * 2> stress{0};
+    stress.at(0) =
+        conv_factor * (-(max_height - materialpoint->coordinates().at(2))) * density;
+    stress.at(1) = stress.at(0) * k0;
+    stress.at(2) = stress.at(0) * k0;
+
     stress_.emplace_back(stress);
   }
 }

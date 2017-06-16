@@ -12,6 +12,8 @@
 #include "point.h"
 
 //! \brief Abstract class for handling mesh
+//! \tparam Tdim Dimension of the mesh
+//! \tparam Tvertices Number of vertices in an element
 template <unsigned Tdim, unsigned Tvertices>
 class Mesh {
 
@@ -19,7 +21,7 @@ class Mesh {
   //! Read vertices from mesh
   virtual void read_mesh(const std::string& filename) = 0;
 
-  //!
+  //! Compute material point location
   virtual void compute_material_points() = 0;
 
   //! Compute initial stresses for material points
@@ -43,20 +45,26 @@ class Mesh {
     return elements_;
   }
 
+  //! Return the total number of vertices
+  unsigned nvertices() const { return nvertices_; }
+
  protected:
+  //! Total number of vertices
+  unsigned nvertices_;
+
   //! Stress vector in Voigt Notation
   //! $\sigma_{xx}$ $\sigma_{yy}$ $\sigma_{zz}$ $\tau_{yz}$ $\tau_{zx}$
   //! $\tau_{xy}$
   std::vector<std::array<double, Tdim * 2>> stress_;
 
   //! Map to store id and vertices coordinates
-  std::map<double, std::array<double, Tdim>> vertices_;
+  std::map<unsigned, std::array<double, Tdim>> vertices_;
 
   //! Map to store element ID and vertices ID
-  std::map<double, std::array<double, Tvertices>> elements_;
+  std::map<unsigned, std::array<double, Tvertices>> elements_;
 
   //! Map to store element ID and vertices coordinates
-  std::map<double, std::array<double, Tdim * Tvertices>> elementcoordinates_;
+  std::map<unsigned, std::array<double, Tdim * Tvertices>> elementcoordinates_;
 
   //! Container for storing material points
   std::vector<std::shared_ptr<Point<Tdim>>> materialpoints_;
