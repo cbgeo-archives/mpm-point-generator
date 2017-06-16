@@ -129,7 +129,7 @@ void GMSH<Tdim, Tvertices>::read_elements(const std::string& filename) {
   std::cout << "Number of Elements: " << elements_.size() << '\n';
 
   //! Get the coordinates for each vertex of each element
-  GMSH::store_element_vertices();
+  this->store_element_vertices();
 }
 
 //! Store element vertices
