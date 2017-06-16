@@ -1,9 +1,19 @@
-//! Read vertex id and coordinates in GMSH
+//! Read mesh
 //! \tparam Tdim Dimension
 //! \tparam Tvertices Number of vertices in element
 //! \param[in] filename Input mesh filename
 template <unsigned Tdim, unsigned Tvertices>
 void GMSH<Tdim, Tvertices>::read_mesh(const std::string& filename) {
+  this->read_vertices(filename);
+  this->read_elements(filename);
+}
+  
+//! Read vertex id and coordinates in GMSH
+//! \tparam Tdim Dimension
+//! \tparam Tvertices Number of vertices in element
+//! \param[in] filename Input mesh filename
+template <unsigned Tdim, unsigned Tvertices>
+void GMSH<Tdim, Tvertices>::read_vertices(const std::string& filename) {
 
   //! Number of vertices
   double nvertices = std::numeric_limits<double>::max();
@@ -46,7 +56,6 @@ void GMSH<Tdim, Tvertices>::read_mesh(const std::string& filename) {
     infile.close();
   }
   std::cout << "Number of Vertices: " << vertices_.size() << '\n';
-  GMSH::read_elements(filename);
 }
 
 //! Read GMSH elements

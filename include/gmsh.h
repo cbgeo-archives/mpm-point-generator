@@ -19,8 +19,11 @@ template <unsigned Tdim, unsigned Tvertices>
 class GMSH : public Mesh<Tdim, Tvertices> {
 
  public:
-  //! Read vertices in GMSH
+  //! Read GMSH file
   void read_mesh(const std::string& filename);
+  
+  //! Read vertices in GMSH
+  void read_vertices(const std::string& filename);
 
   //! Read elements in GMSH
   void read_elements(const std::string& filename);
