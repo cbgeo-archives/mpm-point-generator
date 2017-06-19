@@ -34,7 +34,7 @@ void IO<Tdim>::write_material_points(
 //! /tparam Tdim dimension
 template <unsigned Tdim>
 void IO<Tdim>::write_stresses(
-    const std::vector<std::array<double, Tdim * 2>>& stresses) {
+    const std::vector<std::shared_ptr<Point<Tdim>>>& materialpoints) {
   unsigned id = 0;
 
   //! Output stress file
@@ -43,15 +43,15 @@ void IO<Tdim>::write_stresses(
 
   if (stress_file.is_open()) {
     //! Write the total number of vertices generated
-    stress_file << stresses.size() << "\n";
+    stress_file << materialpoints.size() << "\n";
 
     //! Stresses in Voigt Notation
     //! $\sigma_{xx}$ $\sigma_{yy}$ $\sigma_{zz}$
     //! $\tau_{yz}$ $\tau_{zx}$ $\tau_{xy}$
-    for (const auto& stress : stresses) {
+    for (const auto& points : materialpoints) {
       stress_file.setf(std::ios::fixed, std::ios::floatfield);
       stress_file << id << '\t';
-      for (double stress_component : stress) {
+      for (double stress_component : points->stress()) {
         stress_file << stress_component << '\t';
       }
       stress_file << "\n";

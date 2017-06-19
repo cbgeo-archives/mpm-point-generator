@@ -7,7 +7,7 @@ void GMSH<Tdim, Tvertices>::read_mesh(const std::string& filename) {
   this->read_vertices(filename);
   this->read_elements(filename);
 }
-  
+
 //! Read vertex id and coordinates in GMSH
 //! \tparam Tdim Dimension
 //! \tparam Tvertices Number of vertices in element
@@ -193,6 +193,13 @@ void GMSH<Tdim, Tvertices>::compute_material_points() {
 
   const unsigned firstelementcoord = elementcoordinates_.begin()->first;
   const unsigned lastelementcoord = elementcoordinates_.rbegin()->first;
+  // Material density
+  const double density = 22;
+  // K0 static pressure coefficient
+  const double k0 = 0.5;
+  const double max_height = 3;
+  const double conv_factor = 10;
+  std::array<double, Tdim> stresses;
 
   for (unsigned t = firstelementcoord; t < lastelementcoord + 1; ++t) {
     auto coordinatesfind = elementcoordinates_.find(t);
@@ -206,7 +213,7 @@ void GMSH<Tdim, Tvertices>::compute_material_points() {
         }
       }
 
-      // Assign the centroid as the coordinate of the material point
+      //! Assign the centroid as the coordinate of the material point
       for (unsigned i = 0; i < Tdim; ++i) {
         pointsarray.at(i) = 0;
         for (unsigned j = 0; j < Tvertices; ++j) {
@@ -214,39 +221,20 @@ void GMSH<Tdim, Tvertices>::compute_material_points() {
         }
       }
 
+      //! Compute the stress
+      //! [2D] case, [Y] direction is vertical
+      //! [3D] case, [Z] direction is vertical
+      std::array<double, Tdim * 2> stress{0};
+      stress.at(Tdim - 1) =
+          conv_factor * (-(max_height - pointsarray.at(Tdim - 1))) * density;
+      for (unsigned i = 2; i <= Tdim; ++i) {
+        stress.at(Tdim - i) = stress.at(Tdim - 1) * k0;
+      }
+      stress_.emplace_back(stress);
+
       materialpoints_.emplace_back(
-          new Point<Tdim>(coordinatesfind->first, pointsarray));
+          new Point<Tdim>(coordinatesfind->first, pointsarray, stress));
     }
   }
   std::cout << "Number of Material Points: " << materialpoints_.size() << '\n';
-}
-
-//! Compute stresses of the material points
-//! \tparam Tdim Dimension
-//! \tparam Tvertices Number of vertices in element
-template <unsigned Tdim, unsigned Tvertices>
-void GMSH<Tdim, Tvertices>::compute_stresses() {
-
-  // Material density
-  const double density = 22;
-  // K0 static pressure coefficient
-  const double k0 = 0.5;
-  
-  const double max_height = 3;
-  const double conv_factor = 10;
-
-  std::array<double, Tdim> stresses;
-
-
-  //! Loop through the points to get vertical and horizontal stresses
-  //! Note that tau (shear stress) is assumed 0
-  for (const auto& materialpoint : materialpoints_) {
-    std::array<double, Tdim * 2> stress{0};
-    stress.at(0) =
-        conv_factor * (-(max_height - materialpoint->coordinates().at(2))) * density;
-    stress.at(1) = stress.at(0) * k0;
-    stress.at(2) = stress.at(0) * k0;
-
-    stress_.emplace_back(stress);
-  }
 }
