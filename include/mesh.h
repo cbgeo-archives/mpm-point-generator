@@ -27,6 +27,18 @@ class Mesh {
   //! Compute initial stresses for material points
   virtual void compute_stresses() = 0;
 
+  //! Get vector of stresses
+  std::vector<std::array<double, Tdim * 2>> stress() {
+
+    std::vector<std::array<double, Tdim * 2>> stress;
+    //! Loop through the points to get the stresses
+    for (const auto& materialpoint : materialpoints_) {
+      stress.emplace_back(materialpoint->stress());
+    }
+
+    return stress;
+  }
+
   //! Return a vector of material points
   std::vector<std::shared_ptr<Point<Tdim>>> material_points() {
     return materialpoints_;

@@ -25,9 +25,7 @@ class Point {
   std::array<double, Tdim * 2> stress() const { return stress_; }
 
   //! Assign stress
-  void stress(const std::array<double, Tdim * 2>& stress) {
-    stress_ = stress;
-  }
+  void stress(const std::array<double, Tdim * 2>& stress) { stress_ = stress; }
 
  private:
   //! Index

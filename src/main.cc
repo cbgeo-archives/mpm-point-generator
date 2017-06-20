@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
 
     //! Write material points and stresses
     io->write_material_points(mesh->material_points());
-    io->write_stresses(mesh->material_points());
+    io->write_stresses(mesh->stress());
 
   } catch (std::exception& except) {
     std::cout << "Caught exception: " << except.what() << '\n';
