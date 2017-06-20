@@ -48,10 +48,10 @@ void IO<Tdim>::write_stresses(
     //! Stresses in Voigt Notation
     //! $\sigma_{xx}$ $\sigma_{yy}$ $\sigma_{zz}$
     //! $\tau_{yz}$ $\tau_{zx}$ $\tau_{xy}$
-    for (const auto& points : materialpoints) {
+    for (const auto& materialpoint : materialpoints) {
       stress_file.setf(std::ios::fixed, std::ios::floatfield);
       stress_file << id << '\t';
-      for (double stress_component : points->stress()) {
+      for (double stress_component : materialpoint->stress()) {
         stress_file << stress_component << '\t';
       }
       stress_file << "\n";

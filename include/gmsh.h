@@ -34,6 +34,9 @@ class GMSH : public Mesh<Tdim, Tvertices> {
   //! Compute material points from element coordinate map
   void compute_material_points();
 
+  //! Compute stresses
+  void compute_stresses();
+
  private:
   //! Total number of vertices
   using Mesh<Tdim, Tvertices>::nvertices_;

@@ -11,12 +11,9 @@ class Point {
   //! Constructor with id and coordinates
   //! \param[in] id index of the vertex
   //! \param[in] coord Coordinates of the point
-  //! \param[in] stress Voigt stress of the point
-  Point(unsigned id, const std::array<double, Tdim>& coord,
-        const std::array<double, Tdim * 2>& stress) {
+  Point(unsigned id, const std::array<double, Tdim>& coord) {
     id_ = id;
     coordinates_ = coord;
-    stress_ = stress;
   }
 
   //! Return the id of the point
@@ -27,6 +24,11 @@ class Point {
 
   //! Return stresses of the point
   std::array<double, Tdim * 2> stress() const { return stress_; }
+
+  //! Set stress
+  void set_stress(const std::array<double, Tdim * 2>& stress) {
+    stress_ = stress;
+  }
 
  private:
   //! Index

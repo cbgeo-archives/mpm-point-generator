@@ -23,6 +23,7 @@ int main(int argc, char** argv) {
 
     //! Compute material points & stresses
     mesh->compute_material_points();
+    mesh->compute_stresses();
 
     //! Write material points and stresses
     io->write_material_points(mesh->material_points());

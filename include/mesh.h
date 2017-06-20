@@ -24,6 +24,9 @@ class Mesh {
   //! Compute material point location
   virtual void compute_material_points() = 0;
 
+  //! Compute initial stresses for material points
+  virtual void compute_stresses() = 0;
+
   //! Return a vector of material points
   std::vector<std::shared_ptr<Point<Tdim>>> material_points() {
     return materialpoints_;
