@@ -248,7 +248,6 @@ void GMSH<Tdim, Tvertices>::compute_stresses() {
     for (unsigned i = 2; i <= Tdim; ++i) {
       stress.at(Tdim - i) = stress.at(Tdim - 1) * k0;
     }
-    stress_.emplace_back(stress);
-    materialpoint->set_stress(stress);
+    materialpoint->stress(stress);
   }
 }

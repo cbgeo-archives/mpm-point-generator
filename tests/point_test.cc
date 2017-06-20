@@ -18,7 +18,7 @@ TEST_CASE("Point base is checked in 2D", "[Point][2D]") {
     const std::array<double, DIM> coordinate{0, 0};
     const std::array<double, DIM * 2> stress{0, 0, 0, 0};
     auto node = std::unique_ptr<Point<DIM>>(new Point<DIM>(index, coordinate));
-    node->set_stress(stress);
+    node->stress(stress);
 
     REQUIRE(node->id() == 0);
     REQUIRE(node->coordinates().at(0) == Approx(0).epsilon(tolerance));
@@ -38,7 +38,7 @@ TEST_CASE("Point base is checked in 2D", "[Point][2D]") {
         std::numeric_limits<double>::min(), std::numeric_limits<double>::min(),
         std::numeric_limits<double>::min(), std::numeric_limits<double>::min()};
     auto node = std::unique_ptr<Point<DIM>>(new Point<DIM>(index, coordinate));
-    node->set_stress(stress);
+    node->stress(stress);
 
     REQUIRE(node->id() == std::numeric_limits<unsigned>::min());
     REQUIRE(node->coordinates().at(0) ==
@@ -64,7 +64,7 @@ TEST_CASE("Point base is checked in 2D", "[Point][2D]") {
         std::numeric_limits<double>::max(), std::numeric_limits<double>::max(),
         std::numeric_limits<double>::max(), std::numeric_limits<double>::max()};
     auto node = std::unique_ptr<Point<DIM>>(new Point<DIM>(index, coordinate));
-    node->set_stress(stress);
+    node->stress(stress);
 
     REQUIRE(node->id() == std::numeric_limits<unsigned>::max());
     REQUIRE(node->coordinates().at(0) ==
@@ -95,7 +95,7 @@ TEST_CASE("Point base is checked in 3D", "[Point][3D]") {
     const std::array<double, DIM> coordinate{0, 0, 0};
     const std::array<double, DIM * 2> stress{0, 0, 0, 0, 0, 0};
     auto node = std::unique_ptr<Point<DIM>>(new Point<DIM>(index, coordinate));
-    node->set_stress(stress);
+    node->stress(stress);
 
     REQUIRE(node->id() == 0);
     REQUIRE(node->coordinates().at(0) == Approx(0).epsilon(tolerance));
@@ -120,7 +120,7 @@ TEST_CASE("Point base is checked in 3D", "[Point][3D]") {
         std::numeric_limits<double>::min(), std::numeric_limits<double>::min(),
         std::numeric_limits<double>::min(), std::numeric_limits<double>::min()};
     auto node = std::unique_ptr<Point<DIM>>(new Point<DIM>(index, coordinate));
-    node->set_stress(stress);
+    node->stress(stress);
 
     REQUIRE(node->id() == std::numeric_limits<unsigned>::min());
     REQUIRE(node->coordinates().at(0) ==
@@ -154,7 +154,7 @@ TEST_CASE("Point base is checked in 3D", "[Point][3D]") {
         std::numeric_limits<double>::max(), std::numeric_limits<double>::max(),
         std::numeric_limits<double>::max(), std::numeric_limits<double>::max()};
     auto node = std::unique_ptr<Point<DIM>>(new Point<DIM>(index, coordinate));
-    node->set_stress(stress);
+    node->stress(stress);
 
     REQUIRE(node->id() == std::numeric_limits<unsigned>::max());
     REQUIRE(node->coordinates().at(0) ==

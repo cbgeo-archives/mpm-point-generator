@@ -48,8 +48,6 @@ class GMSH : public Mesh<Tdim, Tvertices> {
   using Mesh<Tdim, Tvertices>::elementcoordinates_;
   //! Vector of material points
   using Mesh<Tdim, Tvertices>::materialpoints_;
-  //! Vector of material point stresses
-  using Mesh<Tdim, Tvertices>::stress_;
 };
 
 #include "gmsh.tcc"

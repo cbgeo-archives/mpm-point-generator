@@ -32,9 +32,6 @@ class Mesh {
     return materialpoints_;
   }
 
-  //! Return a vector of stresses
-  std::vector<std::array<double, Tdim * 2>> stresses() const { return stress_; }
-
   //! Return a map of mesh element vertices
   std::map<unsigned, std::array<unsigned, Tdim>> vertices() const {
     return vertices_;
@@ -51,11 +48,6 @@ class Mesh {
  protected:
   //! Total number of vertices
   unsigned nvertices_;
-
-  //! Stress vector in Voigt Notation
-  //! $\sigma_{xx}$ $\sigma_{yy}$ $\sigma_{zz}$ $\tau_{yz}$ $\tau_{zx}$
-  //! $\tau_{xy}$
-  std::vector<std::array<double, Tdim * 2>> stress_;
 
   //! Map to store id and vertices coordinates
   std::map<unsigned, std::array<double, Tdim>> vertices_;
