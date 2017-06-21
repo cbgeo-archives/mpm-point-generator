@@ -21,11 +21,19 @@ class Point {
   //! Return coordinates of the point
   std::array<double, Tdim> coordinates() const { return coordinates_; }
 
+  //! Return stresses of the point
+  std::array<double, Tdim * 2> stress() const { return stress_; }
+
+  //! Assign stress
+  void stress(const std::array<double, Tdim * 2>& stress) { stress_ = stress; }
+
  private:
   //! Index
   unsigned id_;
   //! Coordinates
   std::array<double, Tdim> coordinates_;
+  //! Stress
+  std::array<double, Tdim * 2> stress_;
 };
 
 #endif  // MPM_MESH_POINT_H_
