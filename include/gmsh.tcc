@@ -123,6 +123,8 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
   //! Element type
   double elementtype = std::numeric_limits<double>::max();
 
+  double physical = std::numeric_limits<double>::max();
+  double elementry = std::numeric_limits<double>::max();
   //! Element id
   unsigned elementid = std::numeric_limits<unsigned>::max();
 
@@ -162,9 +164,33 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
     }
   }
 
+    infile >> nelements;
+    getline(infile, line);
 
+    for (int i = 0; i < nelements; ++i) {
+      std::getline(infile, line);
+      std::istringstream istream(line);
+      if (line.find('#') == std::string::npos && line != "") {
+        istream >> elementid;
+        istream >> elementtype;
+        istream >> elementry;
+        istream >> physical;
+        istream >> elementry;
 
+        //! If element type not == to specified Tvertices, skip element
+        if (elementtype != element_type) {
+          istream >> line;
+        } else {
+          istream >> elementarray.at(0) >> elementarray.at(1) >>
+              elementarray.at(2) >> elementarray.at(3) >> elementarray.at(4) >>
+              elementarray.at(5) >> elementarray.at(6) >> elementarray.at(7);
 
+          elements_.insert(std::make_pair(elementid, elementarray));
+        }
+      }
+    }
+    infile.close();
+  }
   std::cout << "Number of Elements: " << elements_.size() << '\n';
 
   //! Get the coordinates for each vertex of each element
