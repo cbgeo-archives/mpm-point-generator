@@ -55,7 +55,8 @@ void GMSH<Tdim, Tvertices>::read_vertices(const std::string& filename) {
     }
     infile.close();
   }
-  std::cout << "Number of Vertices: " << vertices_.size() << '\n';
+  nvertices_ = vertices_.size();
+  std::cout << "Number of Vertices: " << nvertices_ << '\n';
 }
 
 //! Read GMSH elements
@@ -230,19 +231,26 @@ void GMSH<Tdim, Tvertices>::compute_material_points() {
 template <unsigned Tdim, unsigned Tvertices>
 void GMSH<Tdim, Tvertices>::compute_stresses() {
 
-  // Material density
+  //! Material density
   const double density = 22;
-  // K0 static pressure coefficient
+  //! K0 static pressure coefficient
   const double k0 = 0.5;
-  const double max_height = 3;
   const double conv_factor = 10;
 
-  std::array<double, Tdim> stresses;
+  double max_height = std::numeric_limits<double>::min();;
+
+  //! [2D], y is the vertical direction
+  //! [3D], z is the vertical direction
+  //! In general, [Tdim - 1]
+  for (auto const& point : materialpoints_) {
+    if (point->coordinates().at(Tdim - 1) > max_height) {
+      max_height = point->coordinates().at(Tdim - 1);
+    }
+  }
 
   //! Loop through the points to get vertical and horizontal stresses
   //! Note that tau (shear stress) is assumed 0
-  //! [2D], y is the vertical direction
-  //! [3d], z is the vertical direction
+  std::array<double, Tdim> stresses;
   for (const auto& materialpoint : materialpoints_) {
     std::array<double, Tdim * 2> stress{0};
     stress.at(Tdim - 1) = conv_factor *
