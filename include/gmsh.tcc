@@ -160,6 +160,7 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
       }
     }
   }
+
   std::cout << "Number of Elements: " << elements_.size() << '\n';
 
   //! Get the coordinates for each vertex of each element
