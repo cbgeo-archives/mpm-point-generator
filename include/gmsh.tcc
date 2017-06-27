@@ -34,7 +34,7 @@ void GMSH<Tdim, Tvertices>::read_vertices(const std::string& filename) {
   std::istringstream istream(line);
 
   //! Read number of vertices
-  unsigned nvertices;
+  unsigned nvertices = std::numeric_limits<unsigned>::max();
   istream >> nvertices;
   getline(istream, line);
 
