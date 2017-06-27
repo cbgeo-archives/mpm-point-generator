@@ -29,15 +29,14 @@ void GMSH<Tdim, Tvertices>::read_vertices(const std::string& filename) {
   if (infile.good()) {
     std::cout << "Vertices file found" << '\n';
 
-    std::string line;
+  std::string line;
+  std::getline(file, line);
+  std::istringstream istream(line);
 
-    //! Ignore first 4 lines
-    for (unsigned i = 0; i < toplines; ++i) {
-      std::getline(infile, line);
-    }
-    //! Read number of vertices
-    infile >> nvertices;
-    getline(infile, line);
+  //! Read number of vertices
+  unsigned nvertices;
+  istream >> nvertices;
+  getline(istream, line);
 
     //! Read vertex coordinates & id
     for (unsigned i = 0; i < nvertices; ++i) {
@@ -64,7 +63,7 @@ void GMSH<Tdim, Tvertices>::read_vertices(const std::string& filename) {
 //! \tparam Tvertices Number of vertices in element
 //! \param[in] filename Input mesh filename
 template <unsigned Tdim, unsigned Tvertices>
-void GMSH<Tdim, Tvertices>::read_elements(const std::string& filename) {
+void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
 
   //! Number of vertices
   double nvertices = std::numeric_limits<double>::max();
