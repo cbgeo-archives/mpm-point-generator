@@ -235,9 +235,9 @@ void GMSH<Tdim, Tvertices>::compute_material_points() {
 template <unsigned Tdim, unsigned Tvertices>
 void GMSH<Tdim, Tvertices>::compute_stresses() {
 
-  // Material density
+  //! Material density
   const double density = 22;
-  // K0 static pressure coefficient
+  //! K0 static pressure coefficient
   const double k0 = 0.5;
   const double conv_factor = 10;
 
