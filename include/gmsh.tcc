@@ -248,7 +248,6 @@ void GMSH<Tdim, Tvertices>::compute_stresses() {
   const double density = 22;
   // K0 static pressure coefficient
   const double k0 = 0.5;
-  const double max_height = 3;
   const double conv_factor = 10;
 
   double max_height = std::numeric_limits<double>::min();
