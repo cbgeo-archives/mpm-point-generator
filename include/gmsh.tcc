@@ -4,7 +4,7 @@
 //! \param[in] filename Input mesh filename
 template <unsigned Tdim, unsigned Tvertices>
 void GMSH<Tdim, Tvertices>::read_mesh(const std::string& filename) {
-  
+
   std::ifstream file;
   file.open(filename.c_str(), std::ios::in);
   if (!file.is_open())
@@ -22,7 +22,8 @@ void GMSH<Tdim, Tvertices>::read_mesh(const std::string& filename) {
 //! \param[in] filename Input mesh filename
 //! \param[in] keyword search for the word of interest
 template <unsigned Tdim, unsigned Tvertices>
-void GMSH<Tdim, Tvertices>::read_keyword(std::ifstream& file, const std::string& keyword) {
+void GMSH<Tdim, Tvertices>::read_keyword(std::ifstream& file,
+                                         const std::string& keyword) {
 
   bool read_status = false;
   std::string line;
@@ -80,6 +81,7 @@ void GMSH<Tdim, Tvertices>::read_vertices(std::ifstream& file) {
       this->vertices_.insert(std::make_pair(vertid, vertex));
     }
   }
+<<<<<<< HEAD
 
   this->nvertices_ = vertices_.size();
 
@@ -88,6 +90,9 @@ void GMSH<Tdim, Tvertices>::read_vertices(std::ifstream& file) {
     std::cout << "Error in the code, number of vertices do not match.\n";
   }
 
+=======
+  nvertices_ = vertices_.size();
+>>>>>>> e09defe1c926b7fa7021cf3718128c7ef5b035cf
   std::cout << "Number of Vertices: " << nvertices_ << '\n';
 }
 
@@ -107,15 +112,15 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
 
   //! Number of elements
   unsigned nelements;
-  istream >> nelements; 
+  istream >> nelements;
   getline(istream, line);
 
   //! Element type
   double elementtype = std::numeric_limits<double>::max();
-  
+
   //! Element id
   unsigned elementid = std::numeric_limits<unsigned>::max();
-  
+
   double physical = std::numeric_limits<double>::max();
 
   double elementry = std::numeric_limits<double>::max();
@@ -143,7 +148,7 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
       } else {
         istream >> elementarray.at(0) >> elementarray.at(1) >>
             elementarray.at(2) >> elementarray.at(3);
-         this->elements_.insert(std::make_pair(elementid, elementarray));
+        this->elements_.insert(std::make_pair(elementid, elementarray));
       }
     }
   }
@@ -246,7 +251,8 @@ void GMSH<Tdim, Tvertices>::compute_stresses() {
   const double k0 = 0.5;
   const double conv_factor = 10;
 
-  double max_height = std::numeric_limits<double>::min();;
+  double max_height = std::numeric_limits<double>::min();
+  ;
 
   //! [2D], y is the vertical direction
   //! [3D], z is the vertical direction
