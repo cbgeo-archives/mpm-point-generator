@@ -81,7 +81,6 @@ void GMSH<Tdim, Tvertices>::read_vertices(std::ifstream& file) {
       this->vertices_.insert(std::make_pair(vertid, vertex));
     }
   }
-<<<<<<< HEAD
 
   this->nvertices_ = vertices_.size();
 
@@ -90,9 +89,6 @@ void GMSH<Tdim, Tvertices>::read_vertices(std::ifstream& file) {
     std::cout << "Error in the code, number of vertices do not match.\n";
   }
 
-=======
-  nvertices_ = vertices_.size();
->>>>>>> e09defe1c926b7fa7021cf3718128c7ef5b035cf
   std::cout << "Number of Vertices: " << nvertices_ << '\n';
 }
 
