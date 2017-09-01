@@ -248,7 +248,6 @@ void GMSH<Tdim, Tvertices>::compute_stresses() {
   const double conv_factor = 10;
 
   double max_height = std::numeric_limits<double>::min();
-  ;
 
   //! [2D], y is the vertical direction
   //! [3D], z is the vertical direction
