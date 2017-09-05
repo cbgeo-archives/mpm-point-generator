@@ -98,14 +98,6 @@ void GMSH<Tdim, Tvertices>::read_vertices(std::ifstream& file) {
   if (nvertices_ != nvertices)
     std::cout << "Error: number of vertices do not match.\n";
 
-        istream >> vertid;
-        istream >> vertex.at(0) >> vertex.at(1) >> vertex.at(2);
-        vertices_.insert(std::make_pair(vertid, vertex));
-      }
-    }
-    infile.close();
-  }
-  nvertices_ = vertices_.size();
   std::cout << "Number of Vertices: " << nvertices_ << '\n';
 }
 
@@ -133,12 +125,9 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
 
   double physical = std::numeric_limits<double>::max();
   double elementry = std::numeric_limits<double>::max();
+
   //! Element id
   unsigned elementid = std::numeric_limits<unsigned>::max();
-
-  double physical = std::numeric_limits<double>::max();
-
-  double elementry = std::numeric_limits<double>::max();
 
   //! Array to store vertices coordinates
   Eigen::VectorXd elementarray(Tvertices);
@@ -170,34 +159,6 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
         this->elements_.insert(std::make_pair(elementid, elementarray));
       }
     }
-  }
-
-    infile >> nelements;
-    getline(infile, line);
-
-    for (int i = 0; i < nelements; ++i) {
-      std::getline(infile, line);
-      std::istringstream istream(line);
-      if (line.find('#') == std::string::npos && line != "") {
-        istream >> elementid;
-        istream >> elementtype;
-        istream >> elementry;
-        istream >> physical;
-        istream >> elementry;
-
-        //! If element type not == to specified Tvertices, skip element
-        if (elementtype != element_type) {
-          istream >> line;
-        } else {
-          istream >> elementarray.at(0) >> elementarray.at(1) >>
-              elementarray.at(2) >> elementarray.at(3) >> elementarray.at(4) >>
-              elementarray.at(5) >> elementarray.at(6) >> elementarray.at(7);
-
-          elements_.insert(std::make_pair(elementid, elementarray));
-        }
-      }
-    }
-    infile.close();
   }
   std::cout << "Number of Elements: " << elements_.size() << '\n';
 
