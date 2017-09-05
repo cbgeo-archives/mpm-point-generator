@@ -77,7 +77,12 @@ void GMSH<Tdim, Tvertices>::read_vertices(std::ifstream& file) {
       std::array<double, Tdim> vertex;
 
       istream >> vertid;
-      istream >> vertex.at(0) >> vertex.at(1) >> vertex.at(2);
+
+      if (Tdim == 3) {
+        istream >> vertex.at(0) >> vertex.at(1) >> vertex.at(2);
+      } else {
+        istream >> vertex.at(0) >> vertex.at(1);
+      }
       this->vertices_.insert(std::make_pair(vertid, vertex));
     }
   }
@@ -94,7 +99,7 @@ void GMSH<Tdim, Tvertices>::read_vertices(std::ifstream& file) {
 //! Read GMSH elements
 //! \tparam Tdim Dimension
 //! \tparam Tvertices Number of vertices in element
-//! \param[in] filename Input mesh filename
+//! \param[in] filename Input mesh filename and directory
 template <unsigned Tdim, unsigned Tvertices>
 void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
 
@@ -123,7 +128,7 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
   //! Array to store vertices coordinates
   std::array<double, Tvertices> elementarray;
 
-  //! specify element type 4 = tetrahedral, 8 = hexahedron
+  //! specify element type 4 = quadrilateral, 8 = hexahedron
   const unsigned element_type = 4;
 
   //! Iterate through all elements in the file
