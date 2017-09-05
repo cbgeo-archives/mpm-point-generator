@@ -121,11 +121,12 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
   //! Element type
   double elementtype = std::numeric_limits<double>::max();
 
-  double physical = std::numeric_limits<double>::max();
-  double elementry = std::numeric_limits<double>::max();
-
   //! Element id
   unsigned elementid = std::numeric_limits<unsigned>::max();
+
+  double physical = std::numeric_limits<double>::max();
+
+  double elementry = std::numeric_limits<double>::max();
 
   //! Array to store vertices coordinates
   Eigen::VectorXd elementarray(Tvertices);
@@ -158,6 +159,7 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
       }
     }
   }
+
   std::cout << "Number of Elements: " << elements_.size() << '\n';
 
   //! Get the coordinates for each vertex of each element
