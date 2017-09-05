@@ -41,7 +41,7 @@ include_directories(
   ${PROJECT_SOURCE_DIR}/external
 )
 
-# lem executable
+# mpm_point_generator executable
 SET(mpm_point_gen_src
   src/main.cc
 )

@@ -61,7 +61,7 @@ void GMSH<Tdim, Tvertices>::read_vertices(const std::string& filename) {
 //! Read GMSH elements
 //! \tparam Tdim Dimension
 //! \tparam Tvertices Number of vertices in element
-//! \param[in] filename Input mesh filename
+//! \param[in] filename Input mesh filename and directory
 template <unsigned Tdim, unsigned Tvertices>
 void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
 
