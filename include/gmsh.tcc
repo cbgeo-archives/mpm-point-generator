@@ -40,9 +40,9 @@ void GMSH<Tdim, Tvertices>::read_keyword(std::ifstream& file,
       break;
     }
   }
-  if (!read_status) {
+  if (!read_status)
     std::cerr << "Cannot find keyword: " << keyword << '\n';
-  }
+
 }
 
 //! Read vertex id and coordinates in GMSH
@@ -85,9 +85,8 @@ void GMSH<Tdim, Tvertices>::read_vertices(std::ifstream& file) {
   this->nvertices_ = vertices_.size();
 
   //! Check that the number of vertices are correct
-  if (nvertices_ != nvertices) {
-    std::cout << "Error in the code, number of vertices do not match.\n";
-  }
+  if (nvertices_ != nvertices) 
+    std::cout << "Error: number of vertices do not match.\n";
 
   std::cout << "Number of Vertices: " << nvertices_ << '\n';
 }
@@ -124,7 +123,7 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
   //! Array to store vertices coordinates
   std::array<double, Tvertices> elementarray;
 
-  //! specify element type 4 = tetrahedral
+  //! specify element type 4 = tetrahedral, 8 = hexahedron
   const unsigned element_type = 4;
 
   //! Iterate through all elements in the file
@@ -132,13 +131,9 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
     std::getline(file, line);
     std::istringstream istream(line);
     if (line.find('#') == std::string::npos && line != "") {
-      istream >> elementid;
-      istream >> elementtype;
-      istream >> elementry;
-      istream >> physical;
-      istream >> elementry;
+      istream >> elementid >> elementtype >> elementry >> physical >> elementry;
 
-      //! If element type not == to specified Tvertices, skip element
+      //! If element type not equals to specified Tvertices, skip element
       if (elementtype != element_type) {
         istream >> line;
       } else {
@@ -148,6 +143,9 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
       }
     }
   }
+
+
+
 
   std::cout << "Number of Elements: " << elements_.size() << '\n';
 
