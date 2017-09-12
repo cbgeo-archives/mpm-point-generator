@@ -40,9 +40,7 @@ void GMSH<Tdim, Tvertices>::read_keyword(std::ifstream& file,
       break;
     }
   }
-  if (!read_status)
-    std::cerr << "Cannot find keyword: " << keyword << '\n';
-
+  if (!read_status) std::cerr << "Cannot find keyword: " << keyword << '\n';
 }
 
 //! Read vertex id and coordinates in GMSH
@@ -101,7 +99,7 @@ void GMSH<Tdim, Tvertices>::read_vertices(const std::string& filename) {
   this->nvertices_ = vertices_.size();
 
   //! Check that the number of vertices are correct
-  if (nvertices_ != nvertices) 
+  if (nvertices_ != nvertices)
     std::cout << "Error: number of vertices do not match.\n";
 
   std::cout << "Number of Vertices: " << nvertices_ << '\n';
@@ -162,9 +160,6 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
       }
     }
   }
-
-
-
 
   std::cout << "Number of Elements: " << elements_.size() << '\n';
 
