@@ -8,72 +8,107 @@ void GMSH<Tdim, Tvertices>::read_mesh(const std::string& filename) {
   this->read_elements(filename);
 }
 
+//! \tparam Tdim Dimension
+//! \tparam Tvertices Number of vertices in element
+//! \param[in] filename Input mesh filename
+//! \param[in] keyword search for the word of interest
+template <unsigned Tdim, unsigned Tvertices>
+void GMSH<Tdim, Tvertices>::read_keyword(std::ifstream& file,
+                                         const std::string& keyword) {
+
+  bool read_status = false;
+  std::string line;
+  file.clear();
+  file.seekg(0, std::ios::beg);
+  while (std::getline(file, line)) {
+    if (line != keyword) {
+      if (line.find(keyword) != std::string::npos) {
+        break;
+      };
+    } else {
+      std::cout << "Read keyword: " << keyword << " successfully\n";
+      read_status = true;
+      break;
+    }
+  }
+  if (!read_status)
+    std::cerr << "Cannot find keyword: " << keyword << '\n';
+
+}
+
 //! Read vertex id and coordinates in GMSH
 //! \tparam Tdim Dimension
 //! \tparam Tvertices Number of vertices in element
 //! \param[in] filename Input mesh filename
 template <unsigned Tdim, unsigned Tvertices>
-void GMSH<Tdim, Tvertices>::read_vertices(const std::string& filename) {
+void GMSH<Tdim, Tvertices>::read_vertices(std::ifstream& file) {
 
-  //! Number of vertices
-  double nvertices = std::numeric_limits<double>::max();
-  const unsigned toplines = 4;
+  //! Find the line of interest
+  read_keyword(file, "$Nodes");
+
+  std::string line;
+  std::getline(file, line);
+  std::istringstream istream(line);
+
+  //! Read number of vertices
+  unsigned nvertices = std::numeric_limits<unsigned>::max();
+  istream >> nvertices;
+  getline(istream, line);
 
   //! Vertices id
   unsigned vertid = 0;
 
-  std::fstream infile;
-  infile.open(filename, std::ios::in);
+  //! Read vertex coordinates & id
+  for (unsigned i = 0; i < nvertices; ++i) {
+    std::getline(file, line);
+    std::istringstream istream(line);
 
-  //! Check if input file is good
-  if (infile.good()) {
-    std::cout << "Vertices file found" << '\n';
+    if (line.find('#') == std::string::npos && line != "") {
+      //! Coordinates of vertex
+      std::array<double, Tdim> vertex;
 
-    std::string line;
+      istream >> vertid;
 
-    //! Ignore first 4 lines
-    for (unsigned i = 0; i < toplines; ++i) {
-      std::getline(infile, line);
-    }
-    //! Read number of vertices
-    infile >> nvertices;
-    getline(infile, line);
-
-    //! Read vertex coordinates & id
-    for (unsigned i = 0; i < nvertices; ++i) {
-      std::getline(infile, line);
-      std::istringstream istream(line);
-
-      if (line.find('#') == std::string::npos && line != "") {
-        //! Coordinates of vertex
-        std::array<double, Tdim> vertex;
-
-        istream >> vertid;
+      if (Tdim == 3) {
         istream >> vertex.at(0) >> vertex.at(1) >> vertex.at(2);
-        vertices_.insert(std::make_pair(vertid, vertex));
+      } else {
+        istream >> vertex.at(0) >> vertex.at(1);
       }
+      this->vertices_.insert(std::make_pair(vertid, vertex));
     }
-    infile.close();
   }
-  std::cout << "Number of Vertices: " << vertices_.size() << '\n';
+
+  this->nvertices_ = vertices_.size();
+
+  //! Check that the number of vertices are correct
+  if (nvertices_ != nvertices) 
+    std::cout << "Error: number of vertices do not match.\n";
+
+  std::cout << "Number of Vertices: " << nvertices_ << '\n';
 }
 
 //! Read GMSH elements
 //! \tparam Tdim Dimension
 //! \tparam Tvertices Number of vertices in element
-//! \param[in] filename Input mesh filename
+//! \param[in] filename Input mesh filename and directory
 template <unsigned Tdim, unsigned Tvertices>
-void GMSH<Tdim, Tvertices>::read_elements(const std::string& filename) {
+void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
 
-  //! Number of vertices
-  double nvertices = std::numeric_limits<double>::max();
+  //! Find the line of interest
+  read_keyword(file, "$Elements");
+
+  std::string line;
+  std::getline(file, line);
+  std::istringstream istream(line);
+
   //! Number of elements
-  double nelements = std::numeric_limits<double>::max();
+  unsigned nelements = std::numeric_limits<unsigned>::max();
+  istream >> nelements;
+  getline(istream, line);
+
   //! Element type
   double elementtype = std::numeric_limits<double>::max();
 
-  double physical = std::numeric_limits<double>::max();
-  double elementry = std::numeric_limits<double>::max();
   //! Element id
   unsigned elementid = std::numeric_limits<unsigned>::max();
 
@@ -230,19 +265,26 @@ void GMSH<Tdim, Tvertices>::compute_material_points() {
 template <unsigned Tdim, unsigned Tvertices>
 void GMSH<Tdim, Tvertices>::compute_stresses() {
 
-  // Material density
+  //! Material density
   const double density = 22;
-  // K0 static pressure coefficient
+  //! K0 static pressure coefficient
   const double k0 = 0.5;
-  const double max_height = 3;
   const double conv_factor = 10;
 
-  std::array<double, Tdim> stresses;
+  double max_height = std::numeric_limits<double>::min();
+
+  //! [2D], y is the vertical direction
+  //! [3D], z is the vertical direction
+  //! In general, [Tdim - 1]
+  for (auto const& point : materialpoints_) {
+    if (point->coordinates().at(Tdim - 1) > max_height) {
+      max_height = point->coordinates().at(Tdim - 1);
+    }
+  }
 
   //! Loop through the points to get vertical and horizontal stresses
   //! Note that tau (shear stress) is assumed 0
-  //! [2D], y is the vertical direction
-  //! [3d], z is the vertical direction
+  std::array<double, Tdim> stresses;
   for (const auto& materialpoint : materialpoints_) {
     std::array<double, Tdim * 2> stress{0};
     stress.at(Tdim - 1) = conv_factor *
