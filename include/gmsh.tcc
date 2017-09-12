@@ -8,6 +8,7 @@ void GMSH<Tdim, Tvertices>::read_mesh(const std::string& filename) {
   this->read_elements(filename);
 }
 
+//! Read keyword
 //! \tparam Tdim Dimension
 //! \tparam Tvertices Number of vertices in element
 //! \param[in] filename Input mesh filename
@@ -81,7 +82,7 @@ void GMSH<Tdim, Tvertices>::read_vertices(std::ifstream& file) {
   this->nvertices_ = vertices_.size();
 
   //! Check that the number of vertices are correct
-  if (nvertices_ != nvertices) 
+  if (nvertices_ != nvertices)
     std::cout << "Error: number of vertices do not match.\n";
 
   std::cout << "Number of Vertices: " << nvertices_ << '\n';
