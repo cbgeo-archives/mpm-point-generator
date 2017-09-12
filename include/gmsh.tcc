@@ -29,14 +29,15 @@ void GMSH<Tdim, Tvertices>::read_vertices(const std::string& filename) {
   if (infile.good()) {
     std::cout << "Vertices file found" << '\n';
 
-  std::string line;
-  std::getline(file, line);
-  std::istringstream istream(line);
+    std::string line;
 
-  //! Read number of vertices
-  unsigned nvertices = std::numeric_limits<unsigned>::max();
-  istream >> nvertices;
-  getline(istream, line);
+    //! Ignore first 4 lines
+    for (unsigned i = 0; i < toplines; ++i) {
+      std::getline(infile, line);
+    }
+    //! Read number of vertices
+    infile >> nvertices;
+    getline(infile, line);
 
     //! Read vertex coordinates & id
     for (unsigned i = 0; i < nvertices; ++i) {
@@ -55,15 +56,15 @@ void GMSH<Tdim, Tvertices>::read_vertices(const std::string& filename) {
     infile.close();
   }
   nvertices_ = vertices_.size();
-  std::cout << "Number of Vertices: " << nvertices_ << '\n';
+  std::cout << "Number of Vertices: " << vertices_.size() << '\n';
 }
 
 //! Read GMSH elements
 //! \tparam Tdim Dimension
 //! \tparam Tvertices Number of vertices in element
-//! \param[in] filename Input mesh filename and directory
+//! \param[in] filename Input mesh filename
 template <unsigned Tdim, unsigned Tvertices>
-void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
+void GMSH<Tdim, Tvertices>::read_elements(const std::string& filename) {
 
   //! Number of vertices
   double nvertices = std::numeric_limits<double>::max();
@@ -230,13 +231,14 @@ void GMSH<Tdim, Tvertices>::compute_material_points() {
 template <unsigned Tdim, unsigned Tvertices>
 void GMSH<Tdim, Tvertices>::compute_stresses() {
 
-  //! Material density
+  // Material density
   const double density = 22;
-  //! K0 static pressure coefficient
+  // K0 static pressure coefficient
   const double k0 = 0.5;
+  const double max_height = 3;
   const double conv_factor = 10;
 
-  double max_height = std::numeric_limits<double>::min();;
+  double max_height = std::numeric_limits<double>::min();
 
   //! [2D], y is the vertical direction
   //! [3D], z is the vertical direction
@@ -249,7 +251,8 @@ void GMSH<Tdim, Tvertices>::compute_stresses() {
 
   //! Loop through the points to get vertical and horizontal stresses
   //! Note that tau (shear stress) is assumed 0
-  std::array<double, Tdim> stresses;
+  //! [2D], y is the vertical direction
+  //! [3d], z is the vertical direction
   for (const auto& materialpoint : materialpoints_) {
     std::array<double, Tdim * 2> stress{0};
     stress.at(Tdim - 1) = conv_factor *
