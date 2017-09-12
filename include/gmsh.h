@@ -22,14 +22,11 @@ class GMSH : public Mesh<Tdim, Tvertices> {
   //! Read GMSH file
   void read_mesh(const std::string& filename);
 
-  //! Read keyword in GMSH
-  void read_keyword(std::ifstream& file, const std::string& keyword);
-
   //! Read vertices in GMSH
-  void read_vertices(std::ifstream& file);
+  void read_vertices(const std::string& filename);
 
   //! Read elements in GMSH
-  void read_elements(std::ifstream& file);
+  void read_elements(const std::string& filename);
 
   //! Store element id and vertices coordinates as map
   void store_element_vertices();
