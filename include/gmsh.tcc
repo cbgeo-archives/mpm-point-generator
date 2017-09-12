@@ -4,8 +4,16 @@
 //! \param[in] filename Input mesh filename
 template <unsigned Tdim, unsigned Tvertices>
 void GMSH<Tdim, Tvertices>::read_mesh(const std::string& filename) {
-  this->read_vertices(filename);
-  this->read_elements(filename);
+
+  std::ifstream file;
+  file.open(filename.c_str(), std::ios::in);
+  if (!file.is_open())
+    throw std::runtime_error("Specified GMSH file does not exist");
+  if (file.good()) {
+    read_vertices(file);
+    read_elements(file);
+  }
+  file.close();
 }
 
 //! Read keyword
@@ -42,10 +50,21 @@ void GMSH<Tdim, Tvertices>::read_keyword(std::ifstream& file,
 //! \tparam Tvertices Number of vertices in element
 //! \param[in] filename Input mesh filename
 template <unsigned Tdim, unsigned Tvertices>
-void GMSH<Tdim, Tvertices>::read_vertices(std::ifstream& file) {
+void GMSH<Tdim, Tvertices>::read_vertices(const std::string& filename) {
 
-  //! Find the line of interest
-  read_keyword(file, "$Nodes");
+  //! Number of vertices
+  double nvertices = std::numeric_limits<double>::max();
+  const unsigned toplines = 4;
+
+  //! Vertices id
+  unsigned vertid = 0;
+
+  std::fstream infile;
+  infile.open(filename, std::ios::in);
+
+  //! Check if input file is good
+  if (infile.good()) {
+    std::cout << "Vertices file found" << '\n';
 
   std::string line;
   std::getline(file, line);
@@ -82,7 +101,7 @@ void GMSH<Tdim, Tvertices>::read_vertices(std::ifstream& file) {
   this->nvertices_ = vertices_.size();
 
   //! Check that the number of vertices are correct
-  if (nvertices_ != nvertices)
+  if (nvertices_ != nvertices) 
     std::cout << "Error: number of vertices do not match.\n";
 
   std::cout << "Number of Vertices: " << nvertices_ << '\n';
@@ -122,58 +141,31 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
   //! Array to store vertices coordinates
   std::array<double, Tvertices> elementarray;
 
-  std::fstream infile;
-  infile.open(filename, std::ios::in);
+  //! specify element type 4 = quadrilateral, 8 = hexahedron
+  const unsigned element_type = 4;
 
-  //! Check if input msh file is good
-  if (infile.good()) {
-    std::cout << "Element file found" << '\n';
+  //! Iterate through all elements in the file
+  for (unsigned i = 0; i < nelements; ++i) {
+    std::getline(file, line);
+    std::istringstream istream(line);
+    if (line.find('#') == std::string::npos && line != "") {
+      istream >> elementid >> elementtype >> elementry >> physical >> elementry;
 
-    std::string line;
-
-    //! Ignore first 4 lines
-    for (unsigned k = 0; k < toplines; ++k) {
-      std::getline(infile, line);
-    }
-    //! Get number of vertices
-    infile >> nvertices;
-    getline(infile, line);
-    //! Skip past vertices section
-    for (int i = 0; i < nvertices; ++i) {
-      std::getline(infile, line);
-    }
-    //! Skip past element headers
-    for (unsigned l = 0; l < 2; ++l) {
-      std::getline(infile, line);
-    }
-
-    infile >> nelements;
-    getline(infile, line);
-
-    for (int i = 0; i < nelements; ++i) {
-      std::getline(infile, line);
-      std::istringstream istream(line);
-      if (line.find('#') == std::string::npos && line != "") {
-        istream >> elementid;
-        istream >> elementtype;
-        istream >> elementry;
-        istream >> physical;
-        istream >> elementry;
-
-        //! If element type not == to specified Tvertices, skip element
-        if (elementtype != element_type) {
-          istream >> line;
-        } else {
-          istream >> elementarray.at(0) >> elementarray.at(1) >>
+      //! If element type not equals to specified Tvertices, skip element
+      if (elementtype != element_type) {
+        istream >> line;
+      } else {
+        istream >> elementarray.at(0) >> elementarray.at(1) >>
               elementarray.at(2) >> elementarray.at(3) >> elementarray.at(4) >>
               elementarray.at(5) >> elementarray.at(6) >> elementarray.at(7);
-
-          elements_.insert(std::make_pair(elementid, elementarray));
-        }
+        this->elements_.insert(std::make_pair(elementid, elementarray));
       }
     }
-    infile.close();
   }
+
+
+
+
   std::cout << "Number of Elements: " << elements_.size() << '\n';
 
   //! Get the coordinates for each vertex of each element
