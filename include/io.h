@@ -7,6 +7,8 @@
 #include <sstream>
 #include <vector>
 
+#include <Eigen/Dense>
+
 #include "mesh.h"
 #include "point.h"
 
@@ -39,8 +41,7 @@ class IO {
       const std::vector<std::shared_ptr<Point<Tdim>>>& materialpoints);
 
   //! Write stresses
-  void write_stresses(
-      const std::vector<std::array<double, Tdim * 2>>& stresses);
+  void write_stresses(const std::vector<Eigen::VectorXd>& stresses);
 
   //! Return mesh file name
   std::string mesh_file_name() const { return mesh_file_name_; }

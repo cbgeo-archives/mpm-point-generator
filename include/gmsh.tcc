@@ -121,12 +121,12 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
   //! Element type
   double elementtype = std::numeric_limits<double>::max();
 
+  double physical = std::numeric_limits<double>::max();
+  double elementry = std::numeric_limits<double>::max();
   //! Element id
   unsigned elementid = std::numeric_limits<unsigned>::max();
 
-  double physical = std::numeric_limits<double>::max();
 
-  double elementry = std::numeric_limits<double>::max();
 
   //! Array to store vertices coordinates
   std::array<double, Tvertices> elementarray;
@@ -165,8 +165,8 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
         this->elements_.insert(std::make_pair(elementid, elementarray));
       }
     }
+    infile.close();
   }
-
   std::cout << "Number of Elements: " << elements_.size() << '\n';
 
   //! Get the coordinates for each vertex of each element
@@ -221,7 +221,7 @@ void GMSH<Tdim, Tvertices>::compute_material_points() {
 
   unsigned arrayposition = 0;
 
-  std::array<double, Tdim> pointsarray;
+  Eigen::VectorXd pointsarray(Tdim);
 
   const unsigned firstelementcoord = elementcoordinates_.begin()->first;
   const unsigned lastelementcoord = elementcoordinates_.rbegin()->first;
@@ -240,9 +240,9 @@ void GMSH<Tdim, Tvertices>::compute_material_points() {
 
       // Assign the centroid as the coordinate of the material point
       for (unsigned i = 0; i < Tdim; ++i) {
-        pointsarray.at(i) = 0;
+        pointsarray(i) = 0;
         for (unsigned j = 0; j < Tvertices; ++j) {
-          pointsarray.at(i) += (1. / Tvertices) * m(i, j);
+          pointsarray(i) += (1. / Tvertices) * m(i, j);
         }
       }
 
@@ -263,6 +263,7 @@ void GMSH<Tdim, Tvertices>::compute_stresses() {
   const double density = 22;
   //! K0 static pressure coefficient
   const double k0 = 0.5;
+  const double max_height = 3;
   const double conv_factor = 10;
 
   double max_height = std::numeric_limits<double>::min();
@@ -280,12 +281,13 @@ void GMSH<Tdim, Tvertices>::compute_stresses() {
   //! Note that tau (shear stress) is assumed 0
   std::array<double, Tdim> stresses;
   for (const auto& materialpoint : materialpoints_) {
-    std::array<double, Tdim * 2> stress{0};
-    stress.at(Tdim - 1) = conv_factor *
-                          (-(max_height - materialpoint->coordinates().at(2))) *
-                          density;
+    Eigen::VectorXd stress(Tdim * 2);
+    stress.setZero();
+    stress(Tdim - 1) = conv_factor *
+                       (-(max_height - materialpoint->coordinates()(2))) *
+                       density;
     for (unsigned i = 2; i <= Tdim; ++i) {
-      stress.at(Tdim - i) = stress.at(Tdim - 1) * k0;
+      stress(Tdim - i) = stress(Tdim - 1) * k0;
     }
     materialpoint->stress(stress);
   }

@@ -1,6 +1,7 @@
 #ifndef MPM_POINT_GEN_MESH_H_
 #define MPM_POINT_GEN_MESH_H_
 
+#include <Eigen/Dense>
 #include <array>
 #include <fstream>
 #include <iostream>
@@ -28,9 +29,9 @@ class Mesh {
   virtual void compute_stresses() = 0;
 
   //! Get vector of stresses
-  std::vector<std::array<double, Tdim * 2>> stress() {
+  std::vector<Eigen::VectorXd> stress() {
 
-    std::vector<std::array<double, Tdim * 2>> stress;
+    std::vector<Eigen::VectorXd> stress(Tdim * 2);
     //! Loop through the points to get the stresses
     for (const auto& materialpoint : materialpoints_) {
       stress.emplace_back(materialpoint->stress());
