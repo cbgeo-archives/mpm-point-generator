@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: /home/cbgeo/research/mpm-point-generator
     docker:
-      - image: quay.io/cbgeo/mpm
+      - image: quay.io/cbgeo/mpm3d
     steps:
       - checkout
       # GCC 6.3
