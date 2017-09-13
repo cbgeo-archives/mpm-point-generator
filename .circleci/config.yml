@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: /home/cbgeo/research/mpm-point-generator
     docker:
-      - image: quay.io/cbgeo/mpm
+      - image: quay.io/cbgeo/mpm3d
     steps:
       - checkout
       # GCC 6.3
@@ -31,7 +31,7 @@ jobs:
           name: cppcheck
           command: |
             cppcheck --version
-            cppcheck --enable=warning --inconclusive --force --std=c++11 src/*.cc include/*.h include/*.tcc --error-exitcode=1
+            cppcheck --enable=warning --inconclusive --force --language=c++ --std=c++11 src/*.cc include/*.h include/*.tcc --error-exitcode=1
       # codecoverage
       - run:
           name: codecov.io
