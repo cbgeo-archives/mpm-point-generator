@@ -16,7 +16,7 @@ int main(int argc, char** argv) {
     std::unique_ptr<IO<3>> io(new IO<3>(argv[1]));
 
     //! Mesh handler
-    std::unique_ptr<Mesh<3, 4>> mesh(new GMSH<3, 4>());
+    std::unique_ptr<Mesh<3, 8>> mesh(new GMSH<3, 8>());
 
     //! Read mesh
     mesh->read_mesh(io->mesh_file_name());
