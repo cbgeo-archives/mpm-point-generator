@@ -50,9 +50,7 @@ void IO<Tdim>::write_stresses(const std::vector<Eigen::VectorXd>& stresses) {
       stress_file.setf(std::ios::fixed, std::ios::floatfield);
       stress_file << id << '\t';
       for (unsigned i = 0; i < Tdim * 2; ++i) {
-        std::cout << "testing2\n";
         stress_file << stress(i) << "\t";
-        std::cout << "testing3\n";
       }
       stress_file << "\n";
       ++id;
