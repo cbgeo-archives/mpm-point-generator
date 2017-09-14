@@ -29,6 +29,11 @@ void GMSH<Tdim, Tvertices>::read_keyword(std::ifstream& file,
   std::string line;
   file.clear();
   file.seekg(0, std::ios::beg);
+
+  //! The loop is trying to find specific keyword and get the line number
+  //! The code will obtain the data after the specific keyword
+  //! Should the keyword is not found, it terminates and sends error messsage
+
   while (std::getline(file, line)) {
     if (line != keyword) {
       if (line.find(keyword) != std::string::npos) {
@@ -139,7 +144,19 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
   //! Array to store vertices coordinates
   std::array<double, Tvertices> elementarray;
 
-  //! specify element type 4 = quadrilateral, 8 = hexahedron
+  //! specify element type 4 = quadrilateral, 5 = hexahedron
+  //! Documentation from GMSH
+  //! 1 - Line (2 nodes)
+  //! 2 - Triangle (3 nodes)
+  //! 3 - Quadrangle (4 nodes)
+  //! 4 - Tetrahedron (4 nodes)
+  //! 5 - Hexahedron (8 nodes)
+  //! 6 - Prism (6 nodes)
+  //! 7 - Pyramid (5 nodes)
+  //! 8 - Second order line (3 nodes)
+  //! 9 - Second order triangle (6 nodes)
+  //! 11 - Second order tetrahedron (10 nodes)
+  //! 15 - Point (1 node)
   const unsigned element_type = 4;
 
   //! Iterate through all elements in the file
@@ -264,7 +281,7 @@ void GMSH<Tdim, Tvertices>::compute_stresses() {
   //! [2D], y is the vertical direction
   //! [3D], z is the vertical direction
   //! In general, [Tdim - 1]
-  for (auto const& point : materialpoints_) {
+  for (const auto& point : materialpoints_) {
     if (point->coordinates().at(Tdim - 1) > max_height) {
       max_height = point->coordinates().at(Tdim - 1);
     }
