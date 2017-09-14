@@ -31,7 +31,7 @@ class Mesh {
   //! Get vector of stresses
   std::vector<Eigen::VectorXd> stress() {
 
-    std::vector<Eigen::VectorXd> stress(Tdim * 2);
+    std::vector<Eigen::VectorXd> stress;
     //! Loop through the points to get the stresses
     for (const auto& materialpoint : materialpoints_) {
       stress.emplace_back(materialpoint->stress());
