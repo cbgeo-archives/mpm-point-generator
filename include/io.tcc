@@ -21,6 +21,7 @@ void IO<Tdim>::write_material_points(
       for (unsigned i = 0; i < Tdim; ++i) {
         material_points_file << points->coordinates()(i) << "\t";
       }
+      material_points_file << "\n";
     }
     material_points_file.close();
   }
