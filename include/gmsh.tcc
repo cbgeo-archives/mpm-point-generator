@@ -182,8 +182,8 @@ void GMSH<Tdim, Tvertices>::store_element_vertices() {
   const unsigned firstelement = elements_.begin()->first;
   const unsigned lastelement = elements_.rbegin()->first;
 
-  std::array<double, Tvertices> elementkeyvalues;
-  std::array<double, Tdim * Tvertices> verticesarray;
+  Eigen::VectorXd elementkeyvalues(Tvertices);
+  Eigen::VectorXd verticesarray(Tdim * Tvertices);
 
   //! Iterate through element_
   for (unsigned i = firstelement; i <= lastelement; ++i) {
@@ -192,7 +192,7 @@ void GMSH<Tdim, Tvertices>::store_element_vertices() {
 
       //! In each element, iterate to get vertices id's of the element
       for (unsigned j = 0; j < Tvertices; ++j) {
-        elementkeyvalues.at(j) = elementfind->second[j];
+        elementkeyvalues[j] = elementfind->second[j];
       }
       //! Iterate through the vertices to get coordinates (4 for tetrahedral)
       for (unsigned k = 0; k < Tvertices; ++k) {
@@ -201,7 +201,7 @@ void GMSH<Tdim, Tvertices>::store_element_vertices() {
         //! For each vertex, store the coordinates
         //! j = 0 -> [X], j = 1 -> [Y], j = 2 -> [Z]
         for (unsigned l = 0; l < Tdim; ++l) {
-          verticesarray.at(k * Tdim + l) = verticesfind->second[l];
+          verticesarray[k * Tdim + l] = verticesfind->second[l];
         }
       }
 
@@ -240,9 +240,9 @@ void GMSH<Tdim, Tvertices>::compute_material_points() {
 
       // Assign the centroid as the coordinate of the material point
       for (unsigned i = 0; i < Tdim; ++i) {
-        pointsarray(i) = 0;
+        pointsarray[i] = 0;
         for (unsigned j = 0; j < Tvertices; ++j) {
-          pointsarray(i) += (1. / Tvertices) * m(i, j);
+          pointsarray[i] += (1. / Tvertices) * m(i, j);
         }
       }
 
@@ -259,9 +259,9 @@ void GMSH<Tdim, Tvertices>::compute_material_points() {
 template <unsigned Tdim, unsigned Tvertices>
 void GMSH<Tdim, Tvertices>::compute_stresses() {
 
-  //! Material density
+  // Material density
   const double density = 22;
-  //! K0 static pressure coefficient
+  // K0 static pressure coefficient
   const double k0 = 0.5;
   const double max_height = 3;
   const double conv_factor = 10;
@@ -279,15 +279,16 @@ void GMSH<Tdim, Tvertices>::compute_stresses() {
 
   //! Loop through the points to get vertical and horizontal stresses
   //! Note that tau (shear stress) is assumed 0
-  std::array<double, Tdim> stresses;
+  //! [2D], y is the vertical direction
+  //! [3D], z is the vertical direction
   for (const auto& materialpoint : materialpoints_) {
     Eigen::VectorXd stress(Tdim * 2);
     stress.setZero();
-    stress(Tdim - 1) = conv_factor *
-                       (-(max_height - materialpoint->coordinates()(2))) *
+    stress[Tdim - 1] = conv_factor *
+                       (-(max_height - materialpoint->coordinates()[2])) *
                        density;
     for (unsigned i = 2; i <= Tdim; ++i) {
-      stress(Tdim - i) = stress(Tdim - 1) * k0;
+      stress[Tdim - i] = stress[Tdim - 1] * k0;
     }
     materialpoint->stress(stress);
   }

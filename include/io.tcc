@@ -19,7 +19,7 @@ void IO<Tdim>::write_material_points(
     //! For 1D, both y and z values are 0
     for (auto const& points : materialpoints) {
       for (unsigned i = 0; i < Tdim; ++i) {
-        material_points_file << points->coordinates()(i) << "\t";
+        material_points_file << points->coordinates()[i] << "\t";
       }
       material_points_file << "\n";
     }
@@ -47,11 +47,11 @@ void IO<Tdim>::write_stresses(const std::vector<Eigen::VectorXd>& stresses) {
     //! Stresses in Voigt Notation
     //! $\sigma_{xx}$ $\sigma_{yy}$ $\sigma_{zz}$
     //! $\tau_{yz}$ $\tau_{zx}$ $\tau_{xy}$
-    for (auto const& stress : stresses) {
+    for (const auto& stress : stresses) {
       stress_file.setf(std::ios::fixed, std::ios::floatfield);
       stress_file << id << '\t';
       for (unsigned i = 0; i < Tdim * 2; ++i) {
-        stress_file << stress(i) << "\t";
+        stress_file << stress[i] << "\t";
       }
       stress_file << "\n";
       ++id;
