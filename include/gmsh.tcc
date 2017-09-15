@@ -160,8 +160,8 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
         istream >> line;
       } else {
         istream >> elementarray.at(0) >> elementarray.at(1) >>
-              elementarray.at(2) >> elementarray.at(3) >> elementarray.at(4) >>
-              elementarray.at(5) >> elementarray.at(6) >> elementarray.at(7);
+            elementarray.at(2) >> elementarray.at(3) >> elementarray.at(4) >>
+            elementarray.at(5) >> elementarray.at(6) >> elementarray.at(7);
         this->elements_.insert(std::make_pair(elementid, elementarray));
       }
     }
