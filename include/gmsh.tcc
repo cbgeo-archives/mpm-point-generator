@@ -252,8 +252,8 @@ void GMSH<Tdim, Tvertices>::compute_stresses() {
 
   double max_height = std::numeric_limits<double>::min();
 
-  //! [2D], y is the vertical 3D
-  //! [direction], z is the vertical direction
+  //! [2D], y is the vertical direction
+  //! [3D], z is the vertical direction
   //! In general, [Tdim - 1]
   for (const auto& point : materialpoints_) {
     if (point->coordinates()[Tdim - 1] > max_height) {
