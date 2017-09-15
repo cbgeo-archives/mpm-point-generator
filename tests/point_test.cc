@@ -17,9 +17,9 @@ TEST_CASE("Point base is checked in 2D", "[Point][2D]") {
   //! Coordinates are checked for zero values
   SECTION("Coordinates are checked for zero values") {
     const unsigned index = 0;
-    Eigen::VectorXd coordinate(DIM); 
+    Eigen::VectorXd coordinate(DIM);
     coordinate << 0, 0;
-    Eigen::VectorXd stress(DIM * 2); 
+    Eigen::VectorXd stress(DIM * 2);
     stress << 0, 0, 0, 0;
     auto node = std::unique_ptr<Point<DIM>>(new Point<DIM>(index, coordinate));
     node->stress(stress);
@@ -37,10 +37,12 @@ TEST_CASE("Point base is checked in 2D", "[Point][2D]") {
   SECTION("Coordinates are checked for minimum values") {
     const unsigned index = std::numeric_limits<unsigned>::min();
     Eigen::VectorXd coordinate(DIM);
-    coordinate << std::numeric_limits<double>::min(), std::numeric_limits<double>::min();
+    coordinate << std::numeric_limits<double>::min(),
+        std::numeric_limits<double>::min();
     Eigen::VectorXd stress(DIM * 2);
-    stress << std::numeric_limits<double>::min(), std::numeric_limits<double>::min(),
-        std::numeric_limits<double>::min(), std::numeric_limits<double>::min();
+    stress << std::numeric_limits<double>::min(),
+        std::numeric_limits<double>::min(), std::numeric_limits<double>::min(),
+        std::numeric_limits<double>::min();
     auto node = std::unique_ptr<Point<DIM>>(new Point<DIM>(index, coordinate));
     node->stress(stress);
 
@@ -63,10 +65,12 @@ TEST_CASE("Point base is checked in 2D", "[Point][2D]") {
   SECTION("Coordinates are checked for maximum values") {
     const unsigned index = std::numeric_limits<unsigned>::max();
     Eigen::VectorXd coordinate(DIM);
-    coordinate << std::numeric_limits<double>::max(), std::numeric_limits<double>::max();
+    coordinate << std::numeric_limits<double>::max(),
+        std::numeric_limits<double>::max();
     Eigen::VectorXd stress(DIM * 2);
-    stress << std::numeric_limits<double>::max(), std::numeric_limits<double>::max(),
-        std::numeric_limits<double>::max(), std::numeric_limits<double>::max();
+    stress << std::numeric_limits<double>::max(),
+        std::numeric_limits<double>::max(), std::numeric_limits<double>::max(),
+        std::numeric_limits<double>::max();
     auto node = std::unique_ptr<Point<DIM>>(new Point<DIM>(index, coordinate));
     node->stress(stress);
 
@@ -119,12 +123,13 @@ TEST_CASE("Point base is checked in 3D", "[Point][3D]") {
   SECTION("Coordinates are checked for minimum values") {
     const unsigned index = std::numeric_limits<unsigned>::min();
     Eigen::VectorXd coordinate(DIM);
-    coordinate << std::numeric_limits<double>::min(), std::numeric_limits<double>::min(),
-        std::numeric_limits<double>::min();
-    Eigen::VectorXd stress(DIM * 2);
-    stress << std::numeric_limits<double>::min(), std::numeric_limits<double>::min(),
-        std::numeric_limits<double>::min(), std::numeric_limits<double>::min(),
+    coordinate << std::numeric_limits<double>::min(),
         std::numeric_limits<double>::min(), std::numeric_limits<double>::min();
+    Eigen::VectorXd stress(DIM * 2);
+    stress << std::numeric_limits<double>::min(),
+        std::numeric_limits<double>::min(), std::numeric_limits<double>::min(),
+        std::numeric_limits<double>::min(), std::numeric_limits<double>::min(),
+        std::numeric_limits<double>::min();
     auto node = std::unique_ptr<Point<DIM>>(new Point<DIM>(index, coordinate));
     node->stress(stress);
 
@@ -153,12 +158,13 @@ TEST_CASE("Point base is checked in 3D", "[Point][3D]") {
   SECTION("Coordinates are checked for maximum values") {
     const unsigned index = std::numeric_limits<unsigned>::max();
     Eigen::VectorXd coordinate(DIM);
-    coordinate << std::numeric_limits<double>::max(), std::numeric_limits<double>::max(),
-        std::numeric_limits<double>::max();
-    Eigen::VectorXd stress(DIM * 2);
-    stress << std::numeric_limits<double>::max(), std::numeric_limits<double>::max(),
-        std::numeric_limits<double>::max(), std::numeric_limits<double>::max(),
+    coordinate << std::numeric_limits<double>::max(),
         std::numeric_limits<double>::max(), std::numeric_limits<double>::max();
+    Eigen::VectorXd stress(DIM * 2);
+    stress << std::numeric_limits<double>::max(),
+        std::numeric_limits<double>::max(), std::numeric_limits<double>::max(),
+        std::numeric_limits<double>::max(), std::numeric_limits<double>::max(),
+        std::numeric_limits<double>::max();
     auto node = std::unique_ptr<Point<DIM>>(new Point<DIM>(index, coordinate));
     node->stress(stress);
 
