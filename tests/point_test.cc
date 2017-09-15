@@ -25,12 +25,12 @@ TEST_CASE("Point base is checked in 2D", "[Point][2D]") {
     node->stress(stress);
 
     REQUIRE(node->id() == 0);
-    REQUIRE(node->coordinates()(0) == Approx(0).epsilon(tolerance));
-    REQUIRE(node->coordinates()(1) == Approx(0).epsilon(tolerance));
-    REQUIRE(node->stress()(0) == Approx(0).epsilon(tolerance));
-    REQUIRE(node->stress()(1) == Approx(0).epsilon(tolerance));
-    REQUIRE(node->stress()(2) == Approx(0).epsilon(tolerance));
-    REQUIRE(node->stress()(3) == Approx(0).epsilon(tolerance));
+    REQUIRE(node->coordinates()[0] == Approx(0).epsilon(tolerance));
+    REQUIRE(node->coordinates()[1] == Approx(0).epsilon(tolerance));
+    REQUIRE(node->stress()[0] == Approx(0).epsilon(tolerance));
+    REQUIRE(node->stress()[1] == Approx(0).epsilon(tolerance));
+    REQUIRE(node->stress()[2] == Approx(0).epsilon(tolerance));
+    REQUIRE(node->stress()[3] == Approx(0).epsilon(tolerance));
   }
 
   //! Coordinates are checked for minimum values
@@ -47,17 +47,17 @@ TEST_CASE("Point base is checked in 2D", "[Point][2D]") {
     node->stress(stress);
 
     REQUIRE(node->id() == std::numeric_limits<unsigned>::min());
-    REQUIRE(node->coordinates()(0) ==
+    REQUIRE(node->coordinates()[0] ==
             Approx(std::numeric_limits<double>::min()).epsilon(tolerance));
-    REQUIRE(node->coordinates()(1) ==
+    REQUIRE(node->coordinates()[1] ==
             Approx(std::numeric_limits<double>::min()).epsilon(tolerance));
-    REQUIRE(node->stress()(0) ==
+    REQUIRE(node->stress()[0] ==
             Approx(std::numeric_limits<double>::min()).epsilon(tolerance));
-    REQUIRE(node->stress()(1) ==
+    REQUIRE(node->stress()[1] ==
             Approx(std::numeric_limits<double>::min()).epsilon(tolerance));
-    REQUIRE(node->stress()(2) ==
+    REQUIRE(node->stress()[2] ==
             Approx(std::numeric_limits<double>::min()).epsilon(tolerance));
-    REQUIRE(node->stress()(3) ==
+    REQUIRE(node->stress()[3] ==
             Approx(std::numeric_limits<double>::min()).epsilon(tolerance));
   }
 
@@ -75,17 +75,17 @@ TEST_CASE("Point base is checked in 2D", "[Point][2D]") {
     node->stress(stress);
 
     REQUIRE(node->id() == std::numeric_limits<unsigned>::max());
-    REQUIRE(node->coordinates()(0) ==
+    REQUIRE(node->coordinates()[0] ==
             Approx(std::numeric_limits<double>::max()).epsilon(tolerance));
-    REQUIRE(node->coordinates()(1) ==
+    REQUIRE(node->coordinates()[1] ==
             Approx(std::numeric_limits<double>::max()).epsilon(tolerance));
-    REQUIRE(node->stress()(0) ==
+    REQUIRE(node->stress()[0] ==
             Approx(std::numeric_limits<double>::max()).epsilon(tolerance));
-    REQUIRE(node->stress()(1) ==
+    REQUIRE(node->stress()[1] ==
             Approx(std::numeric_limits<double>::max()).epsilon(tolerance));
-    REQUIRE(node->stress()(2) ==
+    REQUIRE(node->stress()[2] ==
             Approx(std::numeric_limits<double>::max()).epsilon(tolerance));
-    REQUIRE(node->stress()(3) ==
+    REQUIRE(node->stress()[3] ==
             Approx(std::numeric_limits<double>::max()).epsilon(tolerance));
   }
 }
@@ -108,15 +108,15 @@ TEST_CASE("Point base is checked in 3D", "[Point][3D]") {
     node->stress(stress);
 
     REQUIRE(node->id() == 0);
-    REQUIRE(node->coordinates()(0) == Approx(0).epsilon(tolerance));
-    REQUIRE(node->coordinates()(1) == Approx(0).epsilon(tolerance));
-    REQUIRE(node->coordinates()(2) == Approx(0).epsilon(tolerance));
-    REQUIRE(node->stress()(0) == Approx(0).epsilon(tolerance));
-    REQUIRE(node->stress()(1) == Approx(0).epsilon(tolerance));
-    REQUIRE(node->stress()(2) == Approx(0).epsilon(tolerance));
-    REQUIRE(node->stress()(3) == Approx(0).epsilon(tolerance));
-    REQUIRE(node->stress()(4) == Approx(0).epsilon(tolerance));
-    REQUIRE(node->stress()(5) == Approx(0).epsilon(tolerance));
+    REQUIRE(node->coordinates()[0] == Approx(0).epsilon(tolerance));
+    REQUIRE(node->coordinates()[1] == Approx(0).epsilon(tolerance));
+    REQUIRE(node->coordinates()[2] == Approx(0).epsilon(tolerance));
+    REQUIRE(node->stress()[0] == Approx(0).epsilon(tolerance));
+    REQUIRE(node->stress()[1] == Approx(0).epsilon(tolerance));
+    REQUIRE(node->stress()[2] == Approx(0).epsilon(tolerance));
+    REQUIRE(node->stress()[3] == Approx(0).epsilon(tolerance));
+    REQUIRE(node->stress()[4] == Approx(0).epsilon(tolerance));
+    REQUIRE(node->stress()[5] == Approx(0).epsilon(tolerance));
   }
 
   //! Coordinates are checked for minimum values
@@ -134,23 +134,23 @@ TEST_CASE("Point base is checked in 3D", "[Point][3D]") {
     node->stress(stress);
 
     REQUIRE(node->id() == std::numeric_limits<unsigned>::min());
-    REQUIRE(node->coordinates()(0) ==
+    REQUIRE(node->coordinates()[0] ==
             Approx(std::numeric_limits<double>::min()).epsilon(tolerance));
-    REQUIRE(node->coordinates()(1) ==
+    REQUIRE(node->coordinates()[1] ==
             Approx(std::numeric_limits<double>::min()).epsilon(tolerance));
-    REQUIRE(node->coordinates()(2) ==
+    REQUIRE(node->coordinates()[2] ==
             Approx(std::numeric_limits<double>::min()).epsilon(tolerance));
-    REQUIRE(node->stress()(0) ==
+    REQUIRE(node->stress()[0] ==
             Approx(std::numeric_limits<double>::min()).epsilon(tolerance));
-    REQUIRE(node->stress()(1) ==
+    REQUIRE(node->stress()[1] ==
             Approx(std::numeric_limits<double>::min()).epsilon(tolerance));
-    REQUIRE(node->stress()(2) ==
+    REQUIRE(node->stress()[2] ==
             Approx(std::numeric_limits<double>::min()).epsilon(tolerance));
-    REQUIRE(node->stress()(3) ==
+    REQUIRE(node->stress()[3] ==
             Approx(std::numeric_limits<double>::min()).epsilon(tolerance));
-    REQUIRE(node->stress()(4) ==
+    REQUIRE(node->stress()[4] ==
             Approx(std::numeric_limits<double>::min()).epsilon(tolerance));
-    REQUIRE(node->stress()(5) ==
+    REQUIRE(node->stress()[5] ==
             Approx(std::numeric_limits<double>::min()).epsilon(tolerance));
   }
 
@@ -169,23 +169,23 @@ TEST_CASE("Point base is checked in 3D", "[Point][3D]") {
     node->stress(stress);
 
     REQUIRE(node->id() == std::numeric_limits<unsigned>::max());
-    REQUIRE(node->coordinates()(0) ==
+    REQUIRE(node->coordinates()[0] ==
             Approx(std::numeric_limits<double>::max()).epsilon(tolerance));
-    REQUIRE(node->coordinates()(1) ==
+    REQUIRE(node->coordinates()[1] ==
             Approx(std::numeric_limits<double>::max()).epsilon(tolerance));
-    REQUIRE(node->coordinates()(2) ==
+    REQUIRE(node->coordinates()[2] ==
             Approx(std::numeric_limits<double>::max()).epsilon(tolerance));
-    REQUIRE(node->stress()(0) ==
+    REQUIRE(node->stress()[0] ==
             Approx(std::numeric_limits<double>::max()).epsilon(tolerance));
-    REQUIRE(node->stress()(1) ==
+    REQUIRE(node->stress()[1] ==
             Approx(std::numeric_limits<double>::max()).epsilon(tolerance));
-    REQUIRE(node->stress()(2) ==
+    REQUIRE(node->stress()[2] ==
             Approx(std::numeric_limits<double>::max()).epsilon(tolerance));
-    REQUIRE(node->stress()(3) ==
+    REQUIRE(node->stress()[3] ==
             Approx(std::numeric_limits<double>::max()).epsilon(tolerance));
-    REQUIRE(node->stress()(4) ==
+    REQUIRE(node->stress()[4] ==
             Approx(std::numeric_limits<double>::max()).epsilon(tolerance));
-    REQUIRE(node->stress()(5) ==
+    REQUIRE(node->stress()[5] ==
             Approx(std::numeric_limits<double>::max()).epsilon(tolerance));
   }
 }

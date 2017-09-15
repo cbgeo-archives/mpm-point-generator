@@ -46,10 +46,10 @@ void GMSH<Tdim, Tvertices>::read_vertices(const std::string& filename) {
 
       if (line.find('#') == std::string::npos && line != "") {
         //! Coordinates of vertex
-        std::array<double, Tdim> vertex;
+        Eigen::VectorXd vertex(Tdim);
 
         istream >> vertid;
-        istream >> vertex.at(0) >> vertex.at(1) >> vertex.at(2);
+        istream >> vertex[0] >> vertex[1] >> vertex[2];
         vertices_.insert(std::make_pair(vertid, vertex));
       }
     }
@@ -84,7 +84,7 @@ void GMSH<Tdim, Tvertices>::read_elements(const std::string& filename) {
   const unsigned element_type = 5;
 
   //! Array to store vertices coordinates
-  std::array<double, Tvertices> elementarray;
+  Eigen::VectorXd elementarray(Tvertices);
 
   std::fstream infile;
   infile.open(filename, std::ios::in);
@@ -128,9 +128,9 @@ void GMSH<Tdim, Tvertices>::read_elements(const std::string& filename) {
         if (elementtype != element_type) {
           istream >> line;
         } else {
-          istream >> elementarray.at(0) >> elementarray.at(1) >>
-              elementarray.at(2) >> elementarray.at(3) >> elementarray.at(4) >>
-              elementarray.at(5) >> elementarray.at(6) >> elementarray.at(7);
+          istream >> elementarray[0] >> elementarray[1] >>
+              elementarray[2] >> elementarray[3] >> elementarray[4] >>
+              elementarray[5] >> elementarray[6] >> elementarray[7];
 
           elements_.insert(std::make_pair(elementid, elementarray));
         }
@@ -153,8 +153,8 @@ void GMSH<Tdim, Tvertices>::store_element_vertices() {
   const unsigned firstelement = elements_.begin()->first;
   const unsigned lastelement = elements_.rbegin()->first;
 
-  std::array<double, Tvertices> elementkeyvalues;
-  std::array<double, Tdim * Tvertices> verticesarray;
+  Eigen::VectorXd elementkeyvalues(Tvertices);
+  Eigen::VectorXd verticesarray(Tdim * Tvertices);
 
   //! Iterate through element_
   for (unsigned i = firstelement; i <= lastelement; ++i) {
@@ -163,7 +163,7 @@ void GMSH<Tdim, Tvertices>::store_element_vertices() {
 
       //! In each element, iterate to get vertices id's of the element
       for (unsigned j = 0; j < Tvertices; ++j) {
-        elementkeyvalues.at(j) = elementfind->second[j];
+        elementkeyvalues[j] = elementfind->second[j];
       }
       //! Iterate through the vertices to get coordinates (4 for tetrahedral)
       for (unsigned k = 0; k < Tvertices; ++k) {
@@ -172,7 +172,7 @@ void GMSH<Tdim, Tvertices>::store_element_vertices() {
         //! For each vertex, store the coordinates
         //! j = 0 -> [X], j = 1 -> [Y], j = 2 -> [Z]
         for (unsigned l = 0; l < Tdim; ++l) {
-          verticesarray.at(k * Tdim + l) = verticesfind->second[l];
+          verticesarray[k * Tdim + l] = verticesfind->second[l];
         }
       }
 
@@ -211,9 +211,9 @@ void GMSH<Tdim, Tvertices>::compute_material_points() {
 
       // Assign the centroid as the coordinate of the material point
       for (unsigned i = 0; i < Tdim; ++i) {
-        pointsarray(i) = 0;
+        pointsarray[i] = 0;
         for (unsigned j = 0; j < Tvertices; ++j) {
-          pointsarray(i) += (1. / Tvertices) * m(i, j);
+          pointsarray[i] += (1. / Tvertices) * m(i, j);
         }
       }
 
@@ -244,11 +244,11 @@ void GMSH<Tdim, Tvertices>::compute_stresses() {
   for (const auto& materialpoint : materialpoints_) {
     Eigen::VectorXd stress(Tdim * 2);
     stress.setZero();
-    stress(Tdim - 1) = conv_factor *
-                       (-(max_height - materialpoint->coordinates()(2))) *
+    stress[Tdim - 1] = conv_factor *
+                       (-(max_height - materialpoint->coordinates()[2])) *
                        density;
     for (unsigned i = 2; i <= Tdim; ++i) {
-      stress(Tdim - i) = stress(Tdim - 1) * k0;
+      stress[Tdim - i] = stress[Tdim - 1] * k0;
     }
     materialpoint->stress(stress);
   }
