@@ -53,21 +53,10 @@ void GMSH<Tdim, Tvertices>::read_keyword(std::ifstream& file,
 //! \tparam Tvertices Number of vertices in element
 //! \param[in] filename Input mesh filename
 template <unsigned Tdim, unsigned Tvertices>
-void GMSH<Tdim, Tvertices>::read_vertices(const std::string& filename) {
+void GMSH<Tdim, Tvertices>::read_vertices(std::ifstream& file) {
 
-  //! Number of vertices
-  double nvertices = std::numeric_limits<double>::max();
-  const unsigned toplines = 4;
-
-  //! Vertices id
-  unsigned vertid = 0;
-
-  std::fstream infile;
-  infile.open(filename, std::ios::in);
-
-  //! Check if input file is good
-  if (infile.good()) {
-    std::cout << "Vertices file found" << '\n';
+  //! Find the line of interest
+  read_keyword(file, "$Nodes");
 
   std::string line;
   std::getline(file, line);
@@ -135,16 +124,14 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
   //! Element id
   unsigned elementid = std::numeric_limits<unsigned>::max();
 
-  const unsigned toplines = 4;
-  // specify element type 5 =  8-node hexahedron
-  // For more informtion on element types, visit:
-  // http://gmsh.info/doc/texinfo/gmsh.html#File-formats
-  const unsigned element_type = 5;
+  double physical = std::numeric_limits<double>::max();
+
+  double elementry = std::numeric_limits<double>::max();
 
   //! Array to store vertices coordinates
   std::array<double, Tvertices> elementarray;
 
-  //! specify element type 4 = quadrilateral, 5 = hexahedron
+  //! specify element type 4 = tetrahedral, 5 = hexahedron
   //! Documentation from GMSH
   //! 1 - Line (2 nodes)
   //! 2 - Triangle (3 nodes)
@@ -157,7 +144,9 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
   //! 9 - Second order triangle (6 nodes)
   //! 11 - Second order tetrahedron (10 nodes)
   //! 15 - Point (1 node)
-  const unsigned element_type = 4;
+  //! For more informtion on element types, visit:
+  //! http://gmsh.info/doc/texinfo/gmsh.html#File-formats
+  const unsigned element_type = 5;
 
   //! Iterate through all elements in the file
   for (unsigned i = 0; i < nelements; ++i) {
