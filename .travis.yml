@@ -22,9 +22,10 @@ before_install:
 
 env:
   global:
-   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
-   #   via the "travis encrypt" command using the project repo's public key
-   - secure: "RapSH0k4aHUamEm7P2LOAA"
+    # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
+    #   via the "travis encrypt" command using the project repo's public key
+    - secure: "s7pgmuqqjlQRKvRvpGAqfkzscyuiOfzfUvcZjVecMOEiGH5bdJOt3QgYzgkjpvSQweJtUgSy7yeAj+Yh5YFgl4+jIESB1Y/cOkLGSgjr441WRcBbidUaagrGz/v4M1xrwBcjUzMkgyebRl4OttjkyQRf1pBHRsk5+1WUSwIJQBTtPS2xyegvq4QdoAjz3I6uK0WFHwDhFq/Dh1GTmtTbtVPX60J/FXvJZMGw+GGHgPHe4mHGZLaU7YQfCQzs84VrTfjALKzFUz9/HfThIz2s2ouWKIDf+/3Cjcd3HI6CKvEYodi//+ZozgvvLlhjdv7OkQyu3910dg98o10QtZqXo/CXwWeNxyKA3NSX4F6dq8eBL2JavGohECi/bRUTV9zwMcHyTWs0IcOauNZ5HFCHhxKTSSdpJgWVcJXaaXDeN/9teZ7R0jyebH50ErMjJB7f+/mzvCRfkT1MwBxNXto7FXQc0TVjCmj4OmlGfCDSSm48OWN1gMCNf0gAX5IpQHkHRM0O20gsAXpQVSxrYNleF35Dy/+PQCg7Amx7UGMwOOL4rQEphGHTBaQS0G0LRS/lAOqDFkb7x/pslAiP73Ke4qR+p9EqPDUjGPedrcm6PGrqk8EBAYIOa/hgOaBUEER5z21jrw2vN9R/JWVqmzgZ/DDl585qHrZ+8SMRtdlEq7k="
+
   
 ################
 # build matrix #
@@ -113,7 +114,7 @@ matrix:
           packages: ['g++-5', 'libeigen3-dev']
         coverity_scan:
           project:
-            name: "cw646/mpm-point-generator"
+            name: "cb-geo/mpm-point-generator"
             description: "MPM Point Generator Coverity scan build submitted via Travis CI"
           notification_email: cued.geomechanics@gmail.com
           build_command_prepend: "sudo ln -sf /usr/bin/g++-5 /usr/bin/g++ && export CXX=g++ && g++ --version && cmake . && make clean"
