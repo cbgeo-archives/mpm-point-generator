@@ -22,82 +22,16 @@ before_install:
 
 env:
   global:
-   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
-   #   via the "travis encrypt" command using the project repo's public key
-   - secure: "RapSH0k4aHUamEm7P2LOAA"
+    # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
+    #   via the "travis encrypt" command using the project repo's public key
+    - secure: "s7pgmuqqjlQRKvRvpGAqfkzscyuiOfzfUvcZjVecMOEiGH5bdJOt3QgYzgkjpvSQweJtUgSy7yeAj+Yh5YFgl4+jIESB1Y/cOkLGSgjr441WRcBbidUaagrGz/v4M1xrwBcjUzMkgyebRl4OttjkyQRf1pBHRsk5+1WUSwIJQBTtPS2xyegvq4QdoAjz3I6uK0WFHwDhFq/Dh1GTmtTbtVPX60J/FXvJZMGw+GGHgPHe4mHGZLaU7YQfCQzs84VrTfjALKzFUz9/HfThIz2s2ouWKIDf+/3Cjcd3HI6CKvEYodi//+ZozgvvLlhjdv7OkQyu3910dg98o10QtZqXo/CXwWeNxyKA3NSX4F6dq8eBL2JavGohECi/bRUTV9zwMcHyTWs0IcOauNZ5HFCHhxKTSSdpJgWVcJXaaXDeN/9teZ7R0jyebH50ErMjJB7f+/mzvCRfkT1MwBxNXto7FXQc0TVjCmj4OmlGfCDSSm48OWN1gMCNf0gAX5IpQHkHRM0O20gsAXpQVSxrYNleF35Dy/+PQCg7Amx7UGMwOOL4rQEphGHTBaQS0G0LRS/lAOqDFkb7x/pslAiP73Ke4qR+p9EqPDUjGPedrcm6PGrqk8EBAYIOa/hgOaBUEER5z21jrw2vN9R/JWVqmzgZ/DDl585qHrZ+8SMRtdlEq7k="
+
   
 ################
 # build matrix #
 ################
 matrix:
   include:
-    # GCC 4.9
-    - compiler: gcc-4.9
-      env: COMPILER=g++-4.9
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-4.9    
-      before_script: export CXX=g++-4.9
-
-    # GCC 5
-    - compiler: gcc-5
-      env: COMPILER=g++-5
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-5
-      before_script: export CXX=g++-5
-
-    # Clang 3.9 and static analysis
-    - os: linux
-      compiler: clang-3.9
-      addons:
-       apt:
-         sources:
-           - sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-3.9 main'
-           - sourceline: 'deb-src http://apt.llvm.org/trusty/ llvm-toolchain-trusty-3.9 main'
-         packages:
-           - clang-3.9
-      env: 
-        - COMPILER=clang++-3.9
-        - CONFIG=scan-build
-        - ASAN="ON"
-        - MSAN="ON"
-        - TSAN="ON"
-        - UBSAN="ON"
-        - STATIC_ANALYZER="ON"
-        - CLANG_FORMAT="ON"
-        - CLANG_TIDY="ON"
-      before_install:
-        - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
-        - sudo apt-get update -qq
-        - sudo apt-get install -qq clang-3.9
-        - sudo apt-get install -qq libeigen3-dev
-      after_success:
-        - scan-build-3.9 cmake ..
-        - scan-build-3.9 cd .. && make
-
-    # Valgrind and cppcheck
-    - compiler: gcc-5
-      env:
-        - COMPILER=g++-5
-        - SPECIAL=valgrind
-      addons:
-        apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-5', 'cppcheck', 'valgrind']
-      before_script: export CXX=g++-5
-      after_success:
-        # - valgrind --error-exitcode=1 --leak-check=full ./lem
-        - valgrind --error-exitcode=1 --leak-check=full ./lemtest
-        - cd .. && cppcheck --enable=warning --inconclusive --force --std=c++11 src/*.cc include/*.h include/*.tcc --error-exitcode=1
-
-
     # Coverity scan 
     - os: linux
       compiler: gcc-5
@@ -113,7 +47,7 @@ matrix:
           packages: ['g++-5', 'libeigen3-dev']
         coverity_scan:
           project:
-            name: "cw646/mpm-point-generator"
+            name: "cb-geo/mpm-point-generator"
             description: "MPM Point Generator Coverity scan build submitted via Travis CI"
           notification_email: cued.geomechanics@gmail.com
           build_command_prepend: "sudo ln -sf /usr/bin/g++-5 /usr/bin/g++ && export CXX=g++ && g++ --version && cmake . && make clean"
