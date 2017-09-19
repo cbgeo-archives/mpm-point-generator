@@ -127,12 +127,6 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
   //! Element id
   unsigned elementid = std::numeric_limits<unsigned>::max();
 
-  const unsigned toplines = 4;
-  // specify element type 5 =  8-node hexahedron
-  // For more informtion on element types, visit:
-  // http://gmsh.info/doc/texinfo/gmsh.html#File-formats
-  const unsigned element_type = 5;
-
   //! Array to store vertices coordinates
   Eigen::VectorXd elementarray(Tvertices);
 
@@ -164,13 +158,12 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
       if (elementtype != element_type) {
         istream >> line;
       } else {
-        istream >> elementarray[0] >> elementarray[1] >>
-            elementarray[2] >> elementarray[3] >> elementarray[4] >>
-            elementarray[5] >> elementarray[6] >> elementarray[7];
+        istream >> elementarray[0] >> elementarray[1] >> elementarray[2] >>
+            elementarray[3] >> elementarray[4] >> elementarray[5] >>
+            elementarray[6] >> elementarray[7];
         this->elements_.insert(std::make_pair(elementid, elementarray));
       }
     }
-    infile.close();
   }
   std::cout << "Number of Elements: " << elements_.size() << '\n';
 
