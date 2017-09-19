@@ -1,15 +1,12 @@
 #ifndef MPM_POINT_GEN_MESH_H_
 #define MPM_POINT_GEN_MESH_H_
 
-#include <array>
 #include <fstream>
 #include <iostream>
 #include <map>
 #include <memory>
 #include <sstream>
 #include <vector>
-
-#include <Eigen/Dense>
 
 #include "point.h"
 

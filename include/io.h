@@ -7,8 +7,6 @@
 #include <sstream>
 #include <vector>
 
-#include <Eigen/Dense>
-
 #include "mesh.h"
 #include "point.h"
 
