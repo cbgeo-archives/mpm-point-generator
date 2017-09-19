@@ -77,14 +77,14 @@ void GMSH<Tdim, Tvertices>::read_vertices(std::ifstream& file) {
 
     if (line.find('#') == std::string::npos && line != "") {
       //! Coordinates of vertex
-      std::array<double, Tdim> vertex;
+      Eigen::VectorXd vertex(Tdim);
 
       istream >> vertid;
 
       if (Tdim == 3) {
-        istream >> vertex.at(0) >> vertex.at(1) >> vertex.at(2);
+        istream >> vertex[0] >> vertex[1] >> vertex[2];
       } else {
-        istream >> vertex.at(0) >> vertex.at(1);
+        istream >> vertex[0] >> vertex[1];
       }
       this->vertices_.insert(std::make_pair(vertid, vertex));
     }
@@ -123,13 +123,12 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
 
   double physical = std::numeric_limits<double>::max();
   double elementry = std::numeric_limits<double>::max();
+
   //! Element id
   unsigned elementid = std::numeric_limits<unsigned>::max();
 
-
-
   //! Array to store vertices coordinates
-  std::array<double, Tvertices> elementarray;
+  Eigen::VectorXd elementarray(Tvertices);
 
   //! specify element type 4 = tetrahedral, 5 = hexahedron
   //! Documentation from GMSH
@@ -159,13 +158,12 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
       if (elementtype != element_type) {
         istream >> line;
       } else {
-        istream >> elementarray.at(0) >> elementarray.at(1) >>
-            elementarray.at(2) >> elementarray.at(3) >> elementarray.at(4) >>
-            elementarray.at(5) >> elementarray.at(6) >> elementarray.at(7);
+        istream >> elementarray[0] >> elementarray[1] >>
+            elementarray[2] >> elementarray[3] >> elementarray[4] >>
+            elementarray[5] >> elementarray[6] >> elementarray[7];
         this->elements_.insert(std::make_pair(elementid, elementarray));
       }
     }
-    infile.close();
   }
   std::cout << "Number of Elements: " << elements_.size() << '\n';
 
@@ -263,17 +261,16 @@ void GMSH<Tdim, Tvertices>::compute_stresses() {
   const double density = 22;
   // K0 static pressure coefficient
   const double k0 = 0.5;
-  const double max_height = 3;
   const double conv_factor = 10;
 
   double max_height = std::numeric_limits<double>::min();
 
-  //! [2D], y is the vertical direction
-  //! [3D], z is the vertical direction
+  //! [2D], y is the vertical 3D
+  //! [direction], z is the vertical direction
   //! In general, [Tdim - 1]
   for (const auto& point : materialpoints_) {
-    if (point->coordinates().at(Tdim - 1) > max_height) {
-      max_height = point->coordinates().at(Tdim - 1);
+    if (point->coordinates()[Tdim - 1] > max_height) {
+      max_height = point->coordinates()[Tdim - 1];
     }
   }
 
