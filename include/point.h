@@ -1,7 +1,7 @@
 #ifndef MPM_MESH_POINT_H_
 #define MPM_MESH_POINT_H_
 
-#include <Eigen/Dense>
+#include <eigen3/Eigen/Dense>
 
 //! \brief Point class to store vertex coordinates & id
 //! \tparam Tdim dimension
