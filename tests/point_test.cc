@@ -2,8 +2,6 @@
 #include <array>
 #include <limits>
 
-#include <Eigen/Dense>
-
 #include "catch.hpp"
 #include "point.h"
 
