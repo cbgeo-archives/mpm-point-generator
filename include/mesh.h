@@ -46,12 +46,12 @@ class Mesh {
   }
 
   //! Return a map of mesh element vertices
-  std::map<unsigned, std::array<unsigned, Tdim>> vertices() const {
+  std::map<unsigned, Eigen::VectorXd> vertices() const {
     return vertices_;
   }
 
   //! Return a map of element id & vertices id
-  std::map<unsigned, std::array<unsigned, Tvertices>> elements() const {
+  std::map<unsigned, Eigen::VectorXd> elements() const {
     return elements_;
   }
 
