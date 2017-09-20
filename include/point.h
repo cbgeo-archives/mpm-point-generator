@@ -1,7 +1,7 @@
 #ifndef MPM_MESH_POINT_H_
 #define MPM_MESH_POINT_H_
 
-#include <array>
+#include <eigen3/Eigen/Dense>
 
 //! \brief Point class to store vertex coordinates & id
 //! \tparam Tdim dimension
@@ -11,7 +11,7 @@ class Point {
   //! Constructor with id and coordinates
   //! \param[in] id index of the vertex
   //! \param[in] coord Coordinates of the point
-  Point(unsigned id, const std::array<double, Tdim>& coord) : id_{id} {
+  Point(unsigned id, const Eigen::VectorXd& coord) : id_{id} {
     coordinates_ = coord;
   }
 
@@ -19,21 +19,21 @@ class Point {
   unsigned id() const { return id_; }
 
   //! Return coordinates of the point
-  std::array<double, Tdim> coordinates() const { return coordinates_; }
+  Eigen::VectorXd coordinates() const { return coordinates_; }
 
   //! Return stresses of the point
-  std::array<double, Tdim * 2> stress() const { return stress_; }
+  Eigen::VectorXd stress() const { return stress_; }
 
   //! Assign stress
-  void stress(const std::array<double, Tdim * 2>& stress) { stress_ = stress; }
+  void stress(const Eigen::VectorXd stress) { stress_ = stress; }
 
  private:
   //! Index
   unsigned id_;
   //! Coordinates
-  std::array<double, Tdim> coordinates_;
+  Eigen::VectorXd coordinates_;
   //! Stress
-  std::array<double, Tdim * 2> stress_;
+  Eigen::VectorXd stress_;
 };
 
 #endif  // MPM_MESH_POINT_H_

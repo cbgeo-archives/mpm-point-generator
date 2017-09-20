@@ -1,13 +1,14 @@
 #ifndef MPM_POINT_GEN_MESH_H_
 #define MPM_POINT_GEN_MESH_H_
 
-#include <array>
 #include <fstream>
 #include <iostream>
 #include <map>
 #include <memory>
 #include <sstream>
 #include <vector>
+
+#include <eigen3/Eigen/Dense>
 
 #include "point.h"
 
@@ -28,9 +29,9 @@ class Mesh {
   virtual void compute_stresses() = 0;
 
   //! Get vector of stresses
-  std::vector<std::array<double, Tdim * 2>> stress() {
+  std::vector<Eigen::VectorXd> stress() {
 
-    std::vector<std::array<double, Tdim * 2>> stress;
+    std::vector<Eigen::VectorXd> stress;
     //! Loop through the points to get the stresses
     for (const auto& materialpoint : materialpoints_) {
       stress.emplace_back(materialpoint->stress());
@@ -62,13 +63,13 @@ class Mesh {
   unsigned nvertices_;
 
   //! Map to store id and vertices coordinates
-  std::map<unsigned, std::array<double, Tdim>> vertices_;
+  std::map<unsigned, Eigen::VectorXd> vertices_;
 
   //! Map to store element ID and vertices ID
-  std::map<unsigned, std::array<double, Tvertices>> elements_;
+  std::map<unsigned, Eigen::VectorXd> elements_;
 
   //! Map to store element ID and vertices coordinates
-  std::map<unsigned, std::array<double, Tdim * Tvertices>> elementcoordinates_;
+  std::map<unsigned, Eigen::VectorXd> elementcoordinates_;
 
   //! Container for storing material points
   std::vector<std::shared_ptr<Point<Tdim>>> materialpoints_;

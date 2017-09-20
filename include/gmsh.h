@@ -1,7 +1,6 @@
 #ifndef MPM_POINT_GEN_GMSH_H_
 #define MPM_POINT_GEN_GMSH_H_
 
-#include <array>
 #include <fstream>
 #include <iostream>
 #include <limits>
@@ -9,7 +8,7 @@
 #include <memory>
 #include <vector>
 
-#include <Eigen/Dense>
+#include <eigen3/Eigen/Dense>
 
 #include "mesh.h"
 #include "point.h"

@@ -18,8 +18,8 @@ void IO<Tdim>::write_material_points(
     //! Note that for 2D, z values are 0
     //! For 1D, both y and z values are 0
     for (auto const& points : materialpoints) {
-      for (double coordinate : points->coordinates()) {
-        material_points_file << coordinate << "\t";
+      for (unsigned i = 0; i < points->coordinates().size(); ++i) {
+        material_points_file << points->coordinates()[i] << "\t";
       }
       material_points_file << "\n";
     }
@@ -33,8 +33,7 @@ void IO<Tdim>::write_material_points(
 //! \Param[in] stresses Initial stress of material points
 //! /tparam Tdim dimension
 template <unsigned Tdim>
-void IO<Tdim>::write_stresses(
-    const std::vector<std::array<double, Tdim * 2>>& stresses) {
+void IO<Tdim>::write_stresses(const std::vector<Eigen::VectorXd>& stresses) {
   unsigned id = 0;
 
   //! Output stress file
@@ -51,8 +50,8 @@ void IO<Tdim>::write_stresses(
     for (const auto& stress : stresses) {
       stress_file.setf(std::ios::fixed, std::ios::floatfield);
       stress_file << id << '\t';
-      for (double stress_component : stress) {
-        stress_file << stress_component << '\t';
+      for (unsigned i = 0; i < stress.size(); ++i) {
+        stress_file << stress[i] << "\t";
       }
       stress_file << "\n";
       ++id;
