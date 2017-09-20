@@ -173,8 +173,11 @@ void GMSH<Tdim, Tvertices>::store_element_vertices() {
   Eigen::VectorXd elementkeyvalues(Tvertices);
   Eigen::VectorXd verticesarray(Tdim * Tvertices);
 
+  const unsigned firstelement = elements_.begin()->first;
+
   //! Iterate through element_
-  for (unsigned i = 0; i < elements_.size(); ++i) {
+  for (unsigned i = 0 + firstelement; i < elements_.size() + firstelement;
+       ++i) {
     auto elementfind = elements_.find(i);
     if (elementfind != elements_.end()) {
 
