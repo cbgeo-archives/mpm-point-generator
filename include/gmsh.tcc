@@ -125,8 +125,8 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
 
   double physical = std::numeric_limits<double>::max();
   double elementry = std::numeric_limits<double>::max();
-
-  //! Element id
+  
+//! Element id
   unsigned elementid = std::numeric_limits<unsigned>::max();
 
   //! Array to store vertices coordinates
