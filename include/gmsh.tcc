@@ -132,17 +132,10 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
 
   //! specify element type 4 = tetrahedral, 5 = hexahedron
   //! Documentation from GMSH
-  //! 1 - Line (2 nodes)
   //! 2 - Triangle (3 nodes)
   //! 3 - Quadrangle (4 nodes)
   //! 4 - Tetrahedron (4 nodes)
   //! 5 - Hexahedron (8 nodes)
-  //! 6 - Prism (6 nodes)
-  //! 7 - Pyramid (5 nodes)
-  //! 8 - Second order line (3 nodes)
-  //! 9 - Second order triangle (6 nodes)
-  //! 11 - Second order tetrahedron (10 nodes)
-  //! 15 - Point (1 node)
   //! For more informtion on element types, visit:
   //! http://gmsh.info/doc/texinfo/gmsh.html#File-formats
   const unsigned element_type = 5;
@@ -177,14 +170,11 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
 template <unsigned Tdim, unsigned Tvertices>
 void GMSH<Tdim, Tvertices>::store_element_vertices() {
 
-  const unsigned firstelement = elements_.begin()->first;
-  const unsigned lastelement = elements_.rbegin()->first;
-
   Eigen::VectorXd elementkeyvalues(Tvertices);
   Eigen::VectorXd verticesarray(Tdim * Tvertices);
 
   //! Iterate through element_
-  for (unsigned i = firstelement; i <= lastelement; ++i) {
+  for (unsigned i = 0; i < elements_.size(); ++i) {
     auto elementfind = elements_.find(i);
     if (elementfind != elements_.end()) {
 

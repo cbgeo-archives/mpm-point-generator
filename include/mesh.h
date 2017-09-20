@@ -8,6 +8,8 @@
 #include <sstream>
 #include <vector>
 
+#include <eigen3/Eigen/Dense>
+
 #include "point.h"
 
 //! \brief Abstract class for handling mesh

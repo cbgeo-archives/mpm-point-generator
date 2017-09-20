@@ -8,6 +8,8 @@
 #include <memory>
 #include <vector>
 
+#include <eigen3/Eigen/Dense>
+
 #include "mesh.h"
 #include "point.h"
 
