@@ -176,18 +176,14 @@ void GMSH<Tdim, Tvertices>::store_element_vertices() {
   //! Iterate through element_
   for (const auto& element : elements_) {
 
-    //! In each element, iterate to get vertices id's of the element
+    //! Iterate through the vertices to get coordinates depending on the element
     for (unsigned j = 0; j < Tvertices; ++j) {
-      elementkeyvalues[j] = element.second[j];
-    }
-    //! Iterate through the vertices to get coordinates (4 for tetrahedral)
-    for (unsigned k = 0; k < Tvertices; ++k) {
       //! Get the vertex wanted from the id
-      auto verticesfind = vertices_.find(elementkeyvalues[k]);
+      auto verticesfind = vertices_.find(element.second[j]);
       //! For each vertex, store the coordinates
-      //! j = 0 -> [X], j = 1 -> [Y], j = 2 -> [Z]
-      for (unsigned l = 0; l < Tdim; ++l) {
-        verticesarray[k * Tdim + l] = verticesfind->second[l];
+      //! k = 0 -> [X], k = 1 -> [Y], k = 2 -> [Z]
+      for (unsigned k = 0; k < Tdim; ++k) {
+        verticesarray[j * Tdim + k] = verticesfind->second[k];
       }
     }
 
@@ -209,12 +205,13 @@ void GMSH<Tdim, Tvertices>::compute_material_points() {
 
   for (const auto& elementcoord : elementcoordinates_) {
 
-    //! Store coordinates in 3x4 matrix
+    //! Store coordinates in Tdim x Tvertices matrix
+    //! Where N is the number of nodes per element
+    //! This is rearranging of the data to have stored in matrix form
     Eigen::MatrixXd m(Tdim, Tvertices);
     for (unsigned i = 0; i < Tvertices; ++i) {
       for (unsigned j = 0; j < Tdim; ++j) {
-        arrayposition = (i * Tdim) + j;
-        m(j, i) = elementcoord.second[arrayposition];
+        m(j, i) = elementcoord.second[(i * Tdim) + j];
       }
     }
 
