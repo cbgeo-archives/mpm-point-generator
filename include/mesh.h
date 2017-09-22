@@ -45,16 +45,6 @@ class Mesh {
     return materialpoints_;
   }
 
-  //! Return a map of mesh element vertices
-  std::map<unsigned, std::array<unsigned, Tdim>> vertices() const {
-    return vertices_;
-  }
-
-  //! Return a map of element id & vertices id
-  std::map<unsigned, std::array<unsigned, Tvertices>> elements() const {
-    return elements_;
-  }
-
   //! Return the total number of vertices
   unsigned nvertices() const { return nvertices_; }
 

@@ -174,28 +174,20 @@ void GMSH<Tdim, Tvertices>::store_element_vertices() {
   Eigen::VectorXd verticesarray(Tdim * Tvertices);
 
   //! Iterate through element_
-  for (unsigned i = 0; i < elements_.size(); ++i) {
-    auto elementfind = elements_.find(i);
-    if (elementfind != elements_.end()) {
+  for (const auto& element : elements_) {
 
-      //! In each element, iterate to get vertices id's of the element
-      for (unsigned j = 0; j < Tvertices; ++j) {
-        elementkeyvalues[j] = elementfind->second[j];
+    //! Iterate through the vertices to get coordinates depending on the element
+    for (unsigned j = 0; j < Tvertices; ++j) {
+      //! Get the vertex wanted from the id
+      auto verticesfind = vertices_.find(element.second[j]);
+      //! For each vertex, store the coordinates
+      //! k = 0 -> [X], k = 1 -> [Y], k = 2 -> [Z]
+      for (unsigned k = 0; k < Tdim; ++k) {
+        verticesarray[j * Tdim + k] = verticesfind->second[k];
       }
-      //! Iterate through the vertices to get coordinates (4 for tetrahedral)
-      for (unsigned k = 0; k < Tvertices; ++k) {
-        //! Get the vertex wanted from the id
-        auto verticesfind = vertices_.find(elementkeyvalues[k]);
-        //! For each vertex, store the coordinates
-        //! j = 0 -> [X], j = 1 -> [Y], j = 2 -> [Z]
-        for (unsigned l = 0; l < Tdim; ++l) {
-          verticesarray[k * Tdim + l] = verticesfind->second[l];
-        }
-      }
-
-      elementcoordinates_.insert(
-          std::make_pair(elementfind->first, verticesarray));
     }
+
+    elementcoordinates_.insert(std::make_pair(element.first, verticesarray));
   }
   std::cout
       << "The coordinates for vertices of each element have been stored.\n";
@@ -211,32 +203,28 @@ void GMSH<Tdim, Tvertices>::compute_material_points() {
 
   Eigen::VectorXd pointsarray(Tdim);
 
-  const unsigned firstelementcoord = elementcoordinates_.begin()->first;
-  const unsigned lastelementcoord = elementcoordinates_.rbegin()->first;
+  for (const auto& elementcoord : elementcoordinates_) {
 
-  for (unsigned t = firstelementcoord; t < lastelementcoord + 1; ++t) {
-    auto coordinatesfind = elementcoordinates_.find(t);
-    if (coordinatesfind != elementcoordinates_.end()) {
-      //! Store coordinates in 3x4 matrix
-      Eigen::MatrixXd m(Tdim, Tvertices);
-      for (unsigned i = 0; i < Tvertices; ++i) {
-        for (unsigned j = 0; j < Tdim; ++j) {
-          arrayposition = (i * Tdim) + j;
-          m(j, i) = coordinatesfind->second[arrayposition];
-        }
+    //! Store coordinates in Tdim x Tvertices matrix
+    //! Where N is the number of nodes per element
+    //! This is rearranging of the data to have stored in matrix form
+    Eigen::MatrixXd m(Tdim, Tvertices);
+    for (unsigned i = 0; i < Tvertices; ++i) {
+      for (unsigned j = 0; j < Tdim; ++j) {
+        m(j, i) = elementcoord.second[(i * Tdim) + j];
       }
-
-      // Assign the centroid as the coordinate of the material point
-      for (unsigned i = 0; i < Tdim; ++i) {
-        pointsarray[i] = 0;
-        for (unsigned j = 0; j < Tvertices; ++j) {
-          pointsarray[i] += (1. / Tvertices) * m(i, j);
-        }
-      }
-
-      materialpoints_.emplace_back(
-          new Point<Tdim>(coordinatesfind->first, pointsarray));
     }
+
+    // Assign the centroid as the coordinate of the material point
+    for (unsigned i = 0; i < Tdim; ++i) {
+      pointsarray[i] = 0;
+      for (unsigned j = 0; j < Tvertices; ++j) {
+        pointsarray[i] += (1. / Tvertices) * m(i, j);
+      }
+    }
+
+    materialpoints_.emplace_back(
+        new Point<Tdim>(elementcoord.first, pointsarray));
   }
   std::cout << "Number of Material Points: " << materialpoints_.size() << '\n';
 }
@@ -255,8 +243,8 @@ void GMSH<Tdim, Tvertices>::compute_stresses() {
 
   double max_height = std::numeric_limits<double>::min();
 
-  //! [2D], y is the vertical 3D
-  //! [direction], z is the vertical direction
+  //! [2D], y is the vertical direction
+  //! [3D], z is the vertical direction
   //! In general, [Tdim - 1]
   for (const auto& point : materialpoints_) {
     if (point->coordinates()[Tdim - 1] > max_height) {
