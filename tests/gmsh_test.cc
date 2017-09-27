@@ -1,5 +1,4 @@
 // GMSH test
-#include <array>
 #include <limits>
 
 #include "catch.hpp"
@@ -14,7 +13,7 @@ TEST_CASE("GMSH is checked in 3D", "[GMSH][3D]") {
   const double tolerance = 1.E-12;
 
   auto mesh = std::unique_ptr<Mesh<3, 8>> (new GMSH<3, 8>());
-  mesh->read_mesh("../bin/regression_test.msh");
+  mesh->read_mesh("../bin/cube_test.msh");
   mesh->compute_material_points();
   mesh->compute_stresses();
 
