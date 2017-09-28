@@ -4,6 +4,7 @@
 #include "catch.hpp"
 #include "point.h"
 #include "gmsh.h"
+#include "regression_global.h"
 
 //! \brief Check that IO will store right values
 TEST_CASE("GMSH is checked in 3D", "[GMSH][3D]") {
@@ -13,7 +14,7 @@ TEST_CASE("GMSH is checked in 3D", "[GMSH][3D]") {
   const double tolerance = 1.E-12;
 
   auto mesh = std::unique_ptr<Mesh<3, 8>> (new GMSH<3, 8>());
-  mesh->read_mesh("../bin/cube_test.msh");
+  mesh->read_mesh(filename);
   mesh->compute_material_points();
   mesh->compute_stresses();
 
