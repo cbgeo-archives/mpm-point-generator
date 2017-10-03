@@ -5,6 +5,7 @@
 #include <iostream>
 #include <memory>
 #include <sstream>
+#include <utility>
 #include <vector>
 
 #include <eigen3/Eigen/Dense>
@@ -37,8 +38,7 @@ class IO {
   }
 
   //! Write vertices
-  void write_material_points(
-      const std::vector<std::shared_ptr<Point<Tdim>>>& materialpoints);
+  void write_material_points(const Points<Tdim>& materialpoints);
 
   //! Write stresses
   void write_stresses(const std::vector<Eigen::VectorXd>& stresses);

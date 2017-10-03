@@ -12,6 +12,10 @@ int main(int argc, char** argv) {
       throw std::runtime_error("Incorrect number of input arguments");
     }
 
+    //! Set density and k0 for the materials
+    const double density = 2000;
+    const double k0 = 0.5;
+
     //! IO handler
     std::unique_ptr<IO<3>> io(new IO<3>(argv[1]));
 
@@ -22,8 +26,7 @@ int main(int argc, char** argv) {
     mesh->read_mesh(io->mesh_file_name());
 
     //! Compute material points & stresses
-    mesh->compute_material_points();
-    mesh->compute_stresses();
+    mesh->compute_material_points(density, k0);
 
     //! Write material points and stresses
     io->write_material_points(mesh->material_points());

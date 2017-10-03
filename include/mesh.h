@@ -5,12 +5,14 @@
 #include <iostream>
 #include <map>
 #include <memory>
+#include <utility>
 #include <sstream>
 #include <vector>
 
 #include <eigen3/Eigen/Dense>
 
 #include "point.h"
+#include "points.h"
 
 //! \brief Abstract class for handling mesh
 //! \tparam Tdim Dimension of the mesh
@@ -23,25 +25,22 @@ class Mesh {
   virtual void read_mesh(const std::string& filename) = 0;
 
   //! Compute material point location
-  virtual void compute_material_points() = 0;
-
-  //! Compute initial stresses for material points
-  virtual void compute_stresses() = 0;
+  virtual void compute_material_points(const double density, const double k0) = 0;
 
   //! Get vector of stresses
   std::vector<Eigen::VectorXd> stress() {
 
     std::vector<Eigen::VectorXd> stress;
     //! Loop through the points to get the stresses
-    for (const auto& materialpoint : materialpoints_) {
-      stress.emplace_back(materialpoint->stress());
+    for (const auto& materialpoint : materialpoints_.get_points()) {
+      stress.emplace_back(materialpoint.first->stress());
     }
 
     return stress;
   }
 
   //! Return a vector of material points
-  std::vector<std::shared_ptr<Point<Tdim>>> material_points() {
+  Points<Tdim> material_points() {
     return materialpoints_;
   }
 
@@ -62,6 +61,6 @@ class Mesh {
   std::map<unsigned, Eigen::VectorXd> elementcoordinates_;
 
   //! Container for storing material points
-  std::vector<std::shared_ptr<Point<Tdim>>> materialpoints_;
+  Points<Tdim> materialpoints_;
 };
 #endif  // MPM_POINT_GEN_MESH_H_
