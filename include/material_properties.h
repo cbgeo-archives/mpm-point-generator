@@ -26,8 +26,6 @@ class MaterialProperties {
 
   //! k0
   double k0_;
-
-
 };
 
 #endif  // MPM_MESH_MATERIAL_PROPERTIES_H_

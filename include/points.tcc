@@ -28,7 +28,7 @@ void Points<Tdim>::compute_stress() {
     stress[Tdim - 1] = conv_factor *
                        (-(max_height - points.first->coordinates()[Tdim])) *
                        points.second->density();
-    
+
     for (unsigned i = 2; i <= Tdim; ++i) {
       stress[Tdim - i] = stress[Tdim - 1] * points.second->k0();
     }

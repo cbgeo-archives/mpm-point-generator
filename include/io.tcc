@@ -4,7 +4,7 @@
 template <unsigned Tdim>
 void IO<Tdim>::write_material_points(
     const std::shared_ptr<Points<Tdim>>& materialpoints) {
-  
+
   //! Output vertices file
   std::fstream material_points_file;
   material_points_file.open(material_points_filename_, std::ios::out);

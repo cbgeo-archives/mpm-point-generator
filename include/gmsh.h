@@ -6,8 +6,8 @@
 #include <limits>
 #include <map>
 #include <memory>
-#include <vector>
 #include <utility>
+#include <vector>
 
 #include <eigen3/Eigen/Dense>
 
@@ -36,7 +36,6 @@ class GMSH : public Mesh<Tdim, Tvertices> {
 
   //! Compute material points from element coordinate map
   void compute_material_points(const double density, const double k0);
-
 
  private:
   //! Total number of vertices

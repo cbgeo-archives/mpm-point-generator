@@ -38,7 +38,8 @@ class IO {
   }
 
   //! Write vertices
-  void write_material_points(const std::shared_ptr<Points<Tdim>>& materialpoints);
+  void write_material_points(
+      const std::shared_ptr<Points<Tdim>>& materialpoints);
 
   //! Write stresses
   void write_stresses(const std::vector<Eigen::VectorXd>& stresses);

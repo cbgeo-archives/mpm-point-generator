@@ -5,8 +5,8 @@
 #include <iostream>
 #include <map>
 #include <memory>
-#include <utility>
 #include <sstream>
+#include <utility>
 #include <vector>
 
 #include <eigen3/Eigen/Dense>
@@ -24,7 +24,8 @@ class Mesh {
   virtual void read_mesh(const std::string& filename) = 0;
 
   //! Compute material point location
-  virtual void compute_material_points(const double density, const double k0) = 0;
+  virtual void compute_material_points(const double density,
+                                       const double k0) = 0;
 
   //! Get vector of stresses
   std::vector<Eigen::VectorXd> stress() {
