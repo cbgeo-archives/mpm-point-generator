@@ -39,7 +39,7 @@ class Mesh {
   }
 
   //! Return a vector of material points
-  std::shared_ptr<Points<Tdim>> material_points() {
+  std::shared_ptr<Points<Tdim>> material_points() const {
     return materialpoints_;
   }
 

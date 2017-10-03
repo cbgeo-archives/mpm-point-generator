@@ -202,6 +202,7 @@ void GMSH<Tdim, Tvertices>::compute_material_points(const double density, const 
   unsigned arrayposition = 0;
 
   Eigen::VectorXd pointsarray(Tdim);
+  materialpoints_ = std::make_shared<Points<Tdim>>();
 
   for (const auto& elementcoord : elementcoordinates_) {
 
@@ -226,6 +227,8 @@ void GMSH<Tdim, Tvertices>::compute_material_points(const double density, const 
     //! Update vector material points
     std::shared_ptr<Point<Tdim>> temp1(new Point<Tdim>(elementcoord.first, pointsarray));
     std::shared_ptr<MaterialProperties> temp2(new MaterialProperties(density, k0));
+    // materialpoints_->add_points(new Point<Tdim>(elementcoord.first, pointsarray), 
+    //                             new MaterialProperties(density, k0));
     materialpoints_->add_points(temp1, temp2);    
   }
 
