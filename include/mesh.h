@@ -11,7 +11,6 @@
 
 #include <eigen3/Eigen/Dense>
 
-#include "point.h"
 #include "points.h"
 
 //! \brief Abstract class for handling mesh
@@ -32,7 +31,7 @@ class Mesh {
 
     std::vector<Eigen::VectorXd> stress;
     //! Loop through the points to get the stresses
-    for (const auto& materialpoint : materialpoints_.get_points()) {
+    for (const auto& materialpoint : materialpoints_->get_points()) {
       stress.emplace_back(materialpoint.first->stress());
     }
 
@@ -40,7 +39,7 @@ class Mesh {
   }
 
   //! Return a vector of material points
-  Points<Tdim> material_points() {
+  std::shared_ptr<Points<Tdim>> material_points() {
     return materialpoints_;
   }
 
@@ -61,6 +60,6 @@ class Mesh {
   std::map<unsigned, Eigen::VectorXd> elementcoordinates_;
 
   //! Container for storing material points
-  Points<Tdim> materialpoints_;
+  std::shared_ptr<Points<Tdim>> materialpoints_;
 };
 #endif  // MPM_POINT_GEN_MESH_H_

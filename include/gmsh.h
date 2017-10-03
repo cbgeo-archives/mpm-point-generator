@@ -11,9 +11,7 @@
 
 #include <eigen3/Eigen/Dense>
 
-#include "material_properties.h"
 #include "mesh.h"
-#include "point.h"
 #include "points.h"
 
 //! \brief Generate Material Points from GMSH file

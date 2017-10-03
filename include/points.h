@@ -15,32 +15,26 @@
 template <unsigned Tdim>
 class Points {
  public:
-  //! Constructor with point and materialproperties
-  //! \param[in] point - Class Point
-  //! \param[in] material_properties - Class MaterialProperties
-  Points(const Point<Tdim>& point, const MaterialProperties& material_properties) {
-    std::pair <std::shared_ptr<Point<Tdim>>, std::shared_ptr<MaterialProperties>> temp(point, material_properties);
-    points_.push_back(temp);   
-  }
 
   //! Update points
   void add_points(std::shared_ptr<Point<Tdim>> point, std::shared_ptr<MaterialProperties> material_properties) {
-    std::pair <std::shared_ptr<Point<Tdim>>, std::shared_ptr<MaterialProperties>> temp(point, material_properties);
-    points_.push_back(temp);    
+    points_.emplace_back(std::make_pair(point, material_properties));    
   }
 
   //! Return vector of points
   std::vector<std::pair<std::shared_ptr<Point<Tdim>>, 
                         std::shared_ptr<MaterialProperties>>> get_points() const { return points_; }
 
-  //! Assign stress
+  //! Compute stress
   void compute_stress();
 
  private:
-  //! Points
+  //! Points vector
   std::vector<std::pair<std::shared_ptr<Point<Tdim>>, 
                         std::shared_ptr<MaterialProperties>>> points_; 
 
 };
+
+#include "points.tcc"
 
 #endif  // MPM_MESH_POINTS_H_

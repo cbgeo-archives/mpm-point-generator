@@ -1,7 +1,7 @@
 //! Compute stresses of the material points
 //! \tparam Tdim Dimension
 template <unsigned Tdim>
-void Points<Tdim>::compute_stresses() {
+void Points<Tdim>::compute_stress() {
 
   //! Gravity
   const double conv_factor = 9.81;
