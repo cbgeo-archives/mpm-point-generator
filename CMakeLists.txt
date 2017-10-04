@@ -51,6 +51,7 @@ add_executable(mpm_point_generator ${mpm_point_gen_src})
 SET(test_src
   ${PROJECT_SOURCE_DIR}/tests/test.cc
   ${PROJECT_SOURCE_DIR}/tests/point_test.cc
+  ${PROJECT_SOURCE_DIR}/tests/material_properties_test.cc
 )
 add_executable(mpm_point_generator_test ${test_src})
 

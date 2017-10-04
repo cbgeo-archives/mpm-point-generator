@@ -12,11 +12,15 @@ class Point {
   //! \param[in] id index of the vertex
   //! \param[in] coord Coordinates of the point
   Point(unsigned id, const Eigen::VectorXd& coord) : id_{id} {
+    global_id_ = id;
     coordinates_ = coord;
   }
 
   //! Return the id of the point
   unsigned id() const { return id_; }
+
+  //! Return the global id of the point
+  unsigned global_id() const { return global_id_; }
 
   //! Return coordinates of the point
   Eigen::VectorXd coordinates() const { return coordinates_; }
@@ -28,8 +32,12 @@ class Point {
   void stress(const Eigen::VectorXd stress) { stress_ = stress; }
 
  private:
-  //! Index
+  //! local index
   unsigned id_;
+
+  //! global index
+  unsigned global_id_;
+
   //! Coordinates
   Eigen::VectorXd coordinates_;
   //! Stress

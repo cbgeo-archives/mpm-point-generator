@@ -197,13 +197,11 @@ void GMSH<Tdim, Tvertices>::store_element_vertices() {
 //! \tparam Tdim Dimension
 //! \tparam Tvertices Number of vertices in element
 template <unsigned Tdim, unsigned Tvertices>
-void GMSH<Tdim, Tvertices>::compute_material_points(const double density,
-                                                    const double k0) {
+void GMSH<Tdim, Tvertices>::compute_material_points() {
 
   unsigned arrayposition = 0;
 
   Eigen::VectorXd pointsarray(Tdim);
-  materialpoints_ = std::make_shared<Points<Tdim>>();
 
   for (const auto& elementcoord : elementcoordinates_) {
 
@@ -226,19 +224,9 @@ void GMSH<Tdim, Tvertices>::compute_material_points(const double density,
     }
 
     //! Update vector material points
-    std::shared_ptr<Point<Tdim>> temp1(
+    materialpoints_.emplace_back(
         new Point<Tdim>(elementcoord.first, pointsarray));
-    std::shared_ptr<MaterialProperties> temp2(
-        new MaterialProperties(density, k0));
-    // materialpoints_->add_points(new Point<Tdim>(elementcoord.first,
-    // pointsarray),
-    //                             new MaterialProperties(density, k0));
-    materialpoints_->add_points(temp1, temp2);
   }
 
-  std::cout << "Number of Material Points: "
-            << materialpoints_->get_points().size() << '\n';
-
-  //! Compute stresses after points been generated
-  materialpoints_->compute_stress();
+  std::cout << "Number of Material Points: " << materialpoints_.size() << '\n';
 }

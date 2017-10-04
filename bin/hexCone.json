@@ -1,0 +1,5 @@
+{
+	"mesh_file" : "../bin/hexCone.msh",
+	"material_properties_file" : "../bin/hexCone_material.json",
+	"output_directory" : "../bin/"
+}
