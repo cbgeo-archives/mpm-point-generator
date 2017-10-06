@@ -11,12 +11,8 @@
 
 #include <eigen3/Eigen/Dense>
 
-#include "json.hpp"
 #include "material_points.h"
 #include "mesh.h"
-
-//! Short alias for convenience
-using json = nlohmann::json;
 
 //! \brief Generate Material Points from GMSH file
 template <unsigned Tdim, unsigned Tvertices>

@@ -13,24 +13,7 @@ class MaterialProperties {
  public:
   //! Constructor with density and k0
   //! \param[in] json input file containing material properties
-  MaterialProperties(const std::string& filename) {
-    std::ifstream file;
-    std::shared_ptr<MaterialProperties> material_properties;
-    file.open(filename.c_str(), std::ios::in);
-
-    if (!file.is_open())
-      throw std::runtime_error(
-          "Specified material properties file does not exist");
-    if (file.good()) {
-      json j;
-      file >> j;
-
-      density_ = j["material_properties"]["density"].get<double>();
-      k0_ = j["material_properties"]["k0"].get<double>();
-    }
-
-    file.close();
-  }
+  MaterialProperties(const std::string& filename);
 
   //! Return density
   double density() const { return density_; }
@@ -45,5 +28,7 @@ class MaterialProperties {
   //! k0
   double k0_;
 };
+
+#include <material_properties.tcc>
 
 #endif  // MPM_MESH_MATERIAL_PROPERTIES_H_

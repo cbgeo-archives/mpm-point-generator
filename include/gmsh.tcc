@@ -238,6 +238,12 @@ void GMSH<Tdim, Tvertices>::compute_material_points() {
                         pointsarray)));
   }
 
-  std::cout << "Number of Material Points: "
-            << materialpoints_.at(0)->coordinates().size() << '\n';
+  //! Find number of material points generated
+  unsigned materialpoints_size{0};
+
+  for (const auto& materialpoint : materialpoints_) {
+    materialpoints_size += materialpoint->coordinates().size();
+  }
+
+  std::cout << "Number of Material Points: " << materialpoints_size << '\n';
 }

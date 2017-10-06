@@ -3,7 +3,6 @@
 
 #include "gmsh.h"
 #include "io.h"
-#include "material_points.h"
 
 int main(int argc, char** argv) {
   try {

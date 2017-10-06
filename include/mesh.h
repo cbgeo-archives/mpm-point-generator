@@ -13,11 +13,6 @@
 
 #include "material_points.h"
 
-#include "json.hpp"
-
-//! Short alias for convenience
-using json = nlohmann::json;
-
 //! \brief Abstract class for handling mesh
 //! \tparam Tdim Dimension of the mesh
 //! \tparam Tvertices Number of vertices in an element

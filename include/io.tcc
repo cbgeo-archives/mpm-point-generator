@@ -1,5 +1,5 @@
-//! \brief Write output file for point
-//! \details Get stress vector of vertex coordinates, and number of vertices
+//! \brief output coordinates of material points
+//! \details Get vector of point coordinates
 //! \tparam Tdim dimension
 template <unsigned Tdim>
 void IO<Tdim>::write_point_coordinates(
@@ -29,7 +29,7 @@ void IO<Tdim>::write_point_coordinates(
   std::cout << "Wrote material point coordinates\n";
 }
 
-//! \brief Write initial stresses of material points
+//! \brief output initial stresses of material points
 //! \Param[in] stresses Initial stress of material points
 //! /tparam Tdim dimension
 template <unsigned Tdim>
