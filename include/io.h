@@ -25,32 +25,7 @@ class IO {
   //! Constructor with json input file
   //! Get mesh_filename and output_directory
   //! \param[in] json input file name
-  explicit IO(const std::string& json_file) : json_filename_{json_file} {
-
-    //! Check if json file is present
-    std::ifstream inputFile(json_filename_);
-    inputFile.exceptions(std::ifstream::badbit);
-
-    //! Read json file and store to private variables
-    json j;
-    inputFile >> j;
-    mesh_filename_ = j["mesh_file"].get<std::string>();
-    output_directory_ = j["output_directory"].get<std::string>();
-
-    //! Check if mesh file is present
-    std::ifstream meshfile;
-    meshfile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-    try {
-      meshfile.open(mesh_filename_);
-    } catch (const std::ifstream::failure& except) {
-      std::cerr << "Exception opening/reading mesh file";
-    }
-    meshfile.close();
-
-    //! Material point and stresses output file
-    material_points_filename_ = output_directory_ + "material_points.txt";
-    stress_filename_ = output_directory_ + "initial_stresses.txt";
-  }
+  explicit IO(const std::string& json_file);
 
   //! Write vertices
   void write_point_coordinates(const std::vector<Eigen::VectorXd>& coordinates);
