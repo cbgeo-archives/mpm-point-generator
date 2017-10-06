@@ -3,15 +3,33 @@
 
 #include <memory>
 
+#include "json.hpp"
+
+//! Short alias for convenience
+using json = nlohmann::json;
+
 //! \brief Points class to store material properties
 class MaterialProperties {
  public:
   //! Constructor with density and k0
-  //! \param[in] density of the material
-  //! \param[in] k0 of the material
-  MaterialProperties(const double density, const double k0) {
-    density_ = density;
-    k0_ = k0;
+  //! \param[in] json input file containing material properties
+  MaterialProperties(const std::string& filename) {
+    std::ifstream file;
+    std::shared_ptr<MaterialProperties> material_properties;
+    file.open(filename.c_str(), std::ios::in);
+
+    if (!file.is_open())
+      throw std::runtime_error(
+          "Specified material properties file does not exist");
+    if (file.good()) {
+      json j;
+      file >> j;
+      
+      density_ = j["material_properties"]["density"].get<double>();
+      k0_ = j["material_properties"]["k0"].get<double>();
+    }
+    
+    file.close();
   }
 
   //! Return density

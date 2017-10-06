@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
     mesh->material_points().at(0)->compute_stress();
 
     //! Write material points and stresses
-    io->write_point_coordinates(mesh->material_points().at(0)->points());
+    io->write_point_coordinates(mesh->material_points().at(0)->coordinates());
     io->write_stresses(mesh->material_points().at(0)->stress());
 
   } catch (std::exception& except) {

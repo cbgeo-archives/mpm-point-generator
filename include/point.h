@@ -10,7 +10,7 @@
 template <unsigned Tdim>
 class Point {
  public:
-  //! Constructor with id and coordinates
+  //! Constructor with id, global id and coordinates
   //! \param[in] id index of the vertex
   //! \param[in] coord Coordinates of the point
   Point(unsigned id, unsigned global_id, const Eigen::VectorXd& coord) {
@@ -36,10 +36,10 @@ class Point {
 
  private:
   //! local index
-  unsigned id_ = std::numeric_limits<unsigned>::max();
+  unsigned id_{std::numeric_limits<unsigned>::max()};
 
   //! global index
-  unsigned global_id_ = std::numeric_limits<unsigned>::max();
+  unsigned global_id_{std::numeric_limits<unsigned>::max()};
 
   //! Coordinates
   Eigen::VectorXd coordinates_;

@@ -1,29 +1,16 @@
-//! Read and store material properties
+//! Return vector of coordinates
 //! \tparam Tdim Dimension
-//! \tparam Tvertices Number of vertices in element
-//! \param[in] filename of material properties (initial input json file)
 template <unsigned Tdim>
-void MaterialPoints<Tdim>::add_material_properties(
-    const std::string& filename) {
+std::vector<Eigen::VectorXd> MaterialPoints<Tdim>::coordinates() {
 
-  std::ifstream file;
-  std::shared_ptr<MaterialProperties> material_properties;
-  file.open(filename.c_str(), std::ios::in);
+  std::vector<Eigen::VectorXd> coordinates;
 
-  if (!file.is_open())
-    throw std::runtime_error(
-        "Specified material properties file does not exist");
-  if (file.good()) {
-    json j;
-    file >> j;
-    double density = j["MaterialProperties"]["density"].get<double>();
-    double k0 = j["MaterialProperties"]["k0"].get<double>();
-    unsigned nmaterials_ = j["nMaterial"].get<unsigned>();
-
-    //! Store it to private variables
-    material_properties_ = std::make_shared<MaterialProperties>(density, k0);
+  //! Loop through the points to get the stresses
+  for (const auto& materialpoint : points_) {
+    coordinates.emplace_back(materialpoint->coordinates());
   }
-  file.close();
+
+  return coordinates;
 }
 
 //! Return vector of stress

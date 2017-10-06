@@ -239,5 +239,5 @@ void GMSH<Tdim, Tvertices>::compute_material_points() {
   }
 
   std::cout << "Number of Material Points: "
-            << materialpoints_.at(0)->points().size() << '\n';
+            << materialpoints_.at(0)->coordinates().size() << '\n';
 }

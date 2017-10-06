@@ -1,9 +1,7 @@
 {
 	"mesh_file" : "../bin/hexCone.msh",
-	"material_properties_file" : "../bin/hexCone_material.json",
-	"nMaterial" : 1,
 	"output_directory" : "../bin/",
-	"MaterialProperties" : {
+	"material_properties" : {
 		"density" : 2000.0,
 		"k0" : 0.5
 	}

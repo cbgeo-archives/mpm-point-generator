@@ -23,6 +23,7 @@ template <unsigned Tdim>
 class IO {
  public:
   //! Constructor with json input file
+  //! Get mesh_filename and output_directory
   //! \param[in] json input file name
   explicit IO(const std::string& json_file) : json_filename_{json_file} {
 
@@ -53,7 +54,7 @@ class IO {
 
   //! Write vertices
   void write_point_coordinates(
-      const std::vector<std::shared_ptr<Point<Tdim>>>& points);
+      const std::vector<Eigen::VectorXd>& coordinates);
 
   //! Write stresses
   void write_stresses(const std::vector<Eigen::VectorXd>& stresses);
