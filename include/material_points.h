@@ -20,7 +20,7 @@ using json = nlohmann::json;
 template <unsigned Tdim>
 class MaterialPoints {
  public:
-  MaterialPoints() {
+  MaterialPoints(unsigned id) : id_{id} {
   }
 
   //! Add points within this subset of MaterialPoints
