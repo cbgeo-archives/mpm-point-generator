@@ -3,7 +3,8 @@
 //! \tparam Tvertices Number of vertices in element
 //! \param[in] filename of material properties (initial input json file)
 template <unsigned Tdim>
-void MaterialPoints<Tdim>::add_material_properties(const std::string& filename) {
+void MaterialPoints<Tdim>::add_material_properties(
+    const std::string& filename) {
 
   std::ifstream file;
   std::shared_ptr<MaterialProperties> material_properties;
@@ -18,13 +19,11 @@ void MaterialPoints<Tdim>::add_material_properties(const std::string& filename) 
     double density = j["MaterialProperties"]["density"].get<double>();
     double k0 = j["MaterialProperties"]["k0"].get<double>();
     unsigned nmaterials_ = j["nMaterial"].get<unsigned>();
-    
+
     //! Store it to private variables
     material_properties_ = std::make_shared<MaterialProperties>(density, k0);
   }
   file.close();
-
-
 }
 
 //! Return vector of stress
@@ -33,7 +32,7 @@ template <unsigned Tdim>
 std::vector<Eigen::VectorXd> MaterialPoints<Tdim>::stress() {
 
   std::vector<Eigen::VectorXd> stress;
-    
+
   //! Loop through the points to get the stresses
   for (const auto& materialpoint : points_) {
     stress.emplace_back(materialpoint->stress());
@@ -41,7 +40,6 @@ std::vector<Eigen::VectorXd> MaterialPoints<Tdim>::stress() {
 
   return stress;
 }
-
 
 //! Compute stresses of the material points
 //! \tparam Tdim Dimension

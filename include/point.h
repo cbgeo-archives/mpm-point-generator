@@ -13,7 +13,7 @@ class Point {
   //! Constructor with id and coordinates
   //! \param[in] id index of the vertex
   //! \param[in] coord Coordinates of the point
-  Point(unsigned id, unsigned global_id, const Eigen::VectorXd& coord)  {
+  Point(unsigned id, unsigned global_id, const Eigen::VectorXd& coord) {
     id_ = id;
     global_id_ = id;
     coordinates_ = coord;

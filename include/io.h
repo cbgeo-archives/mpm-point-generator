@@ -10,9 +10,9 @@
 
 #include <eigen3/Eigen/Dense>
 
+#include "json.hpp"
 #include "material_points.h"
 #include "mesh.h"
-#include "json.hpp"
 
 //! Short alias for convenience
 using json = nlohmann::json;

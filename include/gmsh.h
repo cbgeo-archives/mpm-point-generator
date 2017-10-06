@@ -11,9 +11,9 @@
 
 #include <eigen3/Eigen/Dense>
 
+#include "json.hpp"
 #include "material_points.h"
 #include "mesh.h"
-#include "json.hpp"
 
 //! Short alias for convenience
 using json = nlohmann::json;
@@ -22,7 +22,7 @@ using json = nlohmann::json;
 template <unsigned Tdim, unsigned Tvertices>
 class GMSH : public Mesh<Tdim, Tvertices> {
 
- public: 
+ public:
   //! Read GMSH file
   void read_mesh(const std::string& filename);
 
