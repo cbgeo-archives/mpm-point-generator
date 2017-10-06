@@ -20,11 +20,12 @@ using json = nlohmann::json;
 template <unsigned Tdim>
 class MaterialPoints {
  public:
-  MaterialPoints(unsigned id) : id_{id} {
+  MaterialPoints() {
   }
 
-  void add_points(const std::vector<std::shared_ptr<Point<Tdim>>>& point) {
-    points_ = point;
+  //! Add points within this subset of MaterialPoints
+  void add_points(const std::shared_ptr<Point<Tdim>>& point) {
+    points_.push_back(point);
   }
 
   //! Add material properties
@@ -40,21 +41,11 @@ class MaterialPoints {
 
   //! Return material properties
   std::shared_ptr<MaterialProperties> material_properties() const {
-    return materialProperties_;
+    return material_properties_;
   }
 
   //! Return vector of stresses
-  std::vector<Eigen::VectorXd> stress() {
-
-    std::vector<Eigen::VectorXd> stress;
-    
-    //! Loop through the points to get the stresses
-    for (const auto& materialpoint : points_) {
-      stress.emplace_back(materialpoint->stress());
-    }
-
-    return stress;
-  }
+  std::vector<Eigen::VectorXd> stress();
 
  private:
   //! material points id
@@ -64,7 +55,7 @@ class MaterialPoints {
   std::vector<std::shared_ptr<Point<Tdim>>> points_;
 
   //! material properties associated with the vector of points
-  std::shared_ptr<MaterialProperties> materialProperties_;
+  std::shared_ptr<MaterialProperties> material_properties_;
 };
 
 #include "material_points.tcc"

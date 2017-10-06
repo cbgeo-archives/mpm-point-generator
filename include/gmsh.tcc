@@ -224,9 +224,14 @@ void GMSH<Tdim, Tvertices>::compute_material_points() {
     }
 
     //! Update vector material points
-    materialpoints_.emplace_back(
-        new Point<Tdim>(elementcoord.first, pointsarray));
+    //! last_global_id should be changed later if more than one material properties being used
+    unsigned last_global_id = 0;
+
+    //! Fill materialpoints_ vector for the first component
+    std::shared_ptr<MaterialPoints<Tdim>> materialpoints = std::make_shared<MaterialPoints<Tdim>>();
+    materialpoints_.emplace_back(materialpoints);  
+    materialpoints_.at(0)->add_points(std::unique_ptr<Point<Tdim>>(new Point<Tdim> (elementcoord.first, elementcoord.first + last_global_id, pointsarray)));
   }
 
-  std::cout << "Number of Material Points: " << materialpoints_.size() << '\n';
+  std::cout << "Number of Material Points: " << materialpoints_.at(0)->points().size() << '\n';
 }

@@ -2,8 +2,8 @@
 //! \details Get stress vector of vertex coordinates, and number of vertices
 //! \tparam Tdim dimension
 template <unsigned Tdim>
-void IO<Tdim>::write_material_points(
-    const std::vector<std::shared_ptr<Point<Tdim>>>& materialpoints) {
+void IO<Tdim>::write_point_coordinates(
+    const std::vector<std::shared_ptr<Point<Tdim>>>& points) {
 
   //! Output vertices file
   std::fstream material_points_file;
@@ -11,15 +11,15 @@ void IO<Tdim>::write_material_points(
 
   if (material_points_file.is_open()) {
     //! Write the total number of vertices
-    material_points_file << materialpoints.size() << "\n";
+    material_points_file << points.size() << "\n";
 
     //! Write the coordinates of the vertices
     //! [X] [Y] [Z]
     //! Note that for 2D, z values are 0
     //! For 1D, both y and z values are 0
-    for (auto const& points : materialpoints) {
-      for (unsigned i = 0; i < points->coordinates().size(); ++i) {
-        material_points_file << points->coordinates()[i] << "\t";
+    for (auto const& point : points) {
+      for (unsigned i = 0; i < point->coordinates().size(); ++i) {
+        material_points_file << point->coordinates()[i] << "\t";
       }
       material_points_file << "\n";
     }

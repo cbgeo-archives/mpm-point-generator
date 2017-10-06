@@ -19,23 +19,17 @@ int main(int argc, char** argv) {
     //! Mesh handler
     std::unique_ptr<Mesh<3, 8>> mesh(new GMSH<3, 8>());
 
-    //! Material points with initial id of the material points of 0
-    std::unique_ptr<MaterialPoints<3>> materialPoints(new MaterialPoints<3>(0));
-
     //! Read mesh
     mesh->read_mesh(io->mesh_file_name());
 
-    //! Compute material points
+    //! Compute material points and stress
     mesh->compute_material_points();
-
-    //! Get materialPoints from mesh, get material properties, compute stress
-    materialPoints->add_points(mesh->material_points());
-    materialPoints->add_material_properties(io->material_properties_name());
-    materialPoints->compute_stress();
+    mesh->material_points().at(0)->add_material_properties(io->json_filename());
+    mesh->material_points().at(0)->compute_stress();
 
     //! Write material points and stresses
-    io->write_material_points(materialPoints->points());
-    io->write_stresses(materialPoints->stress());
+    io->write_point_coordinates(mesh->material_points().at(0)->points());
+    io->write_stresses(mesh->material_points().at(0)->stress());
 
   } catch (std::exception& except) {
     std::cout << "Caught exception: " << except.what() << '\n';

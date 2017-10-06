@@ -1,11 +1,12 @@
-//! Compute stresses of the material points
+//! Read and store material properties
 //! \tparam Tdim Dimension
-//! \param[in] filename of material properties
+//! \tparam Tvertices Number of vertices in element
+//! \param[in] filename of material properties (initial input json file)
 template <unsigned Tdim>
-void MaterialPoints<Tdim>::add_material_properties(
-    const std::string& filename) {
+void MaterialPoints<Tdim>::add_material_properties(const std::string& filename) {
 
   std::ifstream file;
+  std::shared_ptr<MaterialProperties> material_properties;
   file.open(filename.c_str(), std::ios::in);
 
   if (!file.is_open())
@@ -16,11 +17,31 @@ void MaterialPoints<Tdim>::add_material_properties(
     file >> j;
     double density = j["MaterialProperties"]["density"].get<double>();
     double k0 = j["MaterialProperties"]["k0"].get<double>();
-    materialProperties_ = std::make_shared<MaterialProperties>(density, k0);
+    unsigned nmaterials_ = j["nMaterial"].get<unsigned>();
+    
+    //! Store it to private variables
+    material_properties_ = std::make_shared<MaterialProperties>(density, k0);
+  }
+  file.close();
+
+
+}
+
+//! Return vector of stress
+//! \tparam Tdim Dimension
+template <unsigned Tdim>
+std::vector<Eigen::VectorXd> MaterialPoints<Tdim>::stress() {
+
+  std::vector<Eigen::VectorXd> stress;
+    
+  //! Loop through the points to get the stresses
+  for (const auto& materialpoint : points_) {
+    stress.emplace_back(materialpoint->stress());
   }
 
-  file.close();
+  return stress;
 }
+
 
 //! Compute stresses of the material points
 //! \tparam Tdim Dimension
@@ -51,10 +72,10 @@ void MaterialPoints<Tdim>::compute_stress() {
 
     stress[Tdim - 1] = conv_factor *
                        (-(max_height - point->coordinates()[Tdim])) *
-                       materialProperties_->density();
+                       material_properties_->density();
 
     for (unsigned i = 2; i <= Tdim; ++i) {
-      stress[Tdim - i] = stress[Tdim - 1] * materialProperties_->k0();
+      stress[Tdim - i] = stress[Tdim - 1] * material_properties_->k0();
     }
 
     point->stress(stress);

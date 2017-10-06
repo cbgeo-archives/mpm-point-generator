@@ -13,6 +13,11 @@
 
 #include "material_points.h"
 
+#include "json.hpp"
+
+//! Short alias for convenience
+using json = nlohmann::json;
+
 //! \brief Abstract class for handling mesh
 //! \tparam Tdim Dimension of the mesh
 //! \tparam Tvertices Number of vertices in an element
@@ -27,7 +32,7 @@ class Mesh {
   virtual void compute_material_points() = 0;
 
   //! Return a vector of material points
-  std::vector<std::shared_ptr<Point<Tdim>>> material_points() const {
+  std::vector<std::shared_ptr<MaterialPoints<Tdim>>> material_points() const {
     return materialpoints_;
   }
 
@@ -37,6 +42,9 @@ class Mesh {
  protected:
   //! Total number of vertices
   unsigned nvertices_;
+
+  //! Number of materials being used
+  unsigned nmaterials_;
 
   //! Map to store id and vertices coordinates
   std::map<unsigned, Eigen::VectorXd> vertices_;
@@ -48,6 +56,6 @@ class Mesh {
   std::map<unsigned, Eigen::VectorXd> elementcoordinates_;
 
   //! Container for storing material points
-  std::vector<std::shared_ptr<Point<Tdim>>> materialpoints_;
+  std::vector<std::shared_ptr<MaterialPoints<Tdim>>> materialpoints_;
 };
 #endif  // MPM_POINT_GEN_MESH_H_
