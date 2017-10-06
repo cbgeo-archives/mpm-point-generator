@@ -2,7 +2,8 @@
 //! \details Get stress vector of vertex coordinates, and number of vertices
 //! \tparam Tdim dimension
 template <unsigned Tdim>
-void IO<Tdim>::write_point_coordinates(const std::vector<Eigen::VectorXd>& coordinates) {
+void IO<Tdim>::write_point_coordinates(
+    const std::vector<Eigen::VectorXd>& coordinates) {
 
   //! Output vertices file
   std::fstream material_points_file;

@@ -53,8 +53,7 @@ class IO {
   }
 
   //! Write vertices
-  void write_point_coordinates(
-      const std::vector<Eigen::VectorXd>& coordinates);
+  void write_point_coordinates(const std::vector<Eigen::VectorXd>& coordinates);
 
   //! Write stresses
   void write_stresses(const std::vector<Eigen::VectorXd>& stresses);

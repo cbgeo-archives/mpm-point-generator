@@ -25,9 +25,10 @@ class MaterialPoints {
   //! Add material properties
   //! Read and store material properties
   void add_material_properties(const std::string& filename) {
-    material_properties_ = std::make_shared<MaterialProperties>(filename);;
+    material_properties_ = std::make_shared<MaterialProperties>(filename);
+    ;
   }
-    
+
   //! Compute stress
   void compute_stress();
 

@@ -24,11 +24,11 @@ class MaterialProperties {
     if (file.good()) {
       json j;
       file >> j;
-      
+
       density_ = j["material_properties"]["density"].get<double>();
       k0_ = j["material_properties"]["k0"].get<double>();
     }
-    
+
     file.close();
   }
 
