@@ -2,17 +2,18 @@
 //! Get mesh_filename and output_directory
 //! \param[in] json input file name
 template <unsigned Tdim>
-IO<Tdim>::IO(const std::string& json_file) : json_filename_{json_file} {
+IO<Tdim>::IO(const std::string& file_directory, const std::string& json_file) : file_directory_{file_directory} {
+
+  json_filename_ = file_directory_ + json_file;
 
   //! Check if json file is present
   std::ifstream inputFile(json_filename_);
   inputFile.exceptions(std::ifstream::badbit);
 
-  //! Read json file and store to private variables
-  json j;
-  inputFile >> j;
-  mesh_filename_ = j["mesh_file"].get<std::string>();
-  output_directory_ = j["output_directory"].get<std::string>();
+  // //! Store json object as private variable
+  // //! Read json file and store to private variables
+  inputFile >> json_file_;
+  mesh_filename_ = file_directory_ + json_file_["mesh_file"].get<std::string>();
 
   //! Check if mesh file is present
   std::ifstream meshfile;
@@ -25,8 +26,8 @@ IO<Tdim>::IO(const std::string& json_file) : json_filename_{json_file} {
   meshfile.close();
 
   //! Material point and stresses output file
-  material_points_filename_ = output_directory_ + "material_points.txt";
-  stress_filename_ = output_directory_ + "initial_stresses.txt";
+  material_points_filename_ = file_directory_ + "material_points.txt";
+  stress_filename_ = file_directory_ + "initial_stresses.txt";
 }
 
 //! \brief output coordinates of material points
@@ -35,6 +36,8 @@ IO<Tdim>::IO(const std::string& json_file) : json_filename_{json_file} {
 template <unsigned Tdim>
 void IO<Tdim>::write_point_coordinates(
     const std::vector<Eigen::VectorXd>& coordinates) {
+
+  std::cout << "material_points will be stored in: " << file_directory_ << "\n";
 
   //! Output vertices file
   std::fstream material_points_file;
@@ -66,6 +69,8 @@ void IO<Tdim>::write_point_coordinates(
 template <unsigned Tdim>
 void IO<Tdim>::write_stresses(const std::vector<Eigen::VectorXd>& stresses) {
   unsigned id = 0;
+
+  std::cout << "initial_stresses will be stored in: " << file_directory_ << "\n";
 
   //! Output stress file
   std::fstream stress_file;

@@ -13,7 +13,7 @@ class MaterialProperties {
  public:
   //! Constructor with density and k0
   //! \param[in] json input file containing material properties
-  MaterialProperties(const std::string& filename);
+  MaterialProperties(const json& jsonfile);
 
   //! Return density
   double density() const { return density_; }

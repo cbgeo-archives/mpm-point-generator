@@ -24,8 +24,9 @@ class IO {
  public:
   //! Constructor with json input file
   //! Get mesh_filename and output_directory
+  //! \param[in] input directory
   //! \param[in] json input file name
-  explicit IO(const std::string& json_file);
+  explicit IO(const std::string& file_directory, const std::string& json_file);
 
   //! Write vertices
   void write_point_coordinates(const std::vector<Eigen::VectorXd>& coordinates);
@@ -33,21 +34,24 @@ class IO {
   //! Write stresses
   void write_stresses(const std::vector<Eigen::VectorXd>& stresses);
 
-  //! Return input json file for material properties
-  std::string json_filename() const { return json_filename_; }
+  //! Return json object for material properties
+  json json_file() const { return json_file_; }
 
   //! Return mesh file name
   std::string mesh_file_name() const { return mesh_filename_; }
 
  private:
+  //! Input directory
+  std::string file_directory_;
+
   //! Input json file
   std::string json_filename_;
 
+  //! json object to be passed
+  json json_file_;
+
   //! Input mesh file name
   std::string mesh_filename_;
-
-  //! Output directory
-  std::string output_directory_;
 
   //! File name of vertices
   std::string material_points_filename_;
