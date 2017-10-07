@@ -21,19 +21,14 @@ int main(int argc, char** argv) {
     //! Read mesh
     mesh->read_mesh(io->mesh_file_name());
 
-    //! Compute material points
+    //! Compute material points and stress
     mesh->compute_material_points();
-    
-    //! Iterate over the material_points
-    for (const auto& materialpoint : mesh->material_points()) {
-      //! Compute material stress
-      materialpoint->add_material_properties(io->json_file());
-      materialpoint->compute_stress();
+    mesh->add_material_properties(io->json_file());
+    mesh->compute_stress();
 
-      //! Write material points and stresses
-      io->write_point_coordinates(materialpoint->coordinates());
-      io->write_stresses(materialpoint->stress());
-    }
+    //! Write material points and stresses
+    io->write_point_coordinates(mesh->coordinates());
+    io->write_stresses(mesh->stress());
 
   } catch (std::exception& except) {
     std::cout << "Caught exception: " << except.what() << '\n';

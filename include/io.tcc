@@ -2,7 +2,8 @@
 //! Get mesh_filename and output_directory
 //! \param[in] json input file name
 template <unsigned Tdim>
-IO<Tdim>::IO(const std::string& file_directory, const std::string& json_file) : file_directory_{file_directory} {
+IO<Tdim>::IO(const std::string& file_directory, const std::string& json_file)
+    : file_directory_{file_directory} {
 
   json_filename_ = file_directory_ + json_file;
 
@@ -70,7 +71,8 @@ template <unsigned Tdim>
 void IO<Tdim>::write_stresses(const std::vector<Eigen::VectorXd>& stresses) {
   unsigned id = 0;
 
-  std::cout << "initial_stresses will be stored in: " << file_directory_ << "\n";
+  std::cout << "initial_stresses will be stored in: " << file_directory_
+            << "\n";
 
   //! Output stress file
   std::fstream stress_file;

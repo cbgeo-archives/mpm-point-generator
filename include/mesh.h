@@ -11,7 +11,11 @@
 
 #include <eigen3/Eigen/Dense>
 
+#include "json.hpp"
 #include "material_points.h"
+
+//! Short alias for convenience
+using json = nlohmann::json;
 
 //! \brief Abstract class for handling mesh
 //! \tparam Tdim Dimension of the mesh
@@ -26,10 +30,17 @@ class Mesh {
   //! Compute material point location
   virtual void compute_material_points() = 0;
 
-  //! Return a vector of material points
-  std::vector<std::shared_ptr<MaterialPoints<Tdim>>> material_points() const {
-    return materialpoints_;
-  }
+  //! Return a vector of coordinates
+  std::vector<Eigen::VectorXd> coordinates();
+
+  //! Return a vector of stresses
+  std::vector<Eigen::VectorXd> stress();
+
+  //! Get material properties from json object
+  void add_material_properties(const json& jsonfile);
+
+  //! Compute stress of the material points
+  void compute_stress();
 
   //! Return the total number of vertices
   unsigned nvertices() const { return nvertices_; }
@@ -53,4 +64,7 @@ class Mesh {
   //! Container for storing material points
   std::vector<std::shared_ptr<MaterialPoints<Tdim>>> materialpoints_;
 };
+
+#include "mesh.tcc"
+
 #endif  // MPM_POINT_GEN_MESH_H_
