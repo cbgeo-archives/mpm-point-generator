@@ -3,9 +3,9 @@
 
 #include "catch.hpp"
 #include "material_properties.h"
-#include "json.hpp"
 
-//! Short alias for convenience
+//! Alias for JSON
+#include "json.hpp"
 using json = nlohmann::json;
 
 //! \brief Check point class in 2D
@@ -16,12 +16,12 @@ TEST_CASE("MaterialProperties base is checked", "[MaterialProperties]") {
 
   //! Coordinates are checked for zero values
   SECTION("Checking for zero values") {
-    json jsonfile;
-    jsonfile["material_properties"]["density"] = 0;
-    jsonfile["material_properties"]["k0"] = 0;
+    json materialproperties;
+    materialproperties["material_properties"]["density"] = 0;
+    materialproperties["material_properties"]["k0"] = 0;
 
     auto node = std::unique_ptr<MaterialProperties>(
-        new MaterialProperties(jsonfile));
+        new MaterialProperties(materialproperties));
 
     REQUIRE(node->density() == Approx(0).epsilon(tolerance));
     REQUIRE(node->k0() == Approx(0).epsilon(tolerance));
@@ -29,12 +29,12 @@ TEST_CASE("MaterialProperties base is checked", "[MaterialProperties]") {
 
   //! Coordinates are checked for minimum values
   SECTION("Checking for minimum values") {
-    json jsonfile;
-    jsonfile["material_properties"]["density"] = std::numeric_limits<unsigned>::min();
-    jsonfile["material_properties"]["k0"] = std::numeric_limits<unsigned>::min();
+    json materialproperties;
+    materialproperties["material_properties"]["density"] = std::numeric_limits<unsigned>::min();
+    materialproperties["material_properties"]["k0"] = std::numeric_limits<unsigned>::min();
 
     auto node = std::unique_ptr<MaterialProperties>(
-        new MaterialProperties(jsonfile));
+        new MaterialProperties(materialproperties));
 
     REQUIRE(node->density() ==
             Approx(std::numeric_limits<unsigned>::min()).epsilon(tolerance));
@@ -44,12 +44,12 @@ TEST_CASE("MaterialProperties base is checked", "[MaterialProperties]") {
 
   //! Coordinates are checked for maximum values
   SECTION("Checking for maximum values") {
-    json jsonfile;
-    jsonfile["material_properties"]["density"] = std::numeric_limits<unsigned>::max();
-    jsonfile["material_properties"]["k0"] = std::numeric_limits<unsigned>::max();
+    json materialproperties;
+    materialproperties["material_properties"]["density"] = std::numeric_limits<unsigned>::max();
+    materialproperties["material_properties"]["k0"] = std::numeric_limits<unsigned>::max();
 
     auto node = std::unique_ptr<MaterialProperties>(
-        new MaterialProperties(jsonfile));
+        new MaterialProperties(materialproperties));
 
     REQUIRE(node->density() ==
             Approx(std::numeric_limits<unsigned>::max()).epsilon(tolerance));

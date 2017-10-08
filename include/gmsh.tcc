@@ -209,6 +209,13 @@ void GMSH<Tdim, Tvertices>::compute_material_points() {
     //! Where N is the number of nodes per element
     //! This is rearranging of the data to have stored in matrix form
     Eigen::MatrixXd m(Tdim, Tvertices);
+
+    //! last_global_id should be changed later if more than one material
+    //! properties are used
+    //! material_id is the index of materialpoints
+    unsigned last_global_id = 0;
+    unsigned material_id = 0;
+
     for (unsigned i = 0; i < Tvertices; ++i) {
       for (unsigned j = 0; j < Tdim; ++j) {
         m(j, i) = elementcoord.second[(i * Tdim) + j];
@@ -223,27 +230,24 @@ void GMSH<Tdim, Tvertices>::compute_material_points() {
       }
     }
 
-    //! Update vector material points
-    //! last_global_id should be changed later if more than one material
-    //! properties being used
-    //! material_id is the index of the material being used
-    unsigned last_global_id = 0;
-    unsigned material_id = 0;
-
+    //! Update vector of material points
     //! Fill materialpoints_ vector for the first component
-    materialpoints_.emplace_back(
-        std::make_shared<MaterialPoints<Tdim>>(material_id));
-    std::unique_ptr<Point<Tdim>> temp_ptr(new Point<Tdim>(
+    std::unique_ptr<MaterialPoints<Tdim>> materialpoint(new MaterialPoints<Tdim>(material_id));
+    materialpoints_.emplace_back(std::move(materialpoint));
+
+    //! Make class point and store to material points
+    std::unique_ptr<Point<Tdim>> point(new Point<Tdim>(
         elementcoord.first, elementcoord.first + last_global_id, pointsarray));
-    materialpoints_.at(material_id)->add_points(std::move(temp_ptr));
+    
+
+    materialpoints_.at(material_id)->add_points(std::move(point));
   }
 
   //! Find number of material points generated
-  unsigned materialpoints_size{0};
+  unsigned materialpoints = 0;
 
-  for (const auto& materialpoint : materialpoints_) {
-    materialpoints_size += materialpoint->coordinates().size();
-  }
+  for (const auto& materialpoint : materialpoints_)
+    materialpoints += materialpoint->coordinates().size();
 
-  std::cout << "Number of Material Points: " << materialpoints_size << '\n';
+  std::cout << "Number of Material Points: " << materialpoints << '\n';
 }

@@ -11,10 +11,10 @@
 
 #include <eigen3/Eigen/Dense>
 
-#include "json.hpp"
 #include "material_points.h"
 
-//! Short alias for convenience
+//! Alias for JSON
+#include "json.hpp"
 using json = nlohmann::json;
 
 //! \brief Abstract class for handling mesh
@@ -40,17 +40,14 @@ class Mesh {
   void add_material_properties(const json& jsonfile);
 
   //! Compute stress of the material points
-  void compute_stress();
+  void compute_stresses();
 
   //! Return the total number of vertices
   unsigned nvertices() const { return nvertices_; }
 
  protected:
   //! Total number of vertices
-  unsigned nvertices_;
-
-  //! Number of materials being used
-  unsigned nmaterials_;
+  unsigned nvertices_ = std::numeric_limits<unsigned>::max();
 
   //! Map to store id and vertices coordinates
   std::map<unsigned, Eigen::VectorXd> vertices_;
@@ -62,7 +59,7 @@ class Mesh {
   std::map<unsigned, Eigen::VectorXd> elementcoordinates_;
 
   //! Container for storing material points
-  std::vector<std::shared_ptr<MaterialPoints<Tdim>>> materialpoints_;
+  std::vector<std::unique_ptr<MaterialPoints<Tdim>>> materialpoints_;
 };
 
 #include "mesh.tcc"

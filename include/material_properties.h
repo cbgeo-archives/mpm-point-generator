@@ -1,19 +1,19 @@
 #ifndef MPM_MESH_MATERIAL_PROPERTIES_H_
 #define MPM_MESH_MATERIAL_PROPERTIES_H_
 
+#include <limits>
 #include <memory>
 
+//! Alias for JSON
 #include "json.hpp"
-
-//! Short alias for convenience
 using json = nlohmann::json;
 
 //! \brief Points class to store material properties
 class MaterialProperties {
  public:
-  //! Constructor with density and k0
+  //! Constructor of material properties
   //! \param[in] json input file containing material properties
-  MaterialProperties(const json& jsonfile);
+  explicit MaterialProperties(const json& materialproperties);
 
   //! Return density
   double density() const { return density_; }
@@ -23,10 +23,10 @@ class MaterialProperties {
 
  private:
   //! density
-  double density_;
+  double density_ = std::numeric_limits<unsigned>::max();
 
   //! k0
-  double k0_;
+  double k0_ = std::numeric_limits<unsigned>::max();
 };
 
 #include <material_properties.tcc>

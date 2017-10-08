@@ -10,11 +10,11 @@
 
 #include <eigen3/Eigen/Dense>
 
-#include "json.hpp"
 #include "material_points.h"
 #include "mesh.h"
 
-//! Short alias for convenience
+//! Alias for JSON
+#include "json.hpp"
 using json = nlohmann::json;
 
 //! \brief Input/Output handler
@@ -29,7 +29,7 @@ class IO {
   explicit IO(const std::string& file_directory, const std::string& json_file);
 
   //! Write vertices
-  void write_point_coordinates(const std::vector<Eigen::VectorXd>& coordinates);
+  void write_coordinates(const std::vector<Eigen::VectorXd>& coordinates);
 
   //! Write stresses
   void write_stresses(const std::vector<Eigen::VectorXd>& stresses);
@@ -47,7 +47,7 @@ class IO {
   //! Input json file
   std::string json_filename_;
 
-  //! json object to be passed
+  //! json object of material properties to be passed
   json json_file_;
 
   //! Input mesh file name

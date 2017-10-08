@@ -7,11 +7,11 @@
 
 #include <eigen3/Eigen/Dense>
 
-#include "json.hpp"
 #include "material_properties.h"
 #include "point.h"
 
-//! Short alias for convenience
+//! Alias for JSON
+#include "json.hpp"
 using json = nlohmann::json;
 
 //! \brief MaterialPoints class to store Point class and associated materials
@@ -49,7 +49,7 @@ class MaterialPoints {
   std::vector<std::unique_ptr<Point<Tdim>>> points_;
 
   //! material properties associated with the vector of points
-  std::shared_ptr<MaterialProperties> material_properties_;
+  std::shared_ptr<MaterialProperties> material_properties_ = nullptr;
 };
 
 #include "material_points.tcc"

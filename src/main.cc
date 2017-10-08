@@ -21,13 +21,13 @@ int main(int argc, char** argv) {
     //! Read mesh
     mesh->read_mesh(io->mesh_file_name());
 
-    //! Compute material points and stress
+    //! Compute material points and stresses
     mesh->compute_material_points();
     mesh->add_material_properties(io->json_file());
-    mesh->compute_stress();
+    mesh->compute_stresses();
 
     //! Write material points and stresses
-    io->write_point_coordinates(mesh->coordinates());
+    io->write_coordinates(mesh->coordinates());
     io->write_stresses(mesh->stress());
 
   } catch (std::exception& except) {

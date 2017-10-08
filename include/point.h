@@ -10,12 +10,12 @@
 template <unsigned Tdim>
 class Point {
  public:
-  //! Constructor with id, global id and coordinates
+  //! Constructor with global id, id and coordinates
   //! \param[in] id index of the vertex
   //! \param[in] coord Coordinates of the point
-  Point(unsigned id, unsigned global_id, const Eigen::VectorXd& coord)
-      : id_{id} {
-    global_id_ = id;
+  Point(unsigned global_id, unsigned id, const Eigen::VectorXd& coord) {
+    global_id_ = global_id;
+    id_ = id;
     coordinates_ = coord;
   }
 

@@ -1,5 +1,6 @@
 //! Constructor with json input file
-//! Get mesh_filename and output_directory
+//! Read json file, get mesh_filename and output_directory
+//! \param[in] json input directory
 //! \param[in] json input file name
 template <unsigned Tdim>
 IO<Tdim>::IO(const std::string& file_directory, const std::string& json_file)
@@ -9,11 +10,18 @@ IO<Tdim>::IO(const std::string& file_directory, const std::string& json_file)
 
   //! Check if json file is present
   std::ifstream inputFile(json_filename_);
-  inputFile.exceptions(std::ifstream::badbit);
 
-  // //! Store json object as private variable
-  // //! Read json file and store to private variables
-  inputFile >> json_file_;
+  try {
+    if (!inputFile.is_open())
+      throw std::runtime_error(
+          std::string("Input file not found in specified location: ") + json_filename_);
+  } catch (const std::runtime_error& except) {
+    std::cerr << "Exception opening/reading json file";
+  }
+
+  //! Store json object as private variable
+  //! Read json file and store to private variables
+  json_file_ = json::parse(inputFile);
   mesh_filename_ =
       file_directory_ + json_file_["mesh_file"].template get<std::string>();
 
@@ -32,11 +40,11 @@ IO<Tdim>::IO(const std::string& file_directory, const std::string& json_file)
   stress_filename_ = file_directory_ + "initial_stresses.txt";
 }
 
-//! \brief output coordinates of material points
-//! \details Get vector of point coordinates
+//! \brief Write coordinates of material points
+//! \details Write point coordinates
 //! \tparam Tdim dimension
 template <unsigned Tdim>
-void IO<Tdim>::write_point_coordinates(
+void IO<Tdim>::write_coordinates(
     const std::vector<Eigen::VectorXd>& coordinates) {
 
   std::cout << "material_points will be stored in: " << file_directory_ << "\n";
@@ -65,9 +73,9 @@ void IO<Tdim>::write_point_coordinates(
   std::cout << "Wrote material point coordinates\n";
 }
 
-//! \brief output initial stresses of material points
-//! \Param[in] stresses Initial stress of material points
-//! /tparam Tdim dimension
+//! \brief Write initial stresses of material points
+//! \Param[in] stresses is initial stress of material points
+//! \tparam Tdim dimension
 template <unsigned Tdim>
 void IO<Tdim>::write_stresses(const std::vector<Eigen::VectorXd>& stresses) {
   unsigned id = 0;
