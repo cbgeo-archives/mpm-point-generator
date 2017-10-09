@@ -35,7 +35,8 @@ std::vector<Eigen::VectorXd> Mesh<Tdim, Tvertices>::stress() {
 //! Add material properties from json object
 //! \tparam Tdim Dimension of the mesh
 //! \tparam Tvertices Number of vertices in an element
-//! \param[in] jsonfile contains material properties that will be parsed in MaterialPoints
+//! \param[in] jsonfile contains material properties that will be parsed in
+//! MaterialPoints
 template <unsigned Tdim, unsigned Tvertices>
 void Mesh<Tdim, Tvertices>::add_material_properties(const json& jsonfile) {
 

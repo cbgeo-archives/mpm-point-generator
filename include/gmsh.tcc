@@ -232,22 +232,22 @@ void GMSH<Tdim, Tvertices>::compute_material_points() {
 
     //! Update vector of material points
     //! Fill materialpoints_ vector for the first component
-    std::unique_ptr<MaterialPoints<Tdim>> materialpoint(new MaterialPoints<Tdim>(material_id));
+    std::unique_ptr<MaterialPoints<Tdim>> materialpoint(
+        new MaterialPoints<Tdim>(material_id));
     materialpoints_.emplace_back(std::move(materialpoint));
 
     //! Make class point and store to material points
     std::unique_ptr<Point<Tdim>> point(new Point<Tdim>(
         elementcoord.first, elementcoord.first + last_global_id, pointsarray));
-    
 
     materialpoints_.at(material_id)->add_points(std::move(point));
   }
 
   //! Find number of material points generated
-  unsigned materialpoints = 0;
+  unsigned nmaterialpoints = 0;
 
   for (const auto& materialpoint : materialpoints_)
-    materialpoints += materialpoint->coordinates().size();
+    nmaterialpoints += nmaterialpoints->coordinates().size();
 
-  std::cout << "Number of Material Points: " << materialpoints << '\n';
+  std::cout << "Number of Material Points: " << nmaterialpoints << '\n';
 }

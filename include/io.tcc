@@ -14,7 +14,8 @@ IO<Tdim>::IO(const std::string& file_directory, const std::string& json_file)
   try {
     if (!inputFile.is_open())
       throw std::runtime_error(
-          std::string("Input file not found in specified location: ") + json_filename_);
+          std::string("Input file not found in specified location: ") +
+          json_filename_);
   } catch (const std::runtime_error& except) {
     std::cerr << "Exception opening/reading json file";
   }

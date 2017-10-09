@@ -5,7 +5,7 @@ std::vector<Eigen::VectorXd> MaterialPoints<Tdim>::coordinates() {
 
   std::vector<Eigen::VectorXd> coordinates;
 
-  //! Loop through the points to get the stresses
+  //! Loop through the points to get the coordinates
   for (const auto& materialpoint : points_) {
     coordinates.emplace_back(materialpoint->coordinates());
   }
@@ -52,17 +52,22 @@ void MaterialPoints<Tdim>::compute_stress() {
   //! [2D], y is the vertical direction
   //! [3D], z is the vertical direction
   for (const auto& point : points_) {
-    Eigen::VectorXd stress(Tdim * 2);
-    stress.setZero();
+    if (material_properties_) {
 
-    stress[Tdim - 1] = conv_factor *
-                       (-(max_height - point->coordinates()[Tdim])) *
-                       material_properties_->density();
+      Eigen::VectorXd stress(Tdim * 2);
+      stress.setZero();
 
-    for (unsigned i = 2; i <= Tdim; ++i) {
-      stress[Tdim - i] = stress[Tdim - 1] * material_properties_->k0();
+      stress[Tdim - 1] = conv_factor *
+                         (-(max_height - point->coordinates()[Tdim])) *
+                         material_properties_->density();
+
+      for (unsigned i = 2; i <= Tdim; ++i) {
+        stress[Tdim - i] = stress[Tdim - 1] * material_properties_->k0();
+      }
+
+      point->stress(stress);
+    } else {
+      std::cerr << "No material properties found.\n";
     }
-
-    point->stress(stress);
   }
 }
