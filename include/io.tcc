@@ -22,9 +22,9 @@ IO<Tdim>::IO(const std::string& file_directory, const std::string& json_file)
 
   //! Store json object as private variable
   //! Read json file and store to private variables
-  json_file_ = json::parse(inputFile);
+  json_ = json::parse(inputFile);
   mesh_filename_ =
-      file_directory_ + json_file_["mesh_file"].template get<std::string>();
+      file_directory_ + json_["mesh_file"].template get<std::string>();
 
   //! Check if mesh file is present
   std::ifstream meshfile;

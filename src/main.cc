@@ -12,18 +12,21 @@ int main(int argc, char** argv) {
       throw std::runtime_error("Incorrect number of input arguments");
     }
 
-    //! IO handler
+    //! IO
     std::unique_ptr<IO<3>> io(new IO<3>(argv[1], argv[2]));
 
-    //! Mesh handler
+    //! Mesh
     std::unique_ptr<Mesh<3, 8>> mesh(new GMSH<3, 8>());
+
+    //! MaterialProperties
+    std::shared_ptr<MaterialProperties> material = std::make_shared<MaterialProperties>(io->material_properties());
 
     //! Read mesh
     mesh->read_mesh(io->mesh_file_name());
 
     //! Compute material points and stresses
     mesh->compute_material_points();
-    mesh->add_material_properties(io->json_file());
+    mesh->assign_material_properties(material);
     mesh->compute_stresses();
 
     //! Write material points and stresses

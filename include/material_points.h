@@ -26,12 +26,10 @@ class MaterialPoints {
     points_.emplace_back(std::move(point));
   }
 
-  //! Add material properties
-  //! Read and store material properties
-  void add_material_properties(const json& jsonfile) {
-    std::unique_ptr<MaterialProperties> pointer(
-        new MaterialProperties(jsonfile));
-    material_properties_ = std::move(pointer);
+  //! Assign material properties
+  //! \param[in] material pointer to MaterialProperties
+  void assign_material_properties(const std::shared_ptr<MaterialProperties>& material) {
+    material_properties_ = material;
   }
 
   //! Compute stress
@@ -51,7 +49,7 @@ class MaterialPoints {
   std::vector<std::unique_ptr<Point<Tdim>>> points_;
 
   //! material properties associated with the vector of points
-  std::unique_ptr<MaterialProperties> material_properties_ = nullptr;
+  std::shared_ptr<MaterialProperties> material_properties_{nullptr};
 };
 
 #include "material_points.tcc"

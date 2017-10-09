@@ -35,7 +35,7 @@ class IO {
   void write_stresses(const std::vector<Eigen::VectorXd>& stresses);
 
   //! Return json object for material properties
-  json json_file() const { return json_file_; }
+  json material_properties() const { return json_["material_properties"]; }
 
   //! Return mesh file name
   std::string mesh_file_name() const { return mesh_filename_; }
@@ -44,11 +44,11 @@ class IO {
   //! Input directory
   std::string file_directory_;
 
-  //! Input json file
+  //! Input json path file name
   std::string json_filename_;
 
-  //! json object of material properties to be passed
-  json json_file_;
+  //! Input json object
+  json json_;
 
   //! Input mesh file name
   std::string mesh_filename_;
