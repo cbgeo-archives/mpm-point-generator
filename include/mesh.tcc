@@ -37,7 +37,8 @@ std::vector<Eigen::VectorXd> Mesh<Tdim, Tvertices>::stress() {
 //! \tparam Tvertices Number of vertices in an element
 //! \param[in] material pointer to MaterialProperties
 template <unsigned Tdim, unsigned Tvertices>
-void Mesh<Tdim, Tvertices>::assign_material_properties(const std::shared_ptr<MaterialProperties>& material) {
+void Mesh<Tdim, Tvertices>::assign_material_properties(
+    const std::shared_ptr<MaterialProperties>& material) {
 
   for (const auto& materialpoint : materialpoints_) {
     materialpoint->assign_material_properties(material);

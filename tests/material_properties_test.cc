@@ -14,46 +14,46 @@ TEST_CASE("MaterialProperties base is checked", "[MaterialProperties]") {
   //! Test for MaterialProperties
   const double tolerance = 1.E-12;
 
-  //! Coordinates are checked for zero values
+  //! Material properties are checked for zero values
   SECTION("Checking for zero values") {
     json materialproperties;
-    materialproperties["material_properties"]["density"] = 0;
-    materialproperties["material_properties"]["k0"] = 0;
+    materialproperties["density"] = 0;
+    materialproperties["k0"] = 0;
 
-    auto node = std::unique_ptr<MaterialProperties>(
+    auto material = std::unique_ptr<MaterialProperties>(
         new MaterialProperties(materialproperties));
 
-    REQUIRE(node->density() == Approx(0).epsilon(tolerance));
-    REQUIRE(node->k0() == Approx(0).epsilon(tolerance));
+    REQUIRE(material->density() == Approx(0).epsilon(tolerance));
+    REQUIRE(material->k0() == Approx(0).epsilon(tolerance));
   }
 
-  //! Coordinates are checked for minimum values
+  //! Material properties are checked for minimum values
   SECTION("Checking for minimum values") {
     json materialproperties;
-    materialproperties["material_properties"]["density"] = std::numeric_limits<unsigned>::min();
-    materialproperties["material_properties"]["k0"] = std::numeric_limits<unsigned>::min();
+    materialproperties["density"] = std::numeric_limits<double>::min();
+    materialproperties["k0"] = std::numeric_limits<double>::min();
 
-    auto node = std::unique_ptr<MaterialProperties>(
+    auto material = std::unique_ptr<MaterialProperties>(
         new MaterialProperties(materialproperties));
 
-    REQUIRE(node->density() ==
-            Approx(std::numeric_limits<unsigned>::min()).epsilon(tolerance));
-    REQUIRE(node->k0() ==
-            Approx(std::numeric_limits<unsigned>::min()).epsilon(tolerance));
+    REQUIRE(material->density() ==
+            Approx(std::numeric_limits<double>::min()).epsilon(tolerance));
+    REQUIRE(material->k0() ==
+            Approx(std::numeric_limits<double>::min()).epsilon(tolerance));
   }
 
-  //! Coordinates are checked for maximum values
+  //! Material properties are checked for maximum values
   SECTION("Checking for maximum values") {
     json materialproperties;
-    materialproperties["material_properties"]["density"] = std::numeric_limits<unsigned>::max();
-    materialproperties["material_properties"]["k0"] = std::numeric_limits<unsigned>::max();
+    materialproperties["density"] = std::numeric_limits<double>::max();
+    materialproperties["k0"] = std::numeric_limits<double>::max();
 
-    auto node = std::unique_ptr<MaterialProperties>(
+    auto material = std::unique_ptr<MaterialProperties>(
         new MaterialProperties(materialproperties));
 
-    REQUIRE(node->density() ==
-            Approx(std::numeric_limits<unsigned>::max()).epsilon(tolerance));
-    REQUIRE(node->k0() ==
-            Approx(std::numeric_limits<unsigned>::max()).epsilon(tolerance));
+    REQUIRE(material->density() ==
+            Approx(std::numeric_limits<double>::max()).epsilon(tolerance));
+    REQUIRE(material->k0() ==
+            Approx(std::numeric_limits<double>::max()).epsilon(tolerance));
   }
 }

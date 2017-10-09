@@ -19,7 +19,8 @@ int main(int argc, char** argv) {
     std::unique_ptr<Mesh<3, 8>> mesh(new GMSH<3, 8>());
 
     //! MaterialProperties
-    std::shared_ptr<MaterialProperties> material = std::make_shared<MaterialProperties>(io->material_properties());
+    std::shared_ptr<MaterialProperties> material =
+        std::make_shared<MaterialProperties>(io->material_properties());
 
     //! Read mesh
     mesh->read_mesh(io->mesh_file_name());

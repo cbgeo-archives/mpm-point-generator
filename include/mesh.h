@@ -37,7 +37,8 @@ class Mesh {
   std::vector<Eigen::VectorXd> stress();
 
   //! Get material properties from json object
-  void assign_material_properties(const std::shared_ptr<MaterialProperties>& material);
+  void assign_material_properties(
+      const std::shared_ptr<MaterialProperties>& material);
 
   //! Compute stress of the material points
   void compute_stresses();

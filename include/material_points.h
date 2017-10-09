@@ -28,7 +28,8 @@ class MaterialPoints {
 
   //! Assign material properties
   //! \param[in] material pointer to MaterialProperties
-  void assign_material_properties(const std::shared_ptr<MaterialProperties>& material) {
+  void assign_material_properties(
+      const std::shared_ptr<MaterialProperties>& material) {
     material_properties_ = material;
   }
 
