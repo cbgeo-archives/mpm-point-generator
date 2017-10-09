@@ -28,7 +28,7 @@ class IO {
   //! \param[in] json input file name
   explicit IO(const std::string& file_directory, const std::string& json_file);
 
-  //! Write vertices
+  //! Write coordinates
   void write_coordinates(const std::vector<Eigen::VectorXd>& coordinates);
 
   //! Write stresses
