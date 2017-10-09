@@ -48,7 +48,7 @@ class Mesh {
 
  protected:
   //! Total number of vertices
-  unsigned nvertices_ = std::numeric_limits<unsigned>::max();
+  unsigned nvertices_{std::numeric_limits<unsigned>::max()};
 
   //! Map to store id and vertices coordinates
   std::map<unsigned, Eigen::VectorXd> vertices_;

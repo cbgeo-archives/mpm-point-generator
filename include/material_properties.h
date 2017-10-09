@@ -23,10 +23,10 @@ class MaterialProperties {
 
  private:
   //! density
-  double density_ = std::numeric_limits<unsigned>::max();
+  double density_{std::numeric_limits<unsigned>::max()};
 
   //! k0
-  double k0_ = std::numeric_limits<unsigned>::max();
+  double k0_{std::numeric_limits<unsigned>::max()};
 };
 
 #include <material_properties.tcc>

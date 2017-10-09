@@ -34,7 +34,7 @@ template <unsigned Tdim>
 void MaterialPoints<Tdim>::compute_stress() {
 
   //! Gravity
-  const double conv_factor = 9.81;
+  const double gravity = 9.81;
 
   double max_height = std::numeric_limits<double>::min();
 
@@ -57,7 +57,7 @@ void MaterialPoints<Tdim>::compute_stress() {
       Eigen::VectorXd stress(Tdim * 2);
       stress.setZero();
 
-      stress[Tdim - 1] = conv_factor *
+      stress[Tdim - 1] = gravity *
                          (-(max_height - point->coordinates()[Tdim])) *
                          material_properties_->density();
 
