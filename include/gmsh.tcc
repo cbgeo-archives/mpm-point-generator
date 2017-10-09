@@ -209,6 +209,13 @@ void GMSH<Tdim, Tvertices>::compute_material_points() {
     //! Where N is the number of nodes per element
     //! This is rearranging of the data to have stored in matrix form
     Eigen::MatrixXd m(Tdim, Tvertices);
+
+    //! last_global_id should be changed later if more than one material
+    //! properties are used
+    //! material_id is the index of materialpoints
+    unsigned last_global_id = 0;
+    unsigned material_id = 0;
+
     for (unsigned i = 0; i < Tvertices; ++i) {
       for (unsigned j = 0; j < Tdim; ++j) {
         m(j, i) = elementcoord.second[(i * Tdim) + j];
@@ -223,48 +230,23 @@ void GMSH<Tdim, Tvertices>::compute_material_points() {
       }
     }
 
-    materialpoints_.emplace_back(
-        new Point<Tdim>(elementcoord.first, pointsarray));
-  }
-  std::cout << "Number of Material Points: " << materialpoints_.size() << '\n';
-}
+    //! Update vector of material points
+    //! Fill materialpoints_ vector for the first component
+    materialpoints_.emplace_back(std::unique_ptr<MaterialPoints<Tdim>>(
+        new MaterialPoints<Tdim>(material_id)));
 
-//! Compute stresses of the material points
-//! \tparam Tdim Dimension
-//! \tparam Tvertices Number of vertices in element
-template <unsigned Tdim, unsigned Tvertices>
-void GMSH<Tdim, Tvertices>::compute_stresses() {
-
-  // Material density
-  const double density = 22;
-  // K0 static pressure coefficient
-  const double k0 = 0.5;
-  const double conv_factor = 10;
-
-  double max_height = std::numeric_limits<double>::min();
-
-  //! [2D], y is the vertical direction
-  //! [3D], z is the vertical direction
-  //! In general, [Tdim - 1]
-  for (const auto& point : materialpoints_) {
-    if (point->coordinates()[Tdim - 1] > max_height) {
-      max_height = point->coordinates()[Tdim - 1];
-    }
+    //! Make class point and store to material points
+    materialpoints_.at(material_id)
+        ->add_points(std::unique_ptr<Point<Tdim>>(
+            new Point<Tdim>(elementcoord.first,
+                            elementcoord.first + last_global_id, pointsarray)));
   }
 
-  //! Loop through the points to get vertical and horizontal stresses
-  //! Note that tau (shear stress) is assumed 0
-  //! [2D], y is the vertical direction
-  //! [3D], z is the vertical direction
-  for (const auto& materialpoint : materialpoints_) {
-    Eigen::VectorXd stress(Tdim * 2);
-    stress.setZero();
-    stress[Tdim - 1] = conv_factor *
-                       (-(max_height - materialpoint->coordinates()[2])) *
-                       density;
-    for (unsigned i = 2; i <= Tdim; ++i) {
-      stress[Tdim - i] = stress[Tdim - 1] * k0;
-    }
-    materialpoint->stress(stress);
-  }
+  //! Find number of material points generated
+  unsigned nmaterialpoints = 0;
+
+  for (const auto& materialpoint : materialpoints_)
+    nmaterialpoints += materialpoint->coordinates().size();
+
+  std::cout << "Number of Material Points: " << nmaterialpoints << '\n';
 }

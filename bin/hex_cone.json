@@ -1,0 +1,7 @@
+{
+	"mesh_file" : "hexcone.msh",
+	"material_properties" : {
+		"density" : 2000.0,
+		"k0" : 0.5
+	}
+}

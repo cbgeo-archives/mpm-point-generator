@@ -1,6 +1,8 @@
 #ifndef MPM_MESH_POINT_H_
 #define MPM_MESH_POINT_H_
 
+#include <limits>
+
 #include <eigen3/Eigen/Dense>
 
 //! \brief Point class to store vertex coordinates & id
@@ -8,15 +10,20 @@
 template <unsigned Tdim>
 class Point {
  public:
-  //! Constructor with id and coordinates
+  //! Constructor with global id, id and coordinates
   //! \param[in] id index of the vertex
   //! \param[in] coord Coordinates of the point
-  Point(unsigned id, const Eigen::VectorXd& coord) : id_{id} {
+  Point(unsigned global_id, unsigned id, const Eigen::VectorXd& coord) {
+    global_id_ = global_id;
+    id_ = id;
     coordinates_ = coord;
   }
 
   //! Return the id of the point
   unsigned id() const { return id_; }
+
+  //! Return the global id of the point
+  unsigned global_id() const { return global_id_; }
 
   //! Return coordinates of the point
   Eigen::VectorXd coordinates() const { return coordinates_; }
@@ -28,8 +35,12 @@ class Point {
   void stress(const Eigen::VectorXd stress) { stress_ = stress; }
 
  private:
-  //! Index
-  unsigned id_;
+  //! local index
+  unsigned id_{std::numeric_limits<unsigned>::max()};
+
+  //! global index
+  unsigned global_id_{std::numeric_limits<unsigned>::max()};
+
   //! Coordinates
   Eigen::VectorXd coordinates_;
   //! Stress

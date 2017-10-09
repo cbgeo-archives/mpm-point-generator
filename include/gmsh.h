@@ -6,12 +6,13 @@
 #include <limits>
 #include <map>
 #include <memory>
+#include <utility>
 #include <vector>
 
 #include <eigen3/Eigen/Dense>
 
+#include "material_points.h"
 #include "mesh.h"
-#include "point.h"
 
 //! \brief Generate Material Points from GMSH file
 template <unsigned Tdim, unsigned Tvertices>
@@ -35,9 +36,6 @@ class GMSH : public Mesh<Tdim, Tvertices> {
 
   //! Compute material points from element coordinate map
   void compute_material_points();
-
-  //! Compute stresses
-  void compute_stresses();
 
  private:
   //! Total number of vertices

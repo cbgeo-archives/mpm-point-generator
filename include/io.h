@@ -5,50 +5,53 @@
 #include <iostream>
 #include <memory>
 #include <sstream>
+#include <utility>
 #include <vector>
 
 #include <eigen3/Eigen/Dense>
 
+#include "material_points.h"
 #include "mesh.h"
-#include "point.h"
+
+//! Alias for JSON
+#include "json.hpp"
+using json = nlohmann::json;
 
 //! \brief Input/Output handler
 //! \tparam Tdim dimension
 template <unsigned Tdim>
 class IO {
  public:
-  //! Constructor with input file
-  //! \param[in] mesh_file Input mesh file name
-  explicit IO(const std::string& mesh_file) : mesh_file_name_{mesh_file} {
+  //! Constructor with json input file
+  //! Get mesh_filename and output_directory
+  //! \param[in] input directory
+  //! \param[in] json input file name
+  explicit IO(const std::string& file_directory, const std::string& json_file);
 
-    // Check if mesh file is present
-    std::ifstream meshfile;
-    meshfile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-    try {
-      meshfile.open(mesh_file);
-    } catch (const std::ifstream::failure& except) {
-      std::cerr << "Exception opening/reading mesh file";
-    }
-    meshfile.close();
-
-    //! Material point and stresses
-    material_points_filename_ = "material_points.txt";
-    stress_filename_ = "initial_stresses.txt";
-  }
-
-  //! Write vertices
-  void write_material_points(
-      const std::vector<std::shared_ptr<Point<Tdim>>>& materialpoints);
+  //! Write coordinates
+  void write_coordinates(const std::vector<Eigen::VectorXd>& coordinates);
 
   //! Write stresses
   void write_stresses(const std::vector<Eigen::VectorXd>& stresses);
 
+  //! Return json object for material properties
+  json material_properties() const { return json_["material_properties"]; }
+
   //! Return mesh file name
-  std::string mesh_file_name() const { return mesh_file_name_; }
+  std::string mesh_file_name() const { return mesh_filename_; }
 
  private:
+  //! Input directory
+  std::string file_directory_;
+
+  //! Input json path file name
+  std::string json_filename_;
+
+  //! Input json object
+  json json_;
+
   //! Input mesh file name
-  std::string mesh_file_name_;
+  std::string mesh_filename_;
 
   //! File name of vertices
   std::string material_points_filename_;
