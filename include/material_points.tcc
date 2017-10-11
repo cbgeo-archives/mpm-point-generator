@@ -43,9 +43,7 @@ void MaterialPoints<Tdim>::compute_stress() {
   double max_height = std::numeric_limits<double>::min();
   for (const auto& point : points_) {
     const double height = point->coordinates()[Tdim - 1];
-    if (height > max_height) {
-      max_height = height;
-    }
+    if (height > max_height) max_height = height;
   }
 
   //! Loop through the points to get vertical and horizontal stresses
@@ -60,7 +58,6 @@ void MaterialPoints<Tdim>::compute_stress() {
       Eigen::VectorXd stress(Tdim * 2);
       stress.setZero();
       const auto coordinates = point->coordinates();
-      // std::cout << __FILE__ << __LINE__ << '\t' << coordinates[Tdim] << '\n';
       stress[Tdim - 1] =
           gravity * (-(max_height - height)) * material_properties_->density();
 

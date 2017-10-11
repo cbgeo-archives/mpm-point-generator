@@ -12,7 +12,6 @@
 #include <eigen3/Eigen/Dense>
 
 #include "element.h"
-#include "gauss_points.h"
 #include "material_points.h"
 
 //! Alias for JSON
@@ -53,18 +52,18 @@ class Mesh {
   unsigned nvertices_{std::numeric_limits<unsigned>::max()};
 
   //! Number of pgauss oints per coordinate
-  unsigned ngauss_points_;
+  unsigned ngauss_points_{std::numeric_limits<unsigned>::max()};
 
   //! Map to store id and vertices coordinates
   std::map<unsigned, Eigen::VectorXd> vertices_;
 
-  //! Map to store element ID and vertices ID
+  //! Map to store element id and vertices id
   std::map<unsigned, Eigen::VectorXd> elements_;
 
-  //! Map to store element ID and vertices coordinates
+  //! Map to store element id and vertices coordinates
   std::map<unsigned, Eigen::VectorXd> elementcoordinates_;
 
-  //! Container for storing material points
+  //! Vector of material points
   std::vector<std::unique_ptr<MaterialPoints<Tdim>>> materialpoints_;
 };
 

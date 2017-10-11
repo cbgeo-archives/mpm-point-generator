@@ -203,7 +203,7 @@ void GMSH<Tdim, Tvertices>::compute_material_points(unsigned ngauss_points) {
   //! Storing ngauss_points to member variable and get constants from namespace
   ngauss_points_ = ngauss_points;
   std::vector<double> gauss_constants =
-      gauss_points::gauss_points.find(ngauss_points_)->second;
+      element::gauss_points::gauss_points.find(ngauss_points_)->second;
 
   //! Create a matrix of xi from gauss points
   //! Matrix is size npoints x Tdim
@@ -262,15 +262,6 @@ void GMSH<Tdim, Tvertices>::compute_material_points(unsigned ngauss_points) {
           pointsarray[i] += shape_function[j] * node_coordinates(i, j);
         }
       }
-
-      // Unused
-      // Assign the centroid as the coordinate of the material point
-      // for (unsigned i = 0; i < Tdim; ++i) {
-      //   pointsarray[i] = 0;
-      //   for (unsigned j = 0; j < Tvertices; ++j) {
-      //     pointsarray[i] += (1. / Tvertices) * node_coordinates(i, j);
-      //   }
-      // }
 
       //! Make class point and store to material points
       materialpoints_.at(material_id)

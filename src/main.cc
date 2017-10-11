@@ -1,7 +1,6 @@
 #include <iostream>
 #include <memory>
 
-#include "gauss_points.h"
 #include "gmsh.h"
 #include "io.h"
 

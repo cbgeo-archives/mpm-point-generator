@@ -1,13 +1,31 @@
 #ifndef MPM_ELEMENT_H
 #define MPM_ELEMENT_H
 
+#include <map>
+#include <vector>
+
 #include <eigen3/Eigen/Dense>
 
 namespace element {
 
+namespace gauss_points {
+
+//! Map to store gauss points coefficients
+const std::map<unsigned, std::vector<double>> gauss_points{
+    {1, {0}},
+    {2, {-0.5773502691896257, 0.5773502691896257}},
+    {3, {-0.7745966692414834, 0, 0.7745966692414834}},
+    {4,
+     {-0.8611363115940526, -0.3399810435848563, 0.3399810435848563,
+      0.8611363115940526}},
+    {5,
+     {-0.9061798459386640, -0.5384693101056831, 0, 0.5384693101056831,
+      0.9061798459386640}}};
+}
+
 namespace hexahedron {
 
-Eigen::VectorXd shapefn(const std::array<double, 3>& xi) {
+inline Eigen::VectorXd shapefn(const std::array<double, 3>& xi) {
   Eigen::VectorXd shapefn_(8);
 
   shapefn_[0] = 0.125 * (1 - xi.at(0)) * (1 - xi.at(1)) * (1 - xi.at(2));
@@ -25,7 +43,7 @@ Eigen::VectorXd shapefn(const std::array<double, 3>& xi) {
 
 namespace quadrilateral {
 
-Eigen::VectorXd shapefn(const std::array<double, 2>& xi) {
+inline Eigen::VectorXd shapefn(const std::array<double, 2>& xi) {
   Eigen::VectorXd shapefn_(4);
 
   shapefn_[0] = 0.25 * (1 - xi.at(0)) * (1 - xi.at(1));
