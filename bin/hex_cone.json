@@ -1,6 +1,6 @@
 {
 	"mesh_file" : "hexcone.msh",
-	"ngauss_points" : 2,
+	"ngauss_points" : 1,
 	"material_properties" : {
 		"density" : 2000.0,
 		"k0" : 0.5

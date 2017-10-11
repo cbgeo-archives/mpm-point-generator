@@ -201,13 +201,11 @@ void GMSH<Tdim, Tvertices>::compute_material_points(const unsigned ngauss_points
 
   //! Storing ngauss_points to member variable and get constants from namespace
   ngauss_points_ = ngauss_points;
-  std::vector<double> gauss_constants;
-  // std::map<unsigned, std::vector<double>> check = gauss_points::gauss_points.find(ngauss_points_);
-  // if (check != gauss_points::gauss_points.end())
-  gauss_constants = gauss_points::gauss_points.find(ngauss_points_)->second;
+  std::vector<double> gauss_constants = gauss_points::gauss_points.find(ngauss_points_)->second;
 
   //! Create a matrix of xi from gauss points
   //! Matrix is size npoints x Tdim
+  //! For 3D only
   unsigned npoints = std::pow(ngauss_points_, Tdim);
   Eigen::MatrixXd xi_gauss_points(npoints, Tdim);
   unsigned counter = 0;
@@ -227,13 +225,18 @@ void GMSH<Tdim, Tvertices>::compute_material_points(const unsigned ngauss_points
 
   Eigen::VectorXd pointsarray(Tdim);
 
-  for (const auto& elementcoord : elementcoordinates_) {
+  //! last_global_id should be changed later if more than one material
+  //! properties are used
+  //! material_id is the index of materialpoints
+  unsigned last_global_id = 0;
+  unsigned material_id = 0;
 
-    //! last_global_id should be changed later if more than one material
-    //! properties are used
-    //! material_id is the index of materialpoints
-    unsigned last_global_id = 0;
-    unsigned material_id = 0;
+  //! Update vector of material points
+  //! Fill materialpoints_ vector for the first component
+  materialpoints_.emplace_back(std::unique_ptr<MaterialPoints<Tdim>>(
+      new MaterialPoints<Tdim>(material_id)));
+
+  for (const auto& elementcoord : elementcoordinates_) {
 
     //! Store coordinates in Tdim x Tvertices matrix
     //! Where N is the number of nodes per element
@@ -271,11 +274,6 @@ void GMSH<Tdim, Tvertices>::compute_material_points(const unsigned ngauss_points
       //   }
       // }
     
-      //! Update vector of material points
-      //! Fill materialpoints_ vector for the first component
-      materialpoints_.emplace_back(std::unique_ptr<MaterialPoints<Tdim>>(
-          new MaterialPoints<Tdim>(material_id)));
-
       //! Make class point and store to material points
       materialpoints_.at(material_id)
           ->add_points(std::unique_ptr<Point<Tdim>>(
