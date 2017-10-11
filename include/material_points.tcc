@@ -36,11 +36,11 @@ void MaterialPoints<Tdim>::compute_stress() {
   //! Gravity
   const double gravity = 9.81;
 
-  double max_height = std::numeric_limits<double>::min();
-
+  //! Compute maximum height of the points
   //! [2D], y is the vertical direction
   //! [3D], z is the vertical direction
   //! In general, [Tdim - 1]
+  double max_height = std::numeric_limits<double>::min();
   for (const auto& point : points_) {
     if (point->coordinates()[Tdim - 1] > max_height) {
       max_height = point->coordinates()[Tdim - 1];
