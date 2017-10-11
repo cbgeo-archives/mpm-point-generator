@@ -1,6 +1,9 @@
 #ifndef MPM_GAUSS_POINTS_H_
 #define MPM_GAUSS_POINTS_H_
 
+#include <map>
+#include <vector>
+
 namespace gauss_points {
 
 //! Map to store gauss points coefficients

@@ -14,8 +14,8 @@
 
 #include <eigen3/Eigen/Dense>
 
+#include "element.h"
 #include "gauss_points.h"
-#include "hexahedron_element.h"
 #include "material_points.h"
 #include "mesh.h"
 
