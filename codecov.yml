@@ -1,0 +1,2 @@
+ignore:
+  - "external/*"  # ignore external source files
