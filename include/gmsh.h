@@ -40,7 +40,7 @@ class GMSH : public Mesh<Tdim, Tvertices> {
   void store_element_vertices();
 
   //! Compute material points from element coordinate map
-  void compute_material_points(const unsigned& ngauss_points);
+  void compute_material_points(unsigned ngauss_points);
 
  private:
   //! Total number of vertices

@@ -196,10 +196,9 @@ void GMSH<Tdim, Tvertices>::store_element_vertices() {
 //! Compute material points based on the centroid
 //! \tparam Tdim Dimension
 //! \tparam Tvertices Number of vertices in element
-//! \param[in] ngauss_Number of gauss points per coordinate
+//! \param[in] ngauss_points Number of gauss points per coordinate
 template <unsigned Tdim, unsigned Tvertices>
-void GMSH<Tdim, Tvertices>::compute_material_points(
-    const unsigned& ngauss_points) {
+void GMSH<Tdim, Tvertices>::compute_material_points(unsigned ngauss_points) {
 
   //! Storing ngauss_points to member variable and get constants from namespace
   ngauss_points_ = ngauss_points;
