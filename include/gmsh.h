@@ -1,8 +1,9 @@
 #ifndef MPM_POINT_GEN_GMSH_H_
 #define MPM_POINT_GEN_GMSH_H_
 
-#include <array>
 #include <algorithm>
+#include <array>
+#include <cmath>
 #include <fstream>
 #include <iostream>
 #include <limits>
@@ -10,14 +11,13 @@
 #include <memory>
 #include <utility>
 #include <vector>
-#include <cmath>
 
 #include <eigen3/Eigen/Dense>
 
-#include "material_points.h"
-#include "mesh.h"
 #include "gauss_points.h"
 #include "hexahedron_element.h"
+#include "material_points.h"
+#include "mesh.h"
 
 //! \brief Generate Material Points from GMSH file
 template <unsigned Tdim, unsigned Tvertices>
@@ -40,7 +40,7 @@ class GMSH : public Mesh<Tdim, Tvertices> {
   void store_element_vertices();
 
   //! Compute material points from element coordinate map
-  void compute_material_points(const unsigned ngauss_points);
+  void compute_material_points(const unsigned& ngauss_points);
 
  private:
   //! Total number of vertices
@@ -51,13 +51,13 @@ class GMSH : public Mesh<Tdim, Tvertices> {
 
   //! Map of vertex id to its coordinates
   using Mesh<Tdim, Tvertices>::vertices_;
-  
+
   //! Map of elemnt id to its vertices
   using Mesh<Tdim, Tvertices>::elements_;
-  
+
   //! Map of element ids to vertices coordinates
   using Mesh<Tdim, Tvertices>::elementcoordinates_;
-  
+
   //! Vector of material points
   using Mesh<Tdim, Tvertices>::materialpoints_;
 };

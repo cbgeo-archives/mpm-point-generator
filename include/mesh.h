@@ -11,9 +11,9 @@
 
 #include <eigen3/Eigen/Dense>
 
-#include "material_points.h"
 #include "gauss_points.h"
 #include "hexahedron_element.h"
+#include "material_points.h"
 
 //! Alias for JSON
 #include "json.hpp"
@@ -30,7 +30,7 @@ class Mesh {
   virtual void read_mesh(const std::string& filename) = 0;
 
   //! Compute material point location
-  virtual void compute_material_points(const unsigned ngauss_points) = 0;
+  virtual void compute_material_points(const unsigned& ngauss_points) = 0;
 
   //! Return a vector of coordinates
   std::vector<Eigen::VectorXd> coordinates();

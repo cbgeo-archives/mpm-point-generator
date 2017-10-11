@@ -196,12 +196,15 @@ void GMSH<Tdim, Tvertices>::store_element_vertices() {
 //! Compute material points based on the centroid
 //! \tparam Tdim Dimension
 //! \tparam Tvertices Number of vertices in element
+//! \param[in] ngauss_Number of gauss points per coordinate
 template <unsigned Tdim, unsigned Tvertices>
-void GMSH<Tdim, Tvertices>::compute_material_points(const unsigned ngauss_points) {
+void GMSH<Tdim, Tvertices>::compute_material_points(
+    const unsigned& ngauss_points) {
 
   //! Storing ngauss_points to member variable and get constants from namespace
   ngauss_points_ = ngauss_points;
-  std::vector<double> gauss_constants = gauss_points::gauss_points.find(ngauss_points_)->second;
+  std::vector<double> gauss_constants =
+      gauss_points::gauss_points.find(ngauss_points_)->second;
 
   //! Create a matrix of xi from gauss points
   //! Matrix is size npoints x Tdim
@@ -211,13 +214,13 @@ void GMSH<Tdim, Tvertices>::compute_material_points(const unsigned ngauss_points
   unsigned counter = 0;
   for (unsigned ii = 0; ii < ngauss_points_; ++ii) {
     for (unsigned jj = 0; jj < ngauss_points_; ++jj) {
-      for (unsigned kk = 0; kk < ngauss_points_; ++kk) {    
+      for (unsigned kk = 0; kk < ngauss_points_; ++kk) {
         xi_gauss_points(counter, 0) = gauss_constants.at(ii);
         xi_gauss_points(counter, 1) = gauss_constants.at(jj);
         xi_gauss_points(counter, 2) = gauss_constants.at(kk);
         ++counter;
       }
-    }      
+    }
   }
 
   Eigen::VectorXd pointsarray(Tdim);
@@ -250,8 +253,7 @@ void GMSH<Tdim, Tvertices>::compute_material_points(const unsigned ngauss_points
 
       //! Get array of xi for this gauss point
       std::array<double, Tdim> xi;
-      for (unsigned l = 0; l < Tdim; ++l)
-        xi.at(l) = xi_gauss_points(k, l);
+      for (unsigned l = 0; l < Tdim; ++l) xi.at(l) = xi_gauss_points(k, l);
 
       // Compute gauss point in cartesian coordinate
       for (unsigned i = 0; i < Tdim; ++i) {
@@ -270,13 +272,12 @@ void GMSH<Tdim, Tvertices>::compute_material_points(const unsigned ngauss_points
       //     pointsarray[i] += (1. / Tvertices) * node_coordinates(i, j);
       //   }
       // }
-    
+
       //! Make class point and store to material points
       materialpoints_.at(material_id)
-          ->add_points(std::unique_ptr<Point<Tdim>>(
-              new Point<Tdim>(elementcoord.first,
-                              elementcoord.first + last_global_id, pointsarray)));
-      
+          ->add_points(std::unique_ptr<Point<Tdim>>(new Point<Tdim>(
+              elementcoord.first, elementcoord.first + last_global_id,
+              pointsarray)));
     }
   }
 

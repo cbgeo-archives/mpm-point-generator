@@ -1,9 +1,9 @@
 #include <iostream>
 #include <memory>
 
+#include "gauss_points.h"
 #include "gmsh.h"
 #include "io.h"
-#include "gauss_points.h"
 
 int main(int argc, char** argv) {
   try {

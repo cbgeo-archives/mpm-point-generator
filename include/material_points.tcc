@@ -61,9 +61,8 @@ void MaterialPoints<Tdim>::compute_stress() {
       stress.setZero();
       const auto coordinates = point->coordinates();
       // std::cout << __FILE__ << __LINE__ << '\t' << coordinates[Tdim] << '\n';
-      stress[Tdim - 1] = gravity *
-                         (-(max_height - height)) *
-                         material_properties_->density();
+      stress[Tdim - 1] =
+          gravity * (-(max_height - height)) * material_properties_->density();
 
       for (unsigned i = 2; i <= Tdim; ++i) {
         stress[Tdim - i] = stress[Tdim - 1] * material_properties_->k0();
