@@ -220,9 +220,6 @@ void GMSH<Tdim, Tvertices>::compute_material_points(const unsigned ngauss_points
     }      
   }
 
-  //! Get unique_ptr to hexahedron element shape function
-  std::unique_ptr<HexahedronElement> hexahedron(new HexahedronElement());
-
   Eigen::VectorXd pointsarray(Tdim);
 
   //! last_global_id should be changed later if more than one material
@@ -259,7 +256,7 @@ void GMSH<Tdim, Tvertices>::compute_material_points(const unsigned ngauss_points
       // Compute gauss point in cartesian coordinate
       for (unsigned i = 0; i < Tdim; ++i) {
         pointsarray[i] = 0;
-        Eigen::VectorXd shape_function = hexahedron->shapefn(xi);
+        Eigen::VectorXd shape_function = element::hexahedron::shapefn(xi);
         for (unsigned j = 0; j < Tvertices; ++j) {
           pointsarray[i] += shape_function[j] * node_coordinates(i, j);
         }
