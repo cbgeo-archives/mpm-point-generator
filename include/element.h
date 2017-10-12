@@ -6,9 +6,9 @@
 
 #include <eigen3/Eigen/Dense>
 
+//! Namespace containing required global constants / functions
+//! Used in computing material points
 namespace element {
-
-namespace gauss_points {
 
 //! Map to store gauss points coefficients
 const std::map<unsigned, std::vector<double>> gauss_points{
@@ -21,10 +21,12 @@ const std::map<unsigned, std::vector<double>> gauss_points{
     {5,
      {-0.9061798459386640, -0.5384693101056831, 0, 0.5384693101056831,
       0.9061798459386640}}};
-}
 
+//! Namespace conatining shape functions for 8-node hexahedron
 namespace hexahedron {
 
+//! Compute shape function of hexahedron at different coordinates xi
+//! \param[in] xi array of coordinates in mapped coordinate
 inline Eigen::VectorXd shapefn(const std::array<double, 3>& xi) {
   Eigen::VectorXd shapefn_(8);
 
@@ -41,8 +43,11 @@ inline Eigen::VectorXd shapefn(const std::array<double, 3>& xi) {
 }
 }
 
+//! Namespace conatining shape functions for 4-node quadrilateral
 namespace quadrilateral {
 
+//! Compute shape function of quadrilateral at different coordinates xi
+//! \param[in] xi array of coordinates in mapped coordinate
 inline Eigen::VectorXd shapefn(const std::array<double, 2>& xi) {
   Eigen::VectorXd shapefn_(4);
 

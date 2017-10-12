@@ -203,7 +203,7 @@ void GMSH<Tdim, Tvertices>::compute_material_points(unsigned ngauss_points) {
   //! Storing ngauss_points to member variable and get constants from namespace
   ngauss_points_ = ngauss_points;
   std::vector<double> gauss_constants =
-      element::gauss_points::gauss_points.find(ngauss_points_)->second;
+      element::gauss_points.find(ngauss_points_)->second;
 
   //! Create a matrix of xi from gauss points
   //! Matrix is size npoints x Tdim
