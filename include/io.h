@@ -34,6 +34,9 @@ class IO {
   //! Write stresses
   void write_stresses(const std::vector<Eigen::VectorXd>& stresses);
 
+  //! Return the number of points per coordinate
+  unsigned ngauss_points() const { return ngauss_points_; }
+
   //! Return json object for material properties
   json material_properties() const { return json_["material_properties"]; }
 
@@ -58,6 +61,9 @@ class IO {
 
   //! Filename of material point stresses
   std::string stress_filename_;
+
+  //! Number of gauss points per coordinate
+  unsigned ngauss_points_;
 };
 
 #include "io.tcc"

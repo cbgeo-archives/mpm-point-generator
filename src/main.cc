@@ -8,7 +8,7 @@ int main(int argc, char** argv) {
   try {
     //! Check the number of arguments
     if (argc != 3) {
-      std::cout << "Usage: ./mpm-point-generator /path/ json_file\n";
+      std::cout << "Usage: ./mpm_point_generator /path/ json_file\n";
       throw std::runtime_error("Incorrect number of input arguments");
     }
 
@@ -26,7 +26,7 @@ int main(int argc, char** argv) {
     mesh->read_mesh(io->mesh_file_name());
 
     //! Compute material points and stresses
-    mesh->compute_material_points();
+    mesh->compute_material_points(io->ngauss_points());
     mesh->assign_material_properties(material);
     mesh->compute_stresses();
 

@@ -13,5 +13,7 @@
 
 1. Run `make clean && make -jN` (where N is the number of cores)
 
-3. Run lem `./mpm-point-generator /path/to/mesh.msh`
+3. Run mpm `./mpm_point_generator /path/ json_file points_per_element`
+
+4. To test, run `./mpm_point_generator_test`
 

@@ -196,50 +196,79 @@ void GMSH<Tdim, Tvertices>::store_element_vertices() {
 //! Compute material points based on the centroid
 //! \tparam Tdim Dimension
 //! \tparam Tvertices Number of vertices in element
+//! \param[in] ngauss_points Number of gauss points per coordinate
 template <unsigned Tdim, unsigned Tvertices>
-void GMSH<Tdim, Tvertices>::compute_material_points() {
+void GMSH<Tdim, Tvertices>::compute_material_points(unsigned ngauss_points) {
 
-  unsigned arrayposition = 0;
+  //! Storing ngauss_points to member variable and get constants from namespace
+  ngauss_points_ = ngauss_points;
+  std::vector<double> gauss_constants =
+      element::gauss_points.find(ngauss_points_)->second;
+
+  //! Create a matrix of xi from gauss points
+  //! Matrix is size npoints x Tdim
+  //! For 3D only
+  unsigned npoints = std::pow(ngauss_points_, Tdim);
+  Eigen::MatrixXd xi_gauss_points(npoints, Tdim);
+  unsigned counter = 0;
+  for (unsigned ii = 0; ii < ngauss_points_; ++ii) {
+    for (unsigned jj = 0; jj < ngauss_points_; ++jj) {
+      for (unsigned kk = 0; kk < ngauss_points_; ++kk) {
+        xi_gauss_points(counter, 0) = gauss_constants.at(ii);
+        xi_gauss_points(counter, 1) = gauss_constants.at(jj);
+        xi_gauss_points(counter, 2) = gauss_constants.at(kk);
+        ++counter;
+      }
+    }
+  }
 
   Eigen::VectorXd pointsarray(Tdim);
+
+  //! last_global_id should be changed later if more than one material
+  //! properties are used
+  //! material_id is the index of materialpoints
+  unsigned last_global_id = 0;
+  unsigned material_id = 0;
+
+  //! Update vector of material points
+  //! Fill materialpoints_ vector for the first component
+  materialpoints_.emplace_back(std::unique_ptr<MaterialPoints<Tdim>>(
+      new MaterialPoints<Tdim>(material_id)));
 
   for (const auto& elementcoord : elementcoordinates_) {
 
     //! Store coordinates in Tdim x Tvertices matrix
     //! Where N is the number of nodes per element
     //! This is rearranging of the data to have stored in matrix form
-    Eigen::MatrixXd m(Tdim, Tvertices);
-
-    //! last_global_id should be changed later if more than one material
-    //! properties are used
-    //! material_id is the index of materialpoints
-    unsigned last_global_id = 0;
-    unsigned material_id = 0;
-
+    Eigen::MatrixXd node_coordinates(Tdim, Tvertices);
     for (unsigned i = 0; i < Tvertices; ++i) {
       for (unsigned j = 0; j < Tdim; ++j) {
-        m(j, i) = elementcoord.second[(i * Tdim) + j];
+        node_coordinates(j, i) = elementcoord.second[(i * Tdim) + j];
       }
     }
 
-    // Assign the centroid as the coordinate of the material point
-    for (unsigned i = 0; i < Tdim; ++i) {
-      pointsarray[i] = 0;
-      for (unsigned j = 0; j < Tvertices; ++j) {
-        pointsarray[i] += (1. / Tvertices) * m(i, j);
+    //! Compute the gauss points (there are npoints)
+    for (unsigned k = 0; k < npoints; ++k) {
+
+      //! Get array of xi for this gauss point
+      std::array<double, Tdim> xi;
+      for (unsigned l = 0; l < Tdim; ++l) xi.at(l) = xi_gauss_points(k, l);
+
+      // Compute gauss point in cartesian coordinate
+      for (unsigned i = 0; i < Tdim; ++i) {
+        pointsarray[i] = 0;
+        Eigen::VectorXd shape_function = element::hexahedron::shapefn(xi);
+        for (unsigned j = 0; j < Tvertices; ++j) {
+          pointsarray[i] += shape_function[j] * node_coordinates(i, j);
+        }
       }
+
+      //! Make class point and store to material points
+      materialpoints_.at(material_id)
+          ->add_points(std::unique_ptr<Point<Tdim>>(new Point<Tdim>(
+              elementcoord.first, elementcoord.first + last_global_id,
+              pointsarray)));
     }
-
-    //! Update vector of material points
-    //! Fill materialpoints_ vector for the first component
-    materialpoints_.emplace_back(std::unique_ptr<MaterialPoints<Tdim>>(
-        new MaterialPoints<Tdim>(material_id)));
-
-    //! Make class point and store to material points
-    materialpoints_.at(material_id)
-        ->add_points(std::unique_ptr<Point<Tdim>>(
-            new Point<Tdim>(elementcoord.first,
-                            elementcoord.first + last_global_id, pointsarray)));
   }
 
   //! Find number of material points generated
