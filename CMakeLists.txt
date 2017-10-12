@@ -48,17 +48,27 @@ SET(mpm_point_gen_src
 add_executable(mpm_point_generator ${mpm_point_gen_src})
 
 # Unit test
-SET(test_src
-  ${PROJECT_SOURCE_DIR}/tests/test.cc
+SET(unit_test_src
+  ${PROJECT_SOURCE_DIR}/tests/unit_test.cc
   ${PROJECT_SOURCE_DIR}/tests/point_test.cc
   ${PROJECT_SOURCE_DIR}/tests/material_properties_test.cc
 )
-add_executable(mpm_point_generator_test ${test_src})
+add_executable(mpm_point_generator_unit_test ${unit_test_src})
+
+# Regression test
+SET(regression_test_src
+  ${PROJECT_SOURCE_DIR}/tests/regression_test.cc
+  ${PROJECT_SOURCE_DIR}/tests/gmsh_test.cc
+)
+add_executable(mpm_point_generator_regression_test ${regression_test_src})
 
 option(EIGEN3_HEADER_PATH "path to eigen3 header files,  command line option" "")
 
 
-add_test(NAME mpm_point_generator_test COMMAND $<TARGET_FILE:mpm_point_generator_test>)
+add_test(NAME mpm_point_generator_unit_test COMMAND $<TARGET_FILE:mpm_point_generator_unit_test>)
+include(CTest)
+
+add_test(NAME mpm_point_generator_regression_test COMMAND $<TARGET_FILE:mpm_point_generator_regression_test>)
 include(CTest)
 
 find_program( MEMORYCHECK_COMMAND valgrind )
@@ -67,7 +77,7 @@ set( MEMORYCHECK_COMMAND_OPTIONS "--leak-check=full --error-exitcode=1" )
 # Coverage
 find_package(codecov)
 add_coverage(mpm_point_generator)
-add_coverage(mpm_point_generator_test)
+add_coverage(mpm_point_generator_unit_test)
+add_coverage(mpm_point_generator_regression_test)
 
-
-install(TARGETS mpm_point_generator mpm_point_generator_test RUNTIME DESTINATION bin)
+install(TARGETS mpm_point_generator mpm_point_generator_unit_test mpm_point_generator_regression_test RUNTIME DESTINATION bin)
