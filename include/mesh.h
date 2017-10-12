@@ -6,11 +6,17 @@
 #include <map>
 #include <memory>
 #include <sstream>
+#include <utility>
 #include <vector>
 
 #include <eigen3/Eigen/Dense>
 
-#include "point.h"
+#include "element.h"
+#include "material_points.h"
+
+//! Alias for JSON
+#include "json.hpp"
+using json = nlohmann::json;
 
 //! \brief Abstract class for handling mesh
 //! \tparam Tdim Dimension of the mesh
@@ -23,45 +29,44 @@ class Mesh {
   virtual void read_mesh(const std::string& filename) = 0;
 
   //! Compute material point location
-  virtual void compute_material_points() = 0;
+  virtual void compute_material_points(unsigned ngauss_points) = 0;
 
-  //! Compute initial stresses for material points
-  virtual void compute_stresses() = 0;
+  //! Return a vector of coordinates
+  std::vector<Eigen::VectorXd> coordinates();
 
-  //! Get vector of stresses
-  std::vector<Eigen::VectorXd> stress() {
+  //! Return a vector of stresses
+  std::vector<Eigen::VectorXd> stress();
 
-    std::vector<Eigen::VectorXd> stress;
-    //! Loop through the points to get the stresses
-    for (const auto& materialpoint : materialpoints_) {
-      stress.emplace_back(materialpoint->stress());
-    }
+  //! Get material properties from json object
+  void assign_material_properties(
+      const std::shared_ptr<MaterialProperties>& material);
 
-    return stress;
-  }
-
-  //! Return a vector of material points
-  std::vector<std::shared_ptr<Point<Tdim>>> material_points() {
-    return materialpoints_;
-  }
+  //! Compute stress of the material points
+  void compute_stresses();
 
   //! Return the total number of vertices
   unsigned nvertices() const { return nvertices_; }
 
  protected:
   //! Total number of vertices
-  unsigned nvertices_;
+  unsigned nvertices_{std::numeric_limits<unsigned>::max()};
+
+  //! Number of pgauss oints per coordinate
+  unsigned ngauss_points_{std::numeric_limits<unsigned>::max()};
 
   //! Map to store id and vertices coordinates
   std::map<unsigned, Eigen::VectorXd> vertices_;
 
-  //! Map to store element ID and vertices ID
+  //! Map to store element id and vertices id
   std::map<unsigned, Eigen::VectorXd> elements_;
 
-  //! Map to store element ID and vertices coordinates
+  //! Map to store element id and vertices coordinates
   std::map<unsigned, Eigen::VectorXd> elementcoordinates_;
 
-  //! Container for storing material points
-  std::vector<std::shared_ptr<Point<Tdim>>> materialpoints_;
+  //! Vector of material points
+  std::vector<std::unique_ptr<MaterialPoints<Tdim>>> materialpoints_;
 };
+
+#include "mesh.tcc"
+
 #endif  // MPM_POINT_GEN_MESH_H_
