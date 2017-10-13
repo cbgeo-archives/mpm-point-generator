@@ -41,9 +41,9 @@ IO<Tdim>::IO(const std::string& file_directory, const std::string& json_file)
   try {
     if (json_.at("ngauss_points").size())
       ngauss_points_ = json_["ngauss_points"].template get<unsigned>();
-  } catch (std::exception& exception) {
-    std::cerr << exception.what() << '\n';
-    std::cout << "ngauss_points not specified. Using default value of 1\n";
+  } catch (json::out_of_range& out_of_range) {
+    std::cerr << out_of_range.what() << '\n';
+    std::cout << "ngauss_points not specified. Using a default value of 1\n";
     ngauss_points_ = 1;
   }
 
