@@ -31,6 +31,12 @@ endif()
 # CMake Modules
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
+# Boost FileSystem
+find_package(Boost REQUIRED COMPONENTS system filesystem)
+include_directories(${BOOST_INCLUDE_DIRS})
+link_libraries(${Boost_FILESYSTEM_LIBRARY} ${Boost_SYSTEM_LIBRARY})
+
+
 # Eigen
 find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
