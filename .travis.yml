@@ -14,7 +14,6 @@ sudo: required
 ##################
 before_install:
   - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
-  - sudo add-apt-repository ppa:george-edison55/cmake-3.x
   - sudo apt-get install -qq libeigen3-dev
 
 ###################
@@ -44,8 +43,8 @@ matrix:
       before_script: export CXX=g++-5
       addons:
         apt:
-          sources: ['ubuntu-toolchain-r-test', 'george-edison55-precise-backports']
-          packages: ['g++-5', 'libeigen3-dev', 'libboost-all-dev', 'cmake-data', 'cmake']
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-5', 'libeigen3-dev', 'libboost-all-dev']
         coverity_scan:
           project:
             name: "cb-geo/mpm-point-generator"
@@ -54,6 +53,16 @@ matrix:
           build_command_prepend: "sudo ln -sf /usr/bin/g++-5 /usr/bin/g++ && export CXX=g++ && g++ --version && cmake . && make clean"
           build_command: "make"
           branch_pattern: coverity_scan
+
+
+##########################
+# Install a recent CMake
+##########################
+install:
+- CMAKE_URL="https://cmake.org/files/v3.9/cmake-3.9.4-Linux-x86_64.tar.gz"
+- mkdir cmake && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
+- export PATH=${DEPS_DIR}/cmake/bin:${PATH}
+
 
 
 ################
