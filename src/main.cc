@@ -9,12 +9,6 @@
 
 int main(int argc, char** argv) {
   try {
-    //! Check the number of arguments
-    /*if (argc != 4) {
-      std::cout << "Usage: ./mpm-point-generator /path/ json_file\n";
-      throw std::runtime_error("Incorrect number of input arguments");
-    }*/
-
     // Set title
     TCLAP::CmdLine cmd("Material Point Generator (CB-Geo)", ' ', "0.0.1");
 
@@ -70,7 +64,7 @@ int main(int argc, char** argv) {
     io->write_stresses(mesh->stress());
 
   } catch (TCLAP::ArgException& except) {  // catch any exceptions
-    std::cerr << "/* error message */" << except.error() << except.argId();
+    std::cerr << "Unhandled command line argument" << except.error() << except.argId();
   } catch (std::exception& except) {
     std::cout << "Caught exception: " << except.what() << '\n';
   }
