@@ -1,6 +1,9 @@
 #include <iostream>
 #include <memory>
 
+//! TCLAP for Input Argument Parsing
+#include "tclap/CmdLine.h"
+
 #include "gmsh.h"
 #include "io.h"
 
