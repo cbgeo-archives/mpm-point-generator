@@ -6,10 +6,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 cmake_minimum_required(VERSION 3.1)
 
-if(CMAKE_VERSION VERSION_LESS 3.4)
-  file(COPY Modules/FindPackageHandleStandardArgs.cmake DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/cmake-next")
-endif()
-
 SET(CMAKE_COLOR_MAKEFILE ON)
 SET(CMAKE_VERBOSE_MAKEFILE OFF)
 

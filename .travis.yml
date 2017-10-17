@@ -15,6 +15,12 @@ sudo: required
 before_install:
   - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
   - sudo apt-get install -qq libeigen3-dev
+  - sudo apt-get install build-essential
+  - wget https://cmake.org/files/v3.9/cmake-3.9.4-Linux-x86_64.tar.gz
+  - tar xf cmake-3.9.4.tar.gz
+  - cd cmake-3.9.4
+  - ./configure
+  - make
 
 ###################
 # global settings #
@@ -53,16 +59,6 @@ matrix:
           build_command_prepend: "sudo ln -sf /usr/bin/g++-5 /usr/bin/g++ && export CXX=g++ && g++ --version && cmake . && make clean"
           build_command: "make"
           branch_pattern: coverity_scan
-
-
-##########################
-# Install a recent CMake
-##########################
-install:
-- CMAKE_URL="https://cmake.org/files/v3.9/cmake-3.9.4-Linux-x86_64.tar.gz"
-- mkdir cmake && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
-- export PATH=${DEPS_DIR}/cmake/bin:${PATH}
-
 
 
 ################
