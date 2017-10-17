@@ -55,10 +55,11 @@ matrix:
           build_command: "make"
           branch_pattern: coverity_scan
 
-###########
-# Install #
-###########
-install: 
+################
+# build script #
+################
+
+script:
   - sudo apt-get install build-essential
   - sudo apt-get purge cmake
   - wget https://cmake.org/files/v3.9/cmake-3.9.4.tar.gz
@@ -67,15 +68,9 @@ install:
   - ./configure
   - make
   - sudo make install
-
-
-################
-# build script #
-################
-
-script:
-    - cmake --version
-    - mkdir build
-    - cd build
-    - cmake ..
-    - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then make ; fi
+  - cd ..
+  - cmake --version
+  - mkdir build
+  - cd build
+  - cmake ..
+  - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then make ; fi
