@@ -50,6 +50,7 @@ IO<Tdim>::IO(const std::string& file_directory, const std::string& json_file)
   //! Material point and stresses output file
   material_points_filename_ = file_directory_ + "material_points.txt";
   stress_filename_ = file_directory_ + "initial_stresses.txt";
+  volume_filename_ = file_directory + "volumes.txt";
 }
 
 //! \brief Write coordinates of material points
@@ -118,4 +119,34 @@ void IO<Tdim>::write_stresses(const std::vector<Eigen::VectorXd>& stresses) {
     stress_file.close();
   }
   std::cout << "Wrote initial stresses\n";
+}
+
+//! \brief Write initial volumes of material points
+template <unsigned Tdim>
+void IO<Tdim>::write_volumes(const std::map<unsigned, double>& volumes) {
+
+  std::cout << "volumes will be stored in: " << file_directory_ << "\n";
+
+  unsigned id = 0;
+
+  //! Output stress file
+  std::fstream volume_file;
+  volume_file.open(volume_filename_, std::ios::out);
+
+  if (volume_file.is_open()) {
+    //! Write the total number of vertices generated
+    volume_file << volumes.size() << "\n";
+
+    //! Stresses in Voigt Notation
+    //! $\sigma_{xx}$ $\sigma_{yy}$ $\sigma_{zz}$
+    //! $\tau_{yz}$ $\tau_{zx}$ $\tau_{xy}$
+    for (const auto& volume : volumes) {
+      // volume_file.setf(std::ios::fixed, std::ios::floatfield);
+      volume_file << id << '\t' << volume.second;
+      volume_file << "\n";
+      ++id;
+    }
+    volume_file.close();
+  }
+  std::cout << "Wrote Volumes \n";
 }
