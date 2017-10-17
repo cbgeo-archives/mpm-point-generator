@@ -48,11 +48,9 @@ IO<Tdim>::IO(const std::string& file_directory, const std::string& json_file)
   }
 
   //! Make material point and stresses output file name
-  std::string material_points_attribute = "material_points";
-  std::string stresses_attribute = "initial_stresses";
   std::string extension = ".txt";
-  material_points_filename_ = output_file(material_points_attribute, extension);
-  stress_filename_ = output_file(stresses_attribute, extension);
+  material_points_filename_ = output_file("material_points", extension);
+  stress_filename_ = output_file("initial_stresses", extension);
 }
 
 //! \brief Write coordinates of material points
