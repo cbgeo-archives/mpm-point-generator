@@ -44,7 +44,7 @@ matrix:
       addons:
         apt:
           sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-5', 'libeigen3-dev']
+          packages: ['g++-5', 'libeigen3-dev', 'libboost-all-dev']
         coverity_scan:
           project:
             name: "cb-geo/mpm-point-generator"
