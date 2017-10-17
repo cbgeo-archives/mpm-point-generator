@@ -77,14 +77,14 @@ void GMSH<Tdim, Tvertices>::read_vertices(std::ifstream& file) {
 
     if (line.find('#') == std::string::npos && line != "") {
       //! Coordinates of vertex
-      std::array<double, Tdim> vertex;
+      Eigen::VectorXd vertex(Tdim);
 
       istream >> vertid;
 
       if (Tdim == 3) {
-        istream >> vertex.at(0) >> vertex.at(1) >> vertex.at(2);
+        istream >> vertex[0] >> vertex[1] >> vertex[2];
       } else {
-        istream >> vertex.at(0) >> vertex.at(1);
+        istream >> vertex[0] >> vertex[1];
       }
       this->vertices_.insert(std::make_pair(vertid, vertex));
     }
@@ -121,29 +121,21 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
   //! Element type
   double elementtype = std::numeric_limits<double>::max();
 
+  double physical = std::numeric_limits<double>::max();
+  double elementry = std::numeric_limits<double>::max();
+
   //! Element id
   unsigned elementid = std::numeric_limits<unsigned>::max();
 
-  double physical = std::numeric_limits<double>::max();
-
-  double elementry = std::numeric_limits<double>::max();
-
   //! Array to store vertices coordinates
-  std::array<double, Tvertices> elementarray;
+  Eigen::VectorXd elementarray(Tvertices);
 
   //! specify element type 4 = tetrahedral, 5 = hexahedron
   //! Documentation from GMSH
-  //! 1 - Line (2 nodes)
   //! 2 - Triangle (3 nodes)
   //! 3 - Quadrangle (4 nodes)
   //! 4 - Tetrahedron (4 nodes)
   //! 5 - Hexahedron (8 nodes)
-  //! 6 - Prism (6 nodes)
-  //! 7 - Pyramid (5 nodes)
-  //! 8 - Second order line (3 nodes)
-  //! 9 - Second order triangle (6 nodes)
-  //! 11 - Second order tetrahedron (10 nodes)
-  //! 15 - Point (1 node)
   //! For more informtion on element types, visit:
   //! http://gmsh.info/doc/texinfo/gmsh.html#File-formats
   const unsigned element_type = 5;
@@ -159,14 +151,13 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
       if (elementtype != element_type) {
         istream >> line;
       } else {
-        istream >> elementarray.at(0) >> elementarray.at(1) >>
-            elementarray.at(2) >> elementarray.at(3) >> elementarray.at(4) >>
-            elementarray.at(5) >> elementarray.at(6) >> elementarray.at(7);
+        istream >> elementarray[0] >> elementarray[1] >> elementarray[2] >>
+            elementarray[3] >> elementarray[4] >> elementarray[5] >>
+            elementarray[6] >> elementarray[7];
         this->elements_.insert(std::make_pair(elementid, elementarray));
       }
     }
   }
-
   std::cout << "Number of Elements: " << elements_.size() << '\n';
 
   //! Get the coordinates for each vertex of each element
@@ -179,35 +170,24 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
 template <unsigned Tdim, unsigned Tvertices>
 void GMSH<Tdim, Tvertices>::store_element_vertices() {
 
-  const unsigned firstelement = elements_.begin()->first;
-  const unsigned lastelement = elements_.rbegin()->first;
-
-  std::array<double, Tvertices> elementkeyvalues;
-  std::array<double, Tdim * Tvertices> verticesarray;
+  Eigen::VectorXd elementkeyvalues(Tvertices);
+  Eigen::VectorXd verticesarray(Tdim * Tvertices);
 
   //! Iterate through element_
-  for (unsigned i = firstelement; i <= lastelement; ++i) {
-    auto elementfind = elements_.find(i);
-    if (elementfind != elements_.end()) {
+  for (const auto& element : elements_) {
 
-      //! In each element, iterate to get vertices id's of the element
-      for (unsigned j = 0; j < Tvertices; ++j) {
-        elementkeyvalues.at(j) = elementfind->second[j];
+    //! Iterate through the vertices to get coordinates depending on the element
+    for (unsigned j = 0; j < Tvertices; ++j) {
+      //! Get the vertex wanted from the id
+      auto verticesfind = vertices_.find(element.second[j]);
+      //! For each vertex, store the coordinates
+      //! k = 0 -> [X], k = 1 -> [Y], k = 2 -> [Z]
+      for (unsigned k = 0; k < Tdim; ++k) {
+        verticesarray[j * Tdim + k] = verticesfind->second[k];
       }
-      //! Iterate through the vertices to get coordinates (4 for tetrahedral)
-      for (unsigned k = 0; k < Tvertices; ++k) {
-        //! Get the vertex wanted from the id
-        auto verticesfind = vertices_.find(elementkeyvalues[k]);
-        //! For each vertex, store the coordinates
-        //! j = 0 -> [X], j = 1 -> [Y], j = 2 -> [Z]
-        for (unsigned l = 0; l < Tdim; ++l) {
-          verticesarray.at(k * Tdim + l) = verticesfind->second[l];
-        }
-      }
-
-      elementcoordinates_.insert(
-          std::make_pair(elementfind->first, verticesarray));
     }
+
+    elementcoordinates_.insert(std::make_pair(element.first, verticesarray));
   }
   std::cout
       << "The coordinates for vertices of each element have been stored.\n";
@@ -216,77 +196,86 @@ void GMSH<Tdim, Tvertices>::store_element_vertices() {
 //! Compute material points based on the centroid
 //! \tparam Tdim Dimension
 //! \tparam Tvertices Number of vertices in element
+//! \param[in] ngauss_points Number of gauss points per coordinate
 template <unsigned Tdim, unsigned Tvertices>
-void GMSH<Tdim, Tvertices>::compute_material_points() {
+void GMSH<Tdim, Tvertices>::compute_material_points(unsigned ngauss_points) {
 
-  unsigned arrayposition = 0;
+  //! Storing ngauss_points to member variable and get constants from namespace
+  ngauss_points_ = ngauss_points;
+  std::vector<double> gauss_constants =
+      element::gauss_points.find(ngauss_points_)->second;
 
-  std::array<double, Tdim> pointsarray;
-
-  const unsigned firstelementcoord = elementcoordinates_.begin()->first;
-  const unsigned lastelementcoord = elementcoordinates_.rbegin()->first;
-
-  for (unsigned t = firstelementcoord; t < lastelementcoord + 1; ++t) {
-    auto coordinatesfind = elementcoordinates_.find(t);
-    if (coordinatesfind != elementcoordinates_.end()) {
-      //! Store coordinates in 3x4 matrix
-      Eigen::MatrixXd m(Tdim, Tvertices);
-      for (unsigned i = 0; i < Tvertices; ++i) {
-        for (unsigned j = 0; j < Tdim; ++j) {
-          arrayposition = (i * Tdim) + j;
-          m(j, i) = coordinatesfind->second[arrayposition];
-        }
+  //! Create a matrix of xi from gauss points
+  //! Matrix is size npoints x Tdim
+  //! For 3D only
+  unsigned npoints = std::pow(ngauss_points_, Tdim);
+  Eigen::MatrixXd xi_gauss_points(npoints, Tdim);
+  unsigned counter = 0;
+  for (unsigned ii = 0; ii < ngauss_points_; ++ii) {
+    for (unsigned jj = 0; jj < ngauss_points_; ++jj) {
+      for (unsigned kk = 0; kk < ngauss_points_; ++kk) {
+        xi_gauss_points(counter, 0) = gauss_constants.at(ii);
+        xi_gauss_points(counter, 1) = gauss_constants.at(jj);
+        xi_gauss_points(counter, 2) = gauss_constants.at(kk);
+        ++counter;
       }
+    }
+  }
 
-      // Assign the centroid as the coordinate of the material point
+  Eigen::VectorXd pointsarray(Tdim);
+
+  //! last_global_id should be changed later if more than one material
+  //! properties are used
+  //! material_id is the index of materialpoints
+  unsigned last_global_id = 0;
+  unsigned material_id = 0;
+
+  //! Update vector of material points
+  //! Fill materialpoints_ vector for the first component
+  materialpoints_.emplace_back(std::unique_ptr<MaterialPoints<Tdim>>(
+      new MaterialPoints<Tdim>(material_id)));
+
+  for (const auto& elementcoord : elementcoordinates_) {
+
+    //! Store coordinates in Tdim x Tvertices matrix
+    //! Where N is the number of nodes per element
+    //! This is rearranging of the data to have stored in matrix form
+    Eigen::MatrixXd node_coordinates(Tdim, Tvertices);
+    for (unsigned i = 0; i < Tvertices; ++i) {
+      for (unsigned j = 0; j < Tdim; ++j) {
+        node_coordinates(j, i) = elementcoord.second[(i * Tdim) + j];
+      }
+    }
+
+    //! Compute the gauss points (there are npoints)
+    for (unsigned k = 0; k < npoints; ++k) {
+
+      //! Get array of xi for this gauss point
+      std::array<double, Tdim> xi;
+      for (unsigned l = 0; l < Tdim; ++l) xi.at(l) = xi_gauss_points(k, l);
+
+      // Compute gauss point in cartesian coordinate
       for (unsigned i = 0; i < Tdim; ++i) {
-        pointsarray.at(i) = 0;
+        pointsarray[i] = 0;
+        Eigen::VectorXd shape_function = element::hexahedron::shapefn(xi);
         for (unsigned j = 0; j < Tvertices; ++j) {
-          pointsarray.at(i) += (1. / Tvertices) * m(i, j);
+          pointsarray[i] += shape_function[j] * node_coordinates(i, j);
         }
       }
 
-      materialpoints_.emplace_back(
-          new Point<Tdim>(coordinatesfind->first, pointsarray));
-    }
-  }
-  std::cout << "Number of Material Points: " << materialpoints_.size() << '\n';
-}
-
-//! Compute stresses of the material points
-//! \tparam Tdim Dimension
-//! \tparam Tvertices Number of vertices in element
-template <unsigned Tdim, unsigned Tvertices>
-void GMSH<Tdim, Tvertices>::compute_stresses() {
-
-  //! Material density
-  const double density = 22;
-  //! K0 static pressure coefficient
-  const double k0 = 0.5;
-  const double conv_factor = 10;
-
-  double max_height = std::numeric_limits<double>::min();
-
-  //! [2D], y is the vertical direction
-  //! [3D], z is the vertical direction
-  //! In general, [Tdim - 1]
-  for (const auto& point : materialpoints_) {
-    if (point->coordinates().at(Tdim - 1) > max_height) {
-      max_height = point->coordinates().at(Tdim - 1);
+      //! Make class point and store to material points
+      materialpoints_.at(material_id)
+          ->add_points(std::unique_ptr<Point<Tdim>>(new Point<Tdim>(
+              elementcoord.first, elementcoord.first + last_global_id,
+              pointsarray)));
     }
   }
 
-  //! Loop through the points to get vertical and horizontal stresses
-  //! Note that tau (shear stress) is assumed 0
-  std::array<double, Tdim> stresses;
-  for (const auto& materialpoint : materialpoints_) {
-    std::array<double, Tdim * 2> stress{0};
-    stress.at(Tdim - 1) = conv_factor *
-                          (-(max_height - materialpoint->coordinates().at(2))) *
-                          density;
-    for (unsigned i = 2; i <= Tdim; ++i) {
-      stress.at(Tdim - i) = stress.at(Tdim - 1) * k0;
-    }
-    materialpoint->stress(stress);
-  }
+  //! Find number of material points generated
+  unsigned nmaterialpoints = 0;
+
+  for (const auto& materialpoint : materialpoints_)
+    nmaterialpoints += materialpoint->coordinates().size();
+
+  std::cout << "Number of Material Points: " << nmaterialpoints << '\n';
 }

@@ -15,69 +15,84 @@ TEST_CASE("Point base is checked in 2D", "[Point][2D]") {
   //! Coordinates are checked for zero values
   SECTION("Coordinates are checked for zero values") {
     const unsigned index = 0;
-    const std::array<double, DIM> coordinate{0, 0};
-    const std::array<double, DIM * 2> stress{0, 0, 0, 0};
-    auto node = std::unique_ptr<Point<DIM>>(new Point<DIM>(index, coordinate));
+    const unsigned global_index = 0;
+    Eigen::VectorXd coordinate(DIM);
+    coordinate << 0, 0;
+    Eigen::VectorXd stress(DIM * 2);
+    stress << 0, 0, 0, 0;
+    auto node = std::unique_ptr<Point<DIM>>(
+        new Point<DIM>(index, global_index, coordinate));
     node->stress(stress);
 
     REQUIRE(node->id() == 0);
-    REQUIRE(node->coordinates().at(0) == Approx(0).epsilon(tolerance));
-    REQUIRE(node->coordinates().at(1) == Approx(0).epsilon(tolerance));
-    REQUIRE(node->stress().at(0) == Approx(0).epsilon(tolerance));
-    REQUIRE(node->stress().at(1) == Approx(0).epsilon(tolerance));
-    REQUIRE(node->stress().at(2) == Approx(0).epsilon(tolerance));
-    REQUIRE(node->stress().at(3) == Approx(0).epsilon(tolerance));
+    REQUIRE(node->global_id() == 0);
+    REQUIRE(node->coordinates()[0] == Approx(0).epsilon(tolerance));
+    REQUIRE(node->coordinates()[1] == Approx(0).epsilon(tolerance));
+    REQUIRE(node->stress()[0] == Approx(0).epsilon(tolerance));
+    REQUIRE(node->stress()[1] == Approx(0).epsilon(tolerance));
+    REQUIRE(node->stress()[2] == Approx(0).epsilon(tolerance));
+    REQUIRE(node->stress()[3] == Approx(0).epsilon(tolerance));
   }
 
   //! Coordinates are checked for minimum values
   SECTION("Coordinates are checked for minimum values") {
     const unsigned index = std::numeric_limits<unsigned>::min();
-    const std::array<double, DIM> coordinate{
-        std::numeric_limits<double>::min(), std::numeric_limits<double>::min()};
-    const std::array<double, DIM * 2> stress{
+    const unsigned global_index = std::numeric_limits<unsigned>::min();
+    Eigen::VectorXd coordinate(DIM);
+    coordinate << std::numeric_limits<double>::min(),
+        std::numeric_limits<double>::min();
+    Eigen::VectorXd stress(DIM * 2);
+    stress << std::numeric_limits<double>::min(),
         std::numeric_limits<double>::min(), std::numeric_limits<double>::min(),
-        std::numeric_limits<double>::min(), std::numeric_limits<double>::min()};
-    auto node = std::unique_ptr<Point<DIM>>(new Point<DIM>(index, coordinate));
+        std::numeric_limits<double>::min();
+    auto node = std::unique_ptr<Point<DIM>>(
+        new Point<DIM>(index, global_index, coordinate));
     node->stress(stress);
 
     REQUIRE(node->id() == std::numeric_limits<unsigned>::min());
-    REQUIRE(node->coordinates().at(0) ==
+    REQUIRE(node->global_id() == std::numeric_limits<unsigned>::min());
+    REQUIRE(node->coordinates()[0] ==
             Approx(std::numeric_limits<double>::min()).epsilon(tolerance));
-    REQUIRE(node->coordinates().at(1) ==
+    REQUIRE(node->coordinates()[1] ==
             Approx(std::numeric_limits<double>::min()).epsilon(tolerance));
-    REQUIRE(node->stress().at(0) ==
+    REQUIRE(node->stress()[0] ==
             Approx(std::numeric_limits<double>::min()).epsilon(tolerance));
-    REQUIRE(node->stress().at(1) ==
+    REQUIRE(node->stress()[1] ==
             Approx(std::numeric_limits<double>::min()).epsilon(tolerance));
-    REQUIRE(node->stress().at(2) ==
+    REQUIRE(node->stress()[2] ==
             Approx(std::numeric_limits<double>::min()).epsilon(tolerance));
-    REQUIRE(node->stress().at(3) ==
+    REQUIRE(node->stress()[3] ==
             Approx(std::numeric_limits<double>::min()).epsilon(tolerance));
   }
 
   //! Coordinates are checked for maximum values
   SECTION("Coordinates are checked for maximum values") {
     const unsigned index = std::numeric_limits<unsigned>::max();
-    const std::array<double, DIM> coordinate{
-        std::numeric_limits<double>::max(), std::numeric_limits<double>::max()};
-    const std::array<double, DIM * 2> stress{
+    const unsigned global_index = std::numeric_limits<unsigned>::max();
+    Eigen::VectorXd coordinate(DIM);
+    coordinate << std::numeric_limits<double>::max(),
+        std::numeric_limits<double>::max();
+    Eigen::VectorXd stress(DIM * 2);
+    stress << std::numeric_limits<double>::max(),
         std::numeric_limits<double>::max(), std::numeric_limits<double>::max(),
-        std::numeric_limits<double>::max(), std::numeric_limits<double>::max()};
-    auto node = std::unique_ptr<Point<DIM>>(new Point<DIM>(index, coordinate));
+        std::numeric_limits<double>::max();
+    auto node = std::unique_ptr<Point<DIM>>(
+        new Point<DIM>(index, global_index, coordinate));
     node->stress(stress);
 
     REQUIRE(node->id() == std::numeric_limits<unsigned>::max());
-    REQUIRE(node->coordinates().at(0) ==
+    REQUIRE(node->global_id() == std::numeric_limits<unsigned>::max());
+    REQUIRE(node->coordinates()[0] ==
             Approx(std::numeric_limits<double>::max()).epsilon(tolerance));
-    REQUIRE(node->coordinates().at(1) ==
+    REQUIRE(node->coordinates()[1] ==
             Approx(std::numeric_limits<double>::max()).epsilon(tolerance));
-    REQUIRE(node->stress().at(0) ==
+    REQUIRE(node->stress()[0] ==
             Approx(std::numeric_limits<double>::max()).epsilon(tolerance));
-    REQUIRE(node->stress().at(1) ==
+    REQUIRE(node->stress()[1] ==
             Approx(std::numeric_limits<double>::max()).epsilon(tolerance));
-    REQUIRE(node->stress().at(2) ==
+    REQUIRE(node->stress()[2] ==
             Approx(std::numeric_limits<double>::max()).epsilon(tolerance));
-    REQUIRE(node->stress().at(3) ==
+    REQUIRE(node->stress()[3] ==
             Approx(std::numeric_limits<double>::max()).epsilon(tolerance));
   }
 }
@@ -92,88 +107,101 @@ TEST_CASE("Point base is checked in 3D", "[Point][3D]") {
   //! Coordinates are checked for zero values
   SECTION("Coordinates are checked for zero values") {
     const unsigned index = 0;
-    const std::array<double, DIM> coordinate{0, 0, 0};
-    const std::array<double, DIM * 2> stress{0, 0, 0, 0, 0, 0};
-    auto node = std::unique_ptr<Point<DIM>>(new Point<DIM>(index, coordinate));
+    const unsigned global_index = 0;
+    Eigen::VectorXd coordinate(DIM);
+    coordinate << 0, 0, 0;
+    Eigen::VectorXd stress(DIM * 2);
+    stress << 0, 0, 0, 0, 0, 0;
+    auto node = std::unique_ptr<Point<DIM>>(
+        new Point<DIM>(index, global_index, coordinate));
     node->stress(stress);
 
     REQUIRE(node->id() == 0);
-    REQUIRE(node->coordinates().at(0) == Approx(0).epsilon(tolerance));
-    REQUIRE(node->coordinates().at(1) == Approx(0).epsilon(tolerance));
-    REQUIRE(node->coordinates().at(2) == Approx(0).epsilon(tolerance));
-    REQUIRE(node->stress().at(0) == Approx(0).epsilon(tolerance));
-    REQUIRE(node->stress().at(1) == Approx(0).epsilon(tolerance));
-    REQUIRE(node->stress().at(2) == Approx(0).epsilon(tolerance));
-    REQUIRE(node->stress().at(3) == Approx(0).epsilon(tolerance));
-    REQUIRE(node->stress().at(4) == Approx(0).epsilon(tolerance));
-    REQUIRE(node->stress().at(5) == Approx(0).epsilon(tolerance));
+    REQUIRE(node->global_id() == 0);
+    REQUIRE(node->coordinates()[0] == Approx(0).epsilon(tolerance));
+    REQUIRE(node->coordinates()[1] == Approx(0).epsilon(tolerance));
+    REQUIRE(node->coordinates()[2] == Approx(0).epsilon(tolerance));
+    REQUIRE(node->stress()[0] == Approx(0).epsilon(tolerance));
+    REQUIRE(node->stress()[1] == Approx(0).epsilon(tolerance));
+    REQUIRE(node->stress()[2] == Approx(0).epsilon(tolerance));
+    REQUIRE(node->stress()[3] == Approx(0).epsilon(tolerance));
+    REQUIRE(node->stress()[4] == Approx(0).epsilon(tolerance));
+    REQUIRE(node->stress()[5] == Approx(0).epsilon(tolerance));
   }
 
   //! Coordinates are checked for minimum values
   SECTION("Coordinates are checked for minimum values") {
     const unsigned index = std::numeric_limits<unsigned>::min();
-    const std::array<double, DIM> coordinate{
+    const unsigned global_index = std::numeric_limits<unsigned>::min();
+    Eigen::VectorXd coordinate(DIM);
+    coordinate << std::numeric_limits<double>::min(),
+        std::numeric_limits<double>::min(), std::numeric_limits<double>::min();
+    Eigen::VectorXd stress(DIM * 2);
+    stress << std::numeric_limits<double>::min(),
         std::numeric_limits<double>::min(), std::numeric_limits<double>::min(),
-        std::numeric_limits<double>::min()};
-    const std::array<double, DIM * 2> stress{
         std::numeric_limits<double>::min(), std::numeric_limits<double>::min(),
-        std::numeric_limits<double>::min(), std::numeric_limits<double>::min(),
-        std::numeric_limits<double>::min(), std::numeric_limits<double>::min()};
-    auto node = std::unique_ptr<Point<DIM>>(new Point<DIM>(index, coordinate));
+        std::numeric_limits<double>::min();
+    auto node = std::unique_ptr<Point<DIM>>(
+        new Point<DIM>(index, global_index, coordinate));
     node->stress(stress);
 
     REQUIRE(node->id() == std::numeric_limits<unsigned>::min());
-    REQUIRE(node->coordinates().at(0) ==
+    REQUIRE(node->global_id() == std::numeric_limits<unsigned>::min());
+    REQUIRE(node->coordinates()[0] ==
             Approx(std::numeric_limits<double>::min()).epsilon(tolerance));
-    REQUIRE(node->coordinates().at(1) ==
+    REQUIRE(node->coordinates()[1] ==
             Approx(std::numeric_limits<double>::min()).epsilon(tolerance));
-    REQUIRE(node->coordinates().at(2) ==
+    REQUIRE(node->coordinates()[2] ==
             Approx(std::numeric_limits<double>::min()).epsilon(tolerance));
-    REQUIRE(node->stress().at(0) ==
+    REQUIRE(node->stress()[0] ==
             Approx(std::numeric_limits<double>::min()).epsilon(tolerance));
-    REQUIRE(node->stress().at(1) ==
+    REQUIRE(node->stress()[1] ==
             Approx(std::numeric_limits<double>::min()).epsilon(tolerance));
-    REQUIRE(node->stress().at(2) ==
+    REQUIRE(node->stress()[2] ==
             Approx(std::numeric_limits<double>::min()).epsilon(tolerance));
-    REQUIRE(node->stress().at(3) ==
+    REQUIRE(node->stress()[3] ==
             Approx(std::numeric_limits<double>::min()).epsilon(tolerance));
-    REQUIRE(node->stress().at(4) ==
+    REQUIRE(node->stress()[4] ==
             Approx(std::numeric_limits<double>::min()).epsilon(tolerance));
-    REQUIRE(node->stress().at(5) ==
+    REQUIRE(node->stress()[5] ==
             Approx(std::numeric_limits<double>::min()).epsilon(tolerance));
   }
 
   //! Coordinates are checked for maximum values
   SECTION("Coordinates are checked for maximum values") {
     const unsigned index = std::numeric_limits<unsigned>::max();
-    const std::array<double, DIM> coordinate{
+    const unsigned global_index = std::numeric_limits<unsigned>::max();
+    Eigen::VectorXd coordinate(DIM);
+    coordinate << std::numeric_limits<double>::max(),
+        std::numeric_limits<double>::max(), std::numeric_limits<double>::max();
+    Eigen::VectorXd stress(DIM * 2);
+    stress << std::numeric_limits<double>::max(),
         std::numeric_limits<double>::max(), std::numeric_limits<double>::max(),
-        std::numeric_limits<double>::max()};
-    const std::array<double, DIM * 2> stress{
         std::numeric_limits<double>::max(), std::numeric_limits<double>::max(),
-        std::numeric_limits<double>::max(), std::numeric_limits<double>::max(),
-        std::numeric_limits<double>::max(), std::numeric_limits<double>::max()};
-    auto node = std::unique_ptr<Point<DIM>>(new Point<DIM>(index, coordinate));
+        std::numeric_limits<double>::max();
+    auto node = std::unique_ptr<Point<DIM>>(
+        new Point<DIM>(index, global_index, coordinate));
     node->stress(stress);
 
     REQUIRE(node->id() == std::numeric_limits<unsigned>::max());
-    REQUIRE(node->coordinates().at(0) ==
+    REQUIRE(node->global_id() == std::numeric_limits<unsigned>::max());
+    REQUIRE(node->coordinates()[0] ==
             Approx(std::numeric_limits<double>::max()).epsilon(tolerance));
-    REQUIRE(node->coordinates().at(1) ==
+    REQUIRE(node->coordinates()[1] ==
             Approx(std::numeric_limits<double>::max()).epsilon(tolerance));
-    REQUIRE(node->coordinates().at(2) ==
+    REQUIRE(node->coordinates()[2] ==
             Approx(std::numeric_limits<double>::max()).epsilon(tolerance));
-    REQUIRE(node->stress().at(0) ==
+    REQUIRE(node->stress()[0] ==
             Approx(std::numeric_limits<double>::max()).epsilon(tolerance));
-    REQUIRE(node->stress().at(1) ==
+    REQUIRE(node->stress()[1] ==
             Approx(std::numeric_limits<double>::max()).epsilon(tolerance));
-    REQUIRE(node->stress().at(2) ==
+    REQUIRE(node->stress()[2] ==
             Approx(std::numeric_limits<double>::max()).epsilon(tolerance));
-    REQUIRE(node->stress().at(3) ==
+    REQUIRE(node->stress()[3] ==
             Approx(std::numeric_limits<double>::max()).epsilon(tolerance));
-    REQUIRE(node->stress().at(4) ==
+    REQUIRE(node->stress()[4] ==
             Approx(std::numeric_limits<double>::max()).epsilon(tolerance));
-    REQUIRE(node->stress().at(5) ==
+    REQUIRE(node->stress()[5] ==
             Approx(std::numeric_limits<double>::max()).epsilon(tolerance));
   }
 }
