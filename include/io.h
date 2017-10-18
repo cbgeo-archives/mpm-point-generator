@@ -43,6 +43,9 @@ class IO {
   //! Return mesh file name
   std::string mesh_file_name() const { return mesh_filename_; }
 
+  //! Write volumes
+  void write_volumes(const std::map<unsigned, double>& volumes);
+
  private:
   //! Input directory
   std::string file_directory_;
@@ -61,6 +64,9 @@ class IO {
 
   //! Filename of material point stresses
   std::string stress_filename_;
+
+  //! Filename of material point volume
+  std::string volume_filename_;
 
   //! Number of gauss points per coordinate
   unsigned ngauss_points_{0};
