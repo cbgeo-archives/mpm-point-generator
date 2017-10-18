@@ -13,7 +13,7 @@
 
 1. Run `make clean && make -jN` (where N is the number of cores)
 
-3. Run mpm `./mpm_point_generator /path/ json_file points_per_element`
+3. Run mpm `./mpm_point_generator -f /path/ -i json_file_name`
 
 4. To test, run `./mpm_point_generator_test`
 
