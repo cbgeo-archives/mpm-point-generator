@@ -17,3 +17,26 @@
 
 4. To test, run `./mpm_point_generator_test`
 
+
+## Usage 
+```
+   ./mpm_point_generator  [-i <input_file>] -f <Working_folder> [--]
+                          [--version] [-h]
+```
+where: 
+```
+   -i <input_file>,  --input_file <input_file>
+     Input JSON file [cube.json]
+
+   -f <Working_folder>,  --working_dir <Working_folder>
+     (required)  Current working folder
+
+   --,  --ignore_rest
+     Ignores the rest of the labeled arguments following this flag.
+
+   --version
+     Displays version information and exits.
+
+   -h,  --help
+     Displays usage information and exits.
+```
