@@ -68,7 +68,7 @@ class IO {
   boost::filesystem::path stress_filename_;
 
   //! Number of gauss points per coordinate
-  unsigned ngauss_points_;
+  unsigned ngauss_points_{0};
 };
 
 #include "io.tcc"
