@@ -31,6 +31,9 @@ class Mesh {
   //! Compute material point location
   virtual void compute_material_points(unsigned ngauss_points) = 0;
 
+  //! Compute element volumes
+  virtual void compute_volumes() = 0;
+
   //! Return a vector of coordinates
   std::vector<Eigen::VectorXd> coordinates();
 
@@ -46,6 +49,9 @@ class Mesh {
 
   //! Return the total number of vertices
   unsigned nvertices() const { return nvertices_; }
+
+  //! Return a map of element id & volume id
+  std::map<unsigned, double> volumes() const { return volumes_; }
 
  protected:
   //! Total number of vertices
@@ -65,6 +71,9 @@ class Mesh {
 
   //! Vector of material points
   std::vector<std::unique_ptr<MaterialPoints<Tdim>>> materialpoints_;
+
+  //! Map to store element id and volume
+  std::map<unsigned, double> volumes_;
 };
 
 #include "mesh.tcc"

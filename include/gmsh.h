@@ -42,6 +42,9 @@ class GMSH : public Mesh<Tdim, Tvertices> {
   //! Compute material points from element coordinate map
   void compute_material_points(unsigned ngauss_points);
 
+  //! Compute volumes
+  void compute_volumes();
+
  private:
   //! Total number of vertices
   using Mesh<Tdim, Tvertices>::nvertices_;
@@ -60,6 +63,9 @@ class GMSH : public Mesh<Tdim, Tvertices> {
 
   //! Vector of material points
   using Mesh<Tdim, Tvertices>::materialpoints_;
+
+  //! Map of volumes
+  using Mesh<Tdim, Tvertices>::volumes_;
 };
 
 #include "gmsh.tcc"
