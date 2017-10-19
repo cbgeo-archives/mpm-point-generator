@@ -47,6 +47,12 @@ class Mesh {
   //! Return the total number of vertices
   unsigned nvertices() const { return nvertices_; }
 
+  //! Return a map of element id & volume id
+  std::map<unsigned, double> volumes() const { return volumes_; }
+
+  //! Compute the volume of a material point
+  void compute_volumes();
+
  protected:
   //! Total number of vertices
   unsigned nvertices_{std::numeric_limits<unsigned>::max()};
@@ -65,6 +71,12 @@ class Mesh {
 
   //! Vector of material points
   std::vector<std::unique_ptr<MaterialPoints<Tdim>>> materialpoints_;
+
+  //! Map to store element id and volume
+  std::map<unsigned, double> volumes_;
+
+  //! Return volume
+  double calculate_volume(const Eigen::MatrixXd& m);
 };
 
 #include "mesh.tcc"
