@@ -60,6 +60,9 @@ class GMSH : public Mesh<Tdim, Tvertices> {
 
   //! Vector of material points
   using Mesh<Tdim, Tvertices>::materialpoints_;
+
+  //! Map of volumes
+  using Mesh<Tdim, Tvertices>::volumes_;
 };
 
 #include "gmsh.tcc"
