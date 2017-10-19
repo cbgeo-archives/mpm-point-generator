@@ -47,9 +47,10 @@ IO<Tdim>::IO(const std::string& file_directory, const std::string& json_file)
     ngauss_points_ = 1;
   }
 
-  //! Material point and stresses output file
-  material_points_filename_ = file_directory_ + "material_points.txt";
-  stress_filename_ = file_directory_ + "initial_stresses.txt";
+  //! Make material point and stresses output file name
+  std::string extension = ".txt";
+  material_points_filename_ = output_file("material_points", extension);
+  stress_filename_ = output_file("initial_stresses", extension);
 }
 
 //! \brief Write coordinates of material points
@@ -59,11 +60,12 @@ template <unsigned Tdim>
 void IO<Tdim>::write_coordinates(
     const std::vector<Eigen::VectorXd>& coordinates) {
 
-  std::cout << "material_points will be stored in: " << file_directory_ << "\n";
+  std::cout << "material_points will be stored in: "
+            << material_points_filename_.string() << "\n";
 
   //! Output vertices file
   std::fstream material_points_file;
-  material_points_file.open(material_points_filename_, std::ios::out);
+  material_points_file.open(material_points_filename_.string(), std::ios::out);
 
   if (material_points_file.is_open()) {
     //! Write the total number of vertices
@@ -92,12 +94,12 @@ template <unsigned Tdim>
 void IO<Tdim>::write_stresses(const std::vector<Eigen::VectorXd>& stresses) {
   unsigned id = 0;
 
-  std::cout << "initial_stresses will be stored in: " << file_directory_
-            << "\n";
+  std::cout << "initial_stresses will be stored in: "
+            << stress_filename_.string() << "\n";
 
   //! Output stress file
   std::fstream stress_file;
-  stress_file.open(stress_filename_, std::ios::out);
+  stress_file.open(stress_filename_.string(), std::ios::out);
 
   if (stress_file.is_open()) {
     //! Write the total number of vertices generated
@@ -118,4 +120,41 @@ void IO<Tdim>::write_stresses(const std::vector<Eigen::VectorXd>& stresses) {
     stress_file.close();
   }
   std::cout << "Wrote initial stresses\n";
+}
+
+//! \brief Write output file names and store them in private member
+//! \param[in] attribute Attribute being written (eg., material_points / stress)
+//! \param[in] file_extension File Extension (*.txt)
+//! \tparam Tdim dimension
+template <unsigned Tdim>
+boost::filesystem::path IO<Tdim>::output_file(
+    const std::string& attribute, const std::string& file_extension) {
+
+  std::stringstream file_name;
+  std::string path{"results/"};
+
+  try {
+    auto results = json_.at("results_path");
+    if (!results.empty()) path = results;
+
+  } catch (std::exception& except) {
+    std::cerr << except.what() << '\n';
+    // console_->error("Output file creation: {}", except.what());
+    // console_->warn("Using default path: {}", path);
+  }
+
+  //! Make the file_name
+  file_name.str(std::string());
+  file_name << attribute << file_extension;
+
+  //! Include path
+  if (!path.empty()) path = file_directory_ + path;
+
+  //! Create results folder if not present
+  boost::filesystem::path dir(path);
+  if (!boost::filesystem::exists(dir)) boost::filesystem::create_directory(dir);
+
+  //! Create full path with working directory path and file name
+  boost::filesystem::path file_path(path + file_name.str().c_str());
+  return file_path;
 }

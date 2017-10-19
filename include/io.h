@@ -8,6 +8,7 @@
 #include <utility>
 #include <vector>
 
+#include <boost/filesystem.hpp>
 #include <eigen3/Eigen/Dense>
 
 #include "material_points.h"
@@ -43,6 +44,10 @@ class IO {
   //! Return mesh file name
   std::string mesh_file_name() const { return mesh_filename_; }
 
+  //! Create output file names
+  boost::filesystem::path output_file(const std::string& attribute,
+                                      const std::string& file_extension);
+
  private:
   //! Input directory
   std::string file_directory_;
@@ -57,10 +62,10 @@ class IO {
   std::string mesh_filename_;
 
   //! File name of vertices
-  std::string material_points_filename_;
+  boost::filesystem::path material_points_filename_;
 
   //! Filename of material point stresses
-  std::string stress_filename_;
+  boost::filesystem::path stress_filename_;
 
   //! Number of gauss points per coordinate
   unsigned ngauss_points_{0};
