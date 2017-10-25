@@ -48,6 +48,8 @@ class IO {
   boost::filesystem::path output_file(const std::string& attribute,
                                       const std::string& file_extension);
 
+  void write_volumes(const std::map<unsigned, double>& volumes);
+
  private:
   //! Input directory
   std::string file_directory_;
@@ -66,6 +68,9 @@ class IO {
 
   //! Filename of material point stresses
   boost::filesystem::path stress_filename_;
+
+  //! Filename of material point stresses
+  boost::filesystem::path volume_filename_;
 
   //! Number of gauss points per coordinate
   unsigned ngauss_points_{0};

@@ -63,8 +63,8 @@ class Mesh {
   //! Map to store id and vertices coordinates
   std::map<unsigned, Eigen::VectorXd> vertices_;
 
-  //! Map to store element id and vertices id
-  std::map<unsigned, Eigen::VectorXd> elements_;
+  //! Vector to store element id and vertices id
+  std::vector<std::unique_ptr<Element>> elements_;
 
   //! Map to store element id and vertices coordinates
   std::map<unsigned, Eigen::VectorXd> elementcoordinates_;
@@ -74,9 +74,6 @@ class Mesh {
 
   //! Map to store element id and volume
   std::map<unsigned, double> volumes_;
-
-  //! Return volume
-  double calculate_volume(const Eigen::MatrixXd& m);
 };
 
 #include "mesh.tcc"

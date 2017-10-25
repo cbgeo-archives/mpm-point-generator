@@ -154,7 +154,7 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
         istream >> elementarray[0] >> elementarray[1] >> elementarray[2] >>
             elementarray[3] >> elementarray[4] >> elementarray[5] >>
             elementarray[6] >> elementarray[7];
-        this->elements_.insert(std::make_pair(elementid, elementarray));
+        this->elements_.emplace_back(new Element(elementid, elementarray));
       }
     }
   }
@@ -171,23 +171,25 @@ template <unsigned Tdim, unsigned Tvertices>
 void GMSH<Tdim, Tvertices>::store_element_vertices() {
 
   Eigen::VectorXd elementkeyvalues(Tvertices);
-  Eigen::VectorXd verticesarray(Tdim * Tvertices);
 
   //! Iterate through element_
   for (const auto& element : elements_) {
 
+    std::vector<Eigen::Vector3d> verticescoordinates;
+
     //! Iterate through the vertices to get coordinates depending on the element
     for (unsigned j = 0; j < Tvertices; ++j) {
       //! Get the vertex wanted from the id
-      auto verticesfind = vertices_.find(element.second[j]);
+
+      const auto vertex_id = element->vertex_id(j);
+
+      auto verticesfind = vertices_.find(vertex_id);
+
       //! For each vertex, store the coordinates
-      //! k = 0 -> [X], k = 1 -> [Y], k = 2 -> [Z]
-      for (unsigned k = 0; k < Tdim; ++k) {
-        verticesarray[j * Tdim + k] = verticesfind->second[k];
-      }
+      verticescoordinates.push_back(verticesfind->second);
     }
 
-    elementcoordinates_.insert(std::make_pair(element.first, verticesarray));
+    element->coordinates(verticescoordinates);
   }
   std::cout
       << "The coordinates for vertices of each element have been stored.\n";
@@ -235,7 +237,7 @@ void GMSH<Tdim, Tvertices>::compute_material_points(unsigned ngauss_points) {
   materialpoints_.emplace_back(std::unique_ptr<MaterialPoints<Tdim>>(
       new MaterialPoints<Tdim>(material_id)));
 
-  for (const auto& elementcoord : elementcoordinates_) {
+  for (const auto& element : elements_) {
 
     //! Store coordinates in Tdim x Tvertices matrix
     //! Where N is the number of nodes per element
@@ -243,7 +245,7 @@ void GMSH<Tdim, Tvertices>::compute_material_points(unsigned ngauss_points) {
     Eigen::MatrixXd node_coordinates(Tdim, Tvertices);
     for (unsigned i = 0; i < Tvertices; ++i) {
       for (unsigned j = 0; j < Tdim; ++j) {
-        node_coordinates(j, i) = elementcoord.second[(i * Tdim) + j];
+        node_coordinates(j, i) = element->vertex_coordinates(i)[j];
       }
     }
 
@@ -266,8 +268,7 @@ void GMSH<Tdim, Tvertices>::compute_material_points(unsigned ngauss_points) {
       //! Make class point and store to material points
       materialpoints_.at(material_id)
           ->add_points(std::unique_ptr<Point<Tdim>>(new Point<Tdim>(
-              elementcoord.first, elementcoord.first + last_global_id,
-              pointsarray)));
+              element->id(), element->id() + last_global_id, pointsarray)));
     }
   }
 
