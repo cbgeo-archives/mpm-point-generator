@@ -58,12 +58,11 @@ int main(int argc, char** argv) {
     mesh->compute_material_points(io->ngauss_points());
     mesh->assign_material_properties(material);
     mesh->compute_stresses();
-    mesh->compute_volumes();
 
     //! Write material points and stresses
     io->write_coordinates(mesh->coordinates());
     io->write_stresses(mesh->stress());
-    io->write_volumes(mesh->volumes());
+    io->write_volumes(mesh->calculate_volumes());
 
   } catch (TCLAP::ArgException& except) {  // catch any exceptions
     std::cerr << "Unhandled command line argument" << except.error()

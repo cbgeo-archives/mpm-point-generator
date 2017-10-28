@@ -180,9 +180,8 @@ void GMSH<Tdim, Tvertices>::store_element_vertices() {
     //! Iterate through the vertices to get coordinates depending on the element
     for (unsigned j = 0; j < Tvertices; ++j) {
       //! Get the vertex wanted from the id
-
       const auto vertex_id = element->vertex_id(j);
-
+      //! Get the coordinates for the required vertex idz
       auto verticesfind = vertices_.find(vertex_id);
 
       //! For each vertex, store the coordinates

@@ -176,11 +176,8 @@ void IO<Tdim>::write_volumes(const std::map<unsigned, double>& volumes) {
     //! Write the total number of vertices generated
     volume_file << volumes.size() << "\n";
 
-    //! Stresses in Voigt Notation
-    //! $\sigma_{xx}$ $\sigma_{yy}$ $\sigma_{zz}$
-    //! $\tau_{yz}$ $\tau_{zx}$ $\tau_{xy}$
+    //! write element id and volume
     for (const auto& volume : volumes) {
-      // volume_file.setf(std::ios::fixed, std::ios::floatfield);
       volume_file << id << '\t' << volume.second;
       volume_file << "\n";
       ++id;

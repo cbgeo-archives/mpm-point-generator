@@ -59,22 +59,20 @@ void Mesh<Tdim, Tvertices>::compute_stresses() {
 //! Compute initial volume of material points
 //! \tparam Tdim Dimension of the mesh
 //! \tparam Tvertices Number of vertices in an element
+
 template <unsigned Tdim, unsigned Tvertices>
-void Mesh<Tdim, Tvertices>::compute_volumes() {
+std::map<unsigned, double> Mesh<Tdim, Tvertices>::calculate_volumes() {
 
-  unsigned arrayposition = 0;
-
-  double volume = 0;
-  std::array<double, Tdim> volumearray;
+  std::map<unsigned, double> volumes;
 
   for (const auto& element : elements_) {
 
     unsigned id = element->id();
 
-    volumes_.insert(std::make_pair<unsigned, double>(
+    volumes.insert(std::make_pair<unsigned, double>(
         static_cast<int>(id),
         static_cast<double>(element->calculate_volume())));
   }
 
-  std::cout << "Number of Volumes: " << volumes_.size() << '\n';
+  return volumes;
 }
