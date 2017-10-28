@@ -50,9 +50,13 @@ class IO {
 
   void write_volumes(const std::map<unsigned, double>& volumes);
 
-  //! Write .vtk files for iinitial stresses (include coordinates as well)
+  //! Write .vtk files for initial stresses (include coordinates as well)
   void write_vtk_stresses(const std::vector<Eigen::VectorXd>& coordinates,
                           const std::vector<Eigen::VectorXd>& stresses);
+
+  //! Write .vtk files for mesh
+  void write_vtk_mesh(const std::vector<Eigen::VectorXd>& vertices,
+                      const std::vector<Eigen::VectorXd>& elements);
 
  private:
   //! Input directory
@@ -78,6 +82,9 @@ class IO {
 
   //! .vtk filename of material point stresses
   boost::filesystem::path stress_vtk_filename_;
+
+  //! .vtk filename of Mesh
+  boost::filesystem::path mesh_vtk_filename_;
 
   //! Number of gauss points per coordinate
   unsigned ngauss_points_{0};

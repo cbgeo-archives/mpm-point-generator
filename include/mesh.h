@@ -37,6 +37,12 @@ class Mesh {
   //! Return a vector of stresses
   std::vector<Eigen::VectorXd> stress();
 
+  //! Return a vector of vertices of the mesh
+  std::vector<Eigen::VectorXd> vertices();
+
+  //! Return a vector of vertice number of element
+  std::vector<Eigen::VectorXd> elements();
+
   //! Get material properties from json object
   void assign_material_properties(
       const std::shared_ptr<MaterialProperties>& material);

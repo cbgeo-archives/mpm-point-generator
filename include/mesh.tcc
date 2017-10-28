@@ -32,6 +32,37 @@ std::vector<Eigen::VectorXd> Mesh<Tdim, Tvertices>::stress() {
   return stresses;
 }
 
+//! Return a vector of vertice coordinates
+//! \tparam Tdim Dimension of the mesh
+//! \tparam Tvertices Number of vertices in an element
+template <unsigned Tdim, unsigned Tvertices>
+std::vector<Eigen::VectorXd> Mesh<Tdim, Tvertices>::vertices() {
+
+  std::vector<Eigen::VectorXd> vertices;
+
+  // Iterate over the map of vertices_
+  for (std::map<unsigned, Eigen::VectorXd>::iterator it = vertices_.begin();
+       it != vertices_.end(); ++it)
+    vertices.emplace_back(it->second);
+
+  return vertices;
+}
+
+//! Return a vector of elements containing vertices number
+//! \tparam Tdim Dimension of the mesh
+//! \tparam Tvertices Number of vertices in an element
+template <unsigned Tdim, unsigned Tvertices>
+std::vector<Eigen::VectorXd> Mesh<Tdim, Tvertices>::elements() {
+
+  std::vector<Eigen::VectorXd> elements;
+
+  // Iterate over the elements_
+  for (const auto& element : elements_) {
+    elements.emplace_back(element->vertices());
+  }
+  return elements;
+}
+
 //! Assign material properties to MaterialPoints
 //! \tparam Tdim Dimension of the mesh
 //! \tparam Tvertices Number of vertices in an element

@@ -55,6 +55,7 @@ IO<Tdim>::IO(const std::string& file_directory, const std::string& json_file)
 
   //! Make .vtk output file name
   stress_vtk_filename_ = output_file("initial_stresses", ".vtk");
+  mesh_vtk_filename_ = output_file("mesh", ".vtk");
 }
 
 //! \brief Write coordinates of material points
@@ -193,8 +194,8 @@ void IO<Tdim>::write_volumes(const std::map<unsigned, double>& volumes) {
   std::cout << "Wrote Volumes \n";
 }
 
-//! \brief Output .vtk files for viewing
-//! \details Write mesh, material points coordinates and initial stresses
+//! \brief Output .vtk files for viewing material points
+//! \details Write material points coordinates and initial stresses
 //! \tparam Tdim dimension
 template <unsigned Tdim>
 void IO<Tdim>::write_vtk_stresses(
@@ -214,7 +215,7 @@ void IO<Tdim>::write_vtk_stresses(
     std::cerr << "Vector size of coordinates and stresses do not match\n";
   }
 
-  std::cout << ".vtk initial stresses will be stored in: "
+  std::cout << "output .vtk file for initial stresses will be stored in: "
             << stress_vtk_filename_.string() << "\n";
 
   //! Output stress file
@@ -223,7 +224,7 @@ void IO<Tdim>::write_vtk_stresses(
   //! Write .vtk file
   if (stress_vtk_file.is_open()) {
     stress_vtk_file << "# vtk DataFile Version 2.0\n";
-    stress_vtk_file << "test grain\n";
+    stress_vtk_file << "MPM_POINT_GENERATOR: Initial Stresses\n";
     stress_vtk_file << "ASCII\n";
     stress_vtk_file << "DATASET UNSTRUCTURED_GRID\n";
 
@@ -248,11 +249,72 @@ void IO<Tdim>::write_vtk_stresses(
       if (Tdim == 2)
         stress_vtk_file << stress[0] << ' ' << stress[1] << " 0.\n";
       else if (Tdim == 3)
-        stress_vtk_file << stress[0] << ' ' << stress[1] << ' ' << stress[2] << '\n';
-      stress_vtk_file << '\n';
+        stress_vtk_file << stress[0] << ' ' << stress[1] << ' ' << stress[2]
+                        << '\n';
     }
-    
+
     stress_vtk_file.close();
   }
   std::cout << "Wrote initial stresses vtk file\n";
+}
+
+//! \brief Output .vtk files for viewing mesh
+//! \details Write mesh coordinates and elements
+//! \tparam Tdim dimension
+template <unsigned Tdim>
+void IO<Tdim>::write_vtk_mesh(const std::vector<Eigen::VectorXd>& vertices,
+                              const std::vector<Eigen::VectorXd>& elements) {
+
+  unsigned num_vertices, num_elements;
+  num_vertices = vertices.size();
+  num_elements = elements.size();
+
+  //! Assign element_type from VTK documentation
+  //! 5 - Triangle (3 nodes)
+  //! 9 - Quadrangle (4 nodes)
+  //! 10 - Tetrahedron (4 nodes)
+  //! 12 - Hexahedron (8 nodes)
+  //! For more informtion on element types, visit:
+  //! https://www.vtk.org/wp-content/uploads/2015/04/file-formats.pdf
+  unsigned element_type = 12;
+  unsigned nodes_in_element = 8;
+
+  std::cout << "output .vtk file for mesh will be stored in: "
+            << mesh_vtk_filename_.string() << "\n";
+
+  //! Output stress file
+  std::fstream mesh_vtk_file;
+  mesh_vtk_file.open(mesh_vtk_filename_.string(), std::ios::out);
+  //! Write .vtk file
+  if (mesh_vtk_file.is_open()) {
+    mesh_vtk_file << "# vtk DataFile Version 2.0\n";
+    mesh_vtk_file << "MPM_POINT_GENERATOR: Mesh\n";
+    mesh_vtk_file << "ASCII\n";
+    mesh_vtk_file << "DATASET UNSTRUCTURED_GRID\n";
+
+    mesh_vtk_file << "POINTS " << num_vertices << " float\n";
+    for (auto const& vertice : vertices) {
+      for (unsigned i = 0; i < vertice.size(); ++i) {
+        mesh_vtk_file << vertice[i] << ' ';
+      }
+      mesh_vtk_file << '\n';
+    }
+
+    // Note minus 1 is because element starts from 1 instead of 0
+    mesh_vtk_file << "CELLS " << num_elements << " "
+                  << num_elements * (nodes_in_element + 1) << '\n';
+    for (auto const& element : elements) {
+      mesh_vtk_file << nodes_in_element << ' ';
+      for (unsigned i = 0; i < element.size(); ++i)
+        mesh_vtk_file << element[i] - 1 << ' ';
+      mesh_vtk_file << '\n';
+    }
+
+    mesh_vtk_file << "CELL_TYPES " << num_elements << '\n';
+    for (unsigned i = 0; i < num_elements; i++)
+      mesh_vtk_file << element_type << '\n';
+
+    mesh_vtk_file.close();
+  }
+  std::cout << "Wrote mesh vtk file\n";
 }
