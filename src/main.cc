@@ -60,10 +60,13 @@ int main(int argc, char** argv) {
     mesh->compute_stresses();
     mesh->compute_volumes();
 
-    //! Write material points and stresses
+    //! Write output files for mpm simulation
     io->write_coordinates(mesh->coordinates());
     io->write_stresses(mesh->stress());
     io->write_volumes(mesh->volumes());
+
+    //! Write .vtk output files for viewing
+    io->write_vtk_stresses(mesh->coordinates(), mesh->stress());
 
   } catch (TCLAP::ArgException& except) {  // catch any exceptions
     std::cerr << "Unhandled command line argument" << except.error()

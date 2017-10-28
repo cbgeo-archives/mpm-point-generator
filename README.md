@@ -15,8 +15,9 @@
 
 3. Run mpm `./mpm_point_generator -f /path/ -i json_file_name`
 
-4. To test, run `./mpm_point_generator_test`
-
+4. To test, run the two folloing
+  1. Unit tests: `./mpm_point_generator_unit_test`
+  1. Regression tests: `./mpm_point_generator_regression_test /path/to/meshfile.msh`
 
 ## Usage 
 ```

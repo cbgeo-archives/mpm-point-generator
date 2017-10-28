@@ -52,6 +52,9 @@ IO<Tdim>::IO(const std::string& file_directory, const std::string& json_file)
   material_points_filename_ = output_file("material_points", extension);
   stress_filename_ = output_file("initial_stresses", extension);
   volume_filename_ = output_file("volumes", extension);
+
+  //! Make .vtk output file name
+  stress_vtk_filename_ = output_file("initial_stresses", ".vtk");
 }
 
 //! \brief Write coordinates of material points
@@ -61,7 +64,7 @@ template <unsigned Tdim>
 void IO<Tdim>::write_coordinates(
     const std::vector<Eigen::VectorXd>& coordinates) {
 
-  std::cout << "material_points will be stored in: "
+  std::cout << "material points will be stored in: "
             << material_points_filename_.string() << "\n";
 
   //! Output vertices file
@@ -95,7 +98,7 @@ template <unsigned Tdim>
 void IO<Tdim>::write_stresses(const std::vector<Eigen::VectorXd>& stresses) {
   unsigned id = 0;
 
-  std::cout << "initial_stresses will be stored in: "
+  std::cout << "initial stresses will be stored in: "
             << stress_filename_.string() << "\n";
 
   //! Output stress file
@@ -188,4 +191,68 @@ void IO<Tdim>::write_volumes(const std::map<unsigned, double>& volumes) {
     volume_file.close();
   }
   std::cout << "Wrote Volumes \n";
+}
+
+//! \brief Output .vtk files for viewing
+//! \details Write mesh, material points coordinates and initial stresses
+//! \tparam Tdim dimension
+template <unsigned Tdim>
+void IO<Tdim>::write_vtk_stresses(
+    const std::vector<Eigen::VectorXd>& coordinates,
+    const std::vector<Eigen::VectorXd>& stresses) {
+
+  //! Check number of points match
+  unsigned num_coordinates, num_stresses;
+  unsigned num_points = 0;
+
+  num_coordinates = coordinates.size();
+  num_stresses = stresses.size();
+
+  if (num_coordinates == num_stresses) {
+    num_points = num_coordinates;
+  } else {
+    std::cerr << "Vector size of coordinates and stresses do not match\n";
+  }
+
+  std::cout << ".vtk initial stresses will be stored in: "
+            << stress_vtk_filename_.string() << "\n";
+
+  //! Output stress file
+  std::fstream stress_vtk_file;
+  stress_vtk_file.open(stress_vtk_filename_.string(), std::ios::out);
+  //! Write .vtk file
+  if (stress_vtk_file.is_open()) {
+    stress_vtk_file << "# vtk DataFile Version 2.0\n";
+    stress_vtk_file << "test grain\n";
+    stress_vtk_file << "ASCII\n";
+    stress_vtk_file << "DATASET UNSTRUCTURED_GRID\n";
+
+    stress_vtk_file << "POINTS " << num_points << " float\n";
+    for (auto const& coordinate : coordinates) {
+      for (unsigned i = 0; i < coordinate.size(); ++i) {
+        stress_vtk_file << coordinate[i] << ' ';
+      }
+      stress_vtk_file << '\n';
+    }
+
+    stress_vtk_file << "CELLS " << num_points << " " << 2 * num_points << '\n';
+    for (unsigned i = 0; i < num_points; i++)
+      stress_vtk_file << "1 " << i << '\n';
+
+    stress_vtk_file << "CELL_TYPES " << num_points << '\n';
+    for (unsigned i = 0; i < num_points; i++) stress_vtk_file << "1 " << '\n';
+
+    stress_vtk_file << "POINT_DATA " << num_points << '\n';
+    stress_vtk_file << "VECTORS Stress float\n";
+    for (auto const& stress : stresses) {
+      if (Tdim == 2)
+        stress_vtk_file << stress[0] << ' ' << stress[1] << " 0.\n";
+      else if (Tdim == 3)
+        stress_vtk_file << stress[0] << ' ' << stress[1] << ' ' << stress[2] << '\n';
+      stress_vtk_file << '\n';
+    }
+    
+    stress_vtk_file.close();
+  }
+  std::cout << "Wrote initial stresses vtk file\n";
 }
