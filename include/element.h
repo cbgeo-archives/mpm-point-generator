@@ -62,7 +62,9 @@ inline Eigen::VectorXd shapefn(const std::array<double, 2>& xi) {
 };
 
 //! Element class to hold element vertices id and coordinates
-//! \param[in] element id, vertices id, vertices coordinates
+//! \param[in] element id
+//! \param[in] vertices id
+//! \param[in] coordinates
 class Element {
 
  public:
@@ -73,9 +75,10 @@ class Element {
     vertices_ = vertices;
   }
 
-  //! Return volume of element
+  //! Calculate volume of element
   double calculate_volume();
 
+  //! Pass element vertices coordinates from mesh to element class
   //!\param[in] coordinates of all element vertices
   void coordinates(const std::vector<Eigen::Vector3d>& coordinates) {
 
