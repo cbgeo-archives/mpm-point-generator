@@ -47,6 +47,9 @@ class Mesh {
   //! Return the total number of vertices
   unsigned nvertices() const { return nvertices_; }
 
+  //!\retval Map of element volume and id
+  std::map<unsigned, double> calculate_volumes();
+
  protected:
   //! Total number of vertices
   unsigned nvertices_{std::numeric_limits<unsigned>::max()};
@@ -57,8 +60,8 @@ class Mesh {
   //! Map to store id and vertices coordinates
   std::map<unsigned, Eigen::VectorXd> vertices_;
 
-  //! Map to store element id and vertices id
-  std::map<unsigned, Eigen::VectorXd> elements_;
+  //! Vector to store element id and vertices id
+  std::vector<std::unique_ptr<Element>> elements_;
 
   //! Map to store element id and vertices coordinates
   std::map<unsigned, Eigen::VectorXd> elementcoordinates_;

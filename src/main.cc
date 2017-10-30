@@ -62,9 +62,11 @@ int main(int argc, char** argv) {
     //! Write material points and stresses
     io->write_coordinates(mesh->coordinates());
     io->write_stresses(mesh->stress());
+    io->write_volumes(mesh->calculate_volumes());
 
   } catch (TCLAP::ArgException& except) {  // catch any exceptions
-    std::cerr << "Unhandled command line argument" << except.error() << except.argId();
+    std::cerr << "Unhandled command line argument" << except.error()
+              << except.argId();
   } catch (std::exception& except) {
     std::cout << "Caught exception: " << except.what() << '\n';
   }

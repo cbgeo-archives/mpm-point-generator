@@ -51,6 +51,7 @@ IO<Tdim>::IO(const std::string& file_directory, const std::string& json_file)
   std::string extension = ".txt";
   material_points_filename_ = output_file("material_points", extension);
   stress_filename_ = output_file("initial_stresses", extension);
+  volume_filename_ = output_file("volumes", extension);
 }
 
 //! \brief Write coordinates of material points
@@ -157,4 +158,31 @@ boost::filesystem::path IO<Tdim>::output_file(
   //! Create full path with working directory path and file name
   boost::filesystem::path file_path(path + file_name.str().c_str());
   return file_path;
+}
+
+template <unsigned Tdim>
+void IO<Tdim>::write_volumes(const std::map<unsigned, double>& volumes) {
+
+  unsigned id = 0;
+
+  std::cout << "initial volumes will be stored in: "
+            << volume_filename_.string() << "\n";
+
+  //! Output stress file
+  std::fstream volume_file;
+  volume_file.open(volume_filename_.string(), std::ios::out);
+
+  if (volume_file.is_open()) {
+    //! Write the total number of vertices generated
+    volume_file << volumes.size() << "\n";
+
+    //! write element id and volume
+    for (const auto& volume : volumes) {
+      volume_file << id << '\t' << volume.second;
+      volume_file << "\n";
+      ++id;
+    }
+    volume_file.close();
+  }
+  std::cout << "Wrote Volumes \n";
 }

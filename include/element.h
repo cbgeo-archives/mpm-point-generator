@@ -61,4 +61,55 @@ inline Eigen::VectorXd shapefn(const std::array<double, 2>& xi) {
 }
 };
 
+//! Element class to hold element vertices id and coordinates
+//! \param[in] element id
+//! \param[in] vertices id
+//! \param[in] coordinates
+class Element {
+
+ public:
+  //! constructor for Element class
+  //! \param[in] element id and vertices id's
+  Element(unsigned id, const Eigen::VectorXd& vertices) : id_{id} {
+
+    vertices_ = vertices;
+  }
+
+  //! Calculate volume of element
+  double calculate_volume();
+
+  //! Pass element vertices coordinates from mesh to element class
+  //!\param[in] coordinates of all element vertices
+  void coordinates(const std::vector<Eigen::Vector3d>& coordinates) {
+
+    coordinates_ = coordinates;
+  }
+
+  //! Return element id
+  unsigned id() const { return id_; }
+
+  //! Return coordinates of a vertex
+  Eigen::Vector3d vertex_coordinates(unsigned vid) const {
+    return coordinates_.at(vid);
+  }
+
+  //! Return coordinates of the point
+  Eigen::VectorXd vertices() const { return vertices_; }
+
+  //! return id of an element vertex
+  unsigned vertex_id(unsigned vid) const { return vertices_[vid]; }
+
+ private:
+  //! element id
+  unsigned id_;
+
+  //! vector of element vertices id's
+  Eigen::VectorXd vertices_;
+
+  //! vector of element vertices coordinates
+  std::vector<Eigen::Vector3d> coordinates_;
+};
+
+#include "element.cc"
+
 #endif  // MPM_ELEMENT_H

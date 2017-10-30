@@ -55,9 +55,6 @@ class GMSH : public Mesh<Tdim, Tvertices> {
   //! Map to store element id and vertices id
   using Mesh<Tdim, Tvertices>::elements_;
 
-  //! Map to store element id and vertices coordinates
-  using Mesh<Tdim, Tvertices>::elementcoordinates_;
-
   //! Vector of material points
   using Mesh<Tdim, Tvertices>::materialpoints_;
 };

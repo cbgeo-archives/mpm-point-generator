@@ -1,0 +1,9 @@
+{
+	"mesh_file" : "cube.msh",
+	"results_path" : "results/",
+	"ngauss_points" : 1,
+	"material_properties" : {
+		"density" : 2400.0,
+		"k0" : 0.5
+	}
+}
