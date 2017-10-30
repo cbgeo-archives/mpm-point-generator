@@ -23,10 +23,20 @@ IO<Tdim>::IO(const std::string& file_directory, const std::string& json_file)
   //! Store json object as private variable
   //! Read json file and store to private variables
   json_ = json::parse(inputFile);
-  mesh_filename_ =
-      file_directory_ + json_["mesh_file"].template get<std::string>();
+
+  //! Store json object for material properties
+  //! IO handles null json object by making empty json object
+  //! MaterialProperties class could handle empty json object
+  if (!json_["material_properties"].is_null()) {
+    json_material_properties_ = json_["material_properties"];
+  } else {
+    std::cout << "No material properties specified, using default\n";
+    json_material_properties_.clear();
+  }
 
   //! Check if mesh file is present
+  mesh_filename_ =
+      file_directory_ + json_["mesh_file"].template get<std::string>();
   std::ifstream meshfile;
   meshfile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
   try {

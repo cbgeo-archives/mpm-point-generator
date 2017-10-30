@@ -57,7 +57,6 @@ class GMSH : public Mesh<Tdim, Tvertices> {
 
   //! Vector of material points
   using Mesh<Tdim, Tvertices>::materialpoints_;
-
 };
 
 #include "gmsh.tcc"

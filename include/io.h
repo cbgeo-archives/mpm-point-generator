@@ -39,7 +39,7 @@ class IO {
   unsigned ngauss_points() const { return ngauss_points_; }
 
   //! Return json object for material properties
-  json material_properties() const { return json_["material_properties"]; }
+  json material_properties() const { return json_material_properties_; }
 
   //! Return mesh file name
   std::string mesh_file_name() const { return mesh_filename_; }
@@ -68,6 +68,9 @@ class IO {
 
   //! Input json object
   json json_;
+
+  //! Material properties json object
+  json json_material_properties_;
 
   //! Input mesh file name
   std::string mesh_filename_;

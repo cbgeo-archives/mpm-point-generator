@@ -5,10 +5,9 @@
 #include <eigen3/Eigen/Dense>
 
 #include "catch.hpp"
-#include "material_points.h"
 #include "gmsh.h"
+#include "material_points.h"
 #include "regression_global.h"
-
 
 //! Alias for JSON
 #include "json.hpp"
@@ -22,15 +21,13 @@ TEST_CASE("GMSH is checked in 3D", "[GMSH][3D]") {
   const double tolerance = 1.E-12;
 
   //! Make json object with material in it
-  json material_json= {
-    {"density", 2000},
-    {"k0", 0.5} 
-  };
-  
+  json material_json = {{"density", 2000}, {"k0", 0.5}};
+
   //! Make pointers to mesh and MaterialProperties
-  auto mesh = std::unique_ptr<Mesh<3, 8>> (new GMSH<3, 8>());
-  auto material = std::shared_ptr<MaterialProperties> (new MaterialProperties(material_json));
-  
+  auto mesh = std::unique_ptr<Mesh<3, 8>>(new GMSH<3, 8>());
+  auto material = std::shared_ptr<MaterialProperties>(
+      new MaterialProperties(material_json));
+
   mesh->read_mesh(filename);
   mesh->compute_material_points(1);
   mesh->assign_material_properties(material);
