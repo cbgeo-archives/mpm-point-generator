@@ -51,13 +51,11 @@ class IO {
   //! Write initial element volumes
   void write_volumes(const std::map<unsigned, double>& volumes);
 
-  //! Write .vtk files for initial stresses (include coordinates as well)
-  void write_vtk_stresses(const std::vector<Eigen::VectorXd>& coordinates,
-                          const std::vector<Eigen::VectorXd>& stresses);
+  //! Return .vtk file for stress
+  boost::filesystem::path stress_vtk_filename() { return stress_vtk_filename_; }
 
-  //! Write .vtk files for mesh
-  void write_vtk_mesh(const std::vector<Eigen::VectorXd>& vertices,
-                      const std::vector<Eigen::VectorXd>& elements);
+  //! Return .vtk file for mesh
+  boost::filesystem::path mesh_vtk_filename() { return mesh_vtk_filename_; }
 
  private:
   //! Input directory
