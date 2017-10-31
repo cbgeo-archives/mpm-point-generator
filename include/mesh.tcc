@@ -81,6 +81,7 @@ std::map<unsigned, double> Mesh<Tdim, Tvertices>::calculate_volumes() {
 //! \details Write material points coordinates and initial stresses
 //! \tparam Tdim dimension
 //! \tparam Tvertices Number of vertices in an element
+//! \param[in] stress_vtk_filename the directory and filename of output
 template <unsigned Tdim, unsigned Tvertices>
 void Mesh<Tdim, Tvertices>::write_vtk_stresses(
     boost::filesystem::path stress_vtk_filename) {
@@ -144,6 +145,7 @@ void Mesh<Tdim, Tvertices>::write_vtk_stresses(
 //! \details Write mesh coordinates and elements
 //! \tparam Tdim dimension
 //! \tparam Tvertices Number of vertices in an element
+//! \param[in] mesh_vtk_filename the directory and filename of output
 template <unsigned Tdim, unsigned Tvertices>
 void Mesh<Tdim, Tvertices>::write_vtk_mesh(
     boost::filesystem::path mesh_vtk_filename) {
