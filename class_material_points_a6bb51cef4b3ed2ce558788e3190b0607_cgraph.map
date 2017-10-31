@@ -1,0 +1,5 @@
+<map id="MaterialPoints::assign_material_properties" name="MaterialPoints::assign_material_properties">
+<area shape="rect" id="node2" href="$class_material_points.html#a626e80ce2cba45ecefbf02669bbce93f" title="Compute stress. " alt="" coords="213,5,375,47"/>
+<area shape="rect" id="node3" href="$class_material_points.html#a436ad39c55462265a267c236d5ac08ba" title="Return vector of coordinates. " alt="" coords="204,71,384,98"/>
+<area shape="rect" id="node4" href="$class_material_points.html#ae76e3a68aeca9cfe9b7f61ee548e7def" title="Return vector of stresses. " alt="" coords="219,122,369,149"/>
+</map>
