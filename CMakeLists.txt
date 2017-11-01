@@ -70,6 +70,7 @@ add_executable(mpm_point_generator_unit_test ${unit_test_src})
 SET(regression_test_src
   ${PROJECT_SOURCE_DIR}/tests/regression_test.cc
   ${PROJECT_SOURCE_DIR}/tests/gmsh_test.cc
+  ${PROJECT_SOURCE_DIR}/src/material_properties.cc
 )
 add_executable(mpm_point_generator_regression_test ${regression_test_src})
 
