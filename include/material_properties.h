@@ -29,6 +29,4 @@ class MaterialProperties {
   double k0_{std::numeric_limits<unsigned>::max()};
 };
 
-#include <material_properties.tcc>
-
 #endif  // MPM_MESH_MATERIAL_PROPERTIES_H_

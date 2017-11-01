@@ -7,42 +7,11 @@
 #include "gmsh.h"
 #include "io.h"
 
-int main(int argc, char** argv) {
+int main(const int argc, const char** argv) {
   try {
-    // Set title
-    TCLAP::CmdLine cmd("Material Point Generator (CB-Geo)", ' ', "0.0.1");
-
-    // Define dimension
-    /*TCLAP::ValueArg<unsigned int> dim_arg(
-        "d", "dimension", "Problem dimension", true, 3, "Dimension");
-    cmd.add(dim_arg);*/
-
-    // Define working directory
-    TCLAP::ValueArg<std::string> cwd_arg("f", "working_dir",
-                                         "Current working folder", true, "",
-                                         "Working_folder");
-    cmd.add(cwd_arg);
-
-    // Define input file
-    TCLAP::ValueArg<std::string> input_arg("i", "input_file",
-                                           "Input JSON file [cube.json]", false,
-                                           "cube.json", "input_file");
-    cmd.add(input_arg);
-
-    // Parse arguments
-    cmd.parse(argc, argv);
-
-    // Dimension
-    // dimension_ = dim_arg.getValue();
-
-    // Set working directory
-    auto working_dir = cwd_arg.getValue();
-
-    // Set input file if the optional argument is not empty
-    auto input_file = input_arg.getValue();
 
     //! IO
-    std::unique_ptr<IO<3>> io(new IO<3>(working_dir, input_file));
+    std::unique_ptr<IO> io(new IO(argc, argv));
 
     //! Mesh
     std::unique_ptr<Mesh<3, 8>> mesh(new GMSH<3, 8>());

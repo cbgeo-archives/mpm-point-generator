@@ -8,6 +8,7 @@
 #include <utility>
 #include <vector>
 
+#include "tclap/CmdLine.h"
 #include <boost/filesystem.hpp>
 #include <eigen3/Eigen/Dense>
 
@@ -19,15 +20,13 @@
 using json = nlohmann::json;
 
 //! \brief Input/Output handler
-//! \tparam Tdim dimension
-template <unsigned Tdim>
 class IO {
  public:
   //! Constructor with json input file
   //! Get mesh_filename and output_directory
   //! \param[in] input directory
   //! \param[in] json input file name
-  explicit IO(const std::string& file_directory, const std::string& json_file);
+  explicit IO(const int& argc, const char**& argv);
 
   //! Write coordinates
   void write_coordinates(const std::vector<Eigen::VectorXd>& coordinates);
@@ -53,10 +52,7 @@ class IO {
 
  private:
   //! Input directory
-  std::string file_directory_;
-
-  //! Input json path file name
-  std::string json_filename_;
+  std::string working_dir_;
 
   //! Input json object
   json json_;
@@ -69,8 +65,9 @@ class IO {
 
   //! Number of gauss points per coordinate
   unsigned ngauss_points_{0};
+
+  //! Command line arguments for constructor
+  const int argc_;
+  const char** argv_;
 };
-
-#include "io.tcc"
-
 #endif  // MPM_POINT_GEN_IO_H_
