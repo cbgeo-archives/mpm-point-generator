@@ -29,12 +29,6 @@ class IO {
   //! \param[in] json input file name
   explicit IO(const std::string& file_directory, const std::string& json_file);
 
-  //! Write coordinates
-  void write_coordinates(const std::vector<Eigen::VectorXd>& coordinates);
-
-  //! Write stresses
-  void write_stresses(const std::vector<Eigen::VectorXd>& stresses);
-
   //! Return the number of points per coordinate
   unsigned ngauss_points() const { return ngauss_points_; }
 
@@ -47,9 +41,6 @@ class IO {
   //! Create output file names
   boost::filesystem::path output_file(const std::string& attribute,
                                       const std::string& file_extension);
-
-  //! Write initial element volumes
-  void write_volumes(const std::map<unsigned, double>& volumes);
 
  private:
   //! Input directory

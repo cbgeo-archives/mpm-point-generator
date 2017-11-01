@@ -49,6 +49,9 @@ class GMSH : public Mesh<Tdim, Tvertices> {
   //! Number of gauss points per coordinate
   using Mesh<Tdim, Tvertices>::ngauss_points_;
 
+  //! Total number of material points generated
+  using Mesh<Tdim, Tvertices>::npoints_;
+
   //! Map to store id and vertices coordinates
   using Mesh<Tdim, Tvertices>::vertices_;
 

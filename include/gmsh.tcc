@@ -272,10 +272,8 @@ void GMSH<Tdim, Tvertices>::compute_material_points(unsigned ngauss_points) {
   }
 
   //! Find number of material points generated
-  unsigned nmaterialpoints = 0;
-
   for (const auto& materialpoint : materialpoints_)
-    nmaterialpoints += materialpoint->coordinates().size();
+    npoints_ += materialpoint->coordinates().size();
 
-  std::cout << "Number of Material Points: " << nmaterialpoints << '\n';
+  std::cout << "Number of Material Points: " << npoints_ << '\n';
 }
