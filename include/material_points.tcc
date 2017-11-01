@@ -51,23 +51,24 @@ void MaterialPoints<Tdim>::compute_stress() {
   //! [2D], y is the vertical direction
   //! [3D], z is the vertical direction
   for (const auto& point : points_) {
-    if (material_properties_ != nullptr) {
 
-      const double height = point->coordinates()[Tdim - 1];
+    //! Obtain density and k0 from material properties;
+    const double density = material_properties_->density();
+    const double k0 = material_properties_->k0();
 
-      Eigen::VectorXd stress(Tdim * 2);
-      stress.setZero();
-      const auto coordinates = point->coordinates();
-      stress[Tdim - 1] =
-          gravity * (-(max_height - height)) * material_properties_->density();
+    //! Compute the height of the point
+    const double height = point->coordinates()[Tdim - 1];
 
-      for (unsigned i = 2; i <= Tdim; ++i) {
-        stress[Tdim - i] = stress[Tdim - 1] * material_properties_->k0();
-      }
+    //! Compute and store stresses
+    Eigen::VectorXd stress(Tdim * 2);
+    stress.setZero();
+    const auto coordinates = point->coordinates();
+    stress[Tdim - 1] = gravity * (-(max_height - height)) * density;
 
-      point->stress(stress);
-    } else {
-      std::cerr << "No material properties found.\n";
+    for (unsigned i = 2; i <= Tdim; ++i) {
+      stress[Tdim - i] = stress[Tdim - 1] * k0;
     }
+
+    point->stress(stress);
   }
 }

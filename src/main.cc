@@ -64,6 +64,10 @@ int main(int argc, char** argv) {
     io->write_stresses(mesh->stress());
     io->write_volumes(mesh->calculate_volumes());
 
+    //! Write .vtk output files for viewing
+    mesh->write_vtk_stresses(io->output_file("initial_stresses", ".vtk"));
+    mesh->write_vtk_mesh(io->output_file("mesh", ".vtk"));
+
   } catch (TCLAP::ArgException& except) {  // catch any exceptions
     std::cerr << "Unhandled command line argument" << except.error()
               << except.argId();

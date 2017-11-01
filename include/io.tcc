@@ -23,10 +23,20 @@ IO<Tdim>::IO(const std::string& file_directory, const std::string& json_file)
   //! Store json object as private variable
   //! Read json file and store to private variables
   json_ = json::parse(inputFile);
-  mesh_filename_ =
-      file_directory_ + json_["mesh_file"].template get<std::string>();
+
+  //! Store json object for material properties
+  //! IO handles null json object by making empty json object
+  //! MaterialProperties class could handle empty json object
+  if (!json_["material_properties"].is_null()) {
+    json_material_properties_ = json_["material_properties"];
+  } else {
+    std::cout << "No material properties specified, using default\n";
+    json_material_properties_.clear();
+  }
 
   //! Check if mesh file is present
+  mesh_filename_ =
+      file_directory_ + json_["mesh_file"].template get<std::string>();
   std::ifstream meshfile;
   meshfile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
   try {
@@ -46,12 +56,6 @@ IO<Tdim>::IO(const std::string& file_directory, const std::string& json_file)
     std::cout << "ngauss_points not specified. Using a default value of 1\n";
     ngauss_points_ = 1;
   }
-
-  //! Make material point and stresses output file name
-  std::string extension = ".txt";
-  material_points_filename_ = output_file("material_points", extension);
-  stress_filename_ = output_file("initial_stresses", extension);
-  volume_filename_ = output_file("volumes", extension);
 }
 
 //! \brief Write coordinates of material points
@@ -61,12 +65,13 @@ template <unsigned Tdim>
 void IO<Tdim>::write_coordinates(
     const std::vector<Eigen::VectorXd>& coordinates) {
 
-  std::cout << "material_points will be stored in: "
-            << material_points_filename_.string() << "\n";
+  const auto filename = this->output_file("material_points", ".txt").string();
+  std::cout << "material points will be stored in: "
+            << filename << "\n";
 
   //! Output vertices file
   std::fstream material_points_file;
-  material_points_file.open(material_points_filename_.string(), std::ios::out);
+  material_points_file.open(filename, std::ios::out);
 
   if (material_points_file.is_open()) {
     //! Write the total number of vertices
@@ -95,12 +100,14 @@ template <unsigned Tdim>
 void IO<Tdim>::write_stresses(const std::vector<Eigen::VectorXd>& stresses) {
   unsigned id = 0;
 
-  std::cout << "initial_stresses will be stored in: "
-            << stress_filename_.string() << "\n";
+  const auto filename = this->output_file("initial_stresses", ".txt").string();
+
+  std::cout << "initial stresses will be stored in: "
+            << filename << "\n";
 
   //! Output stress file
   std::fstream stress_file;
-  stress_file.open(stress_filename_.string(), std::ios::out);
+  stress_file.open(filename, std::ios::out);
 
   if (stress_file.is_open()) {
     //! Write the total number of vertices generated
@@ -160,17 +167,21 @@ boost::filesystem::path IO<Tdim>::output_file(
   return file_path;
 }
 
+//! \brief Write volumes
+//! \param[in] volumes Map of point id and the corresponding volume
+//! \tparam Tdim dimension
 template <unsigned Tdim>
 void IO<Tdim>::write_volumes(const std::map<unsigned, double>& volumes) {
 
   unsigned id = 0;
 
+  const auto filename = this->output_file("volumes", ".txt").string();
   std::cout << "initial volumes will be stored in: "
-            << volume_filename_.string() << "\n";
+            << filename << "\n";
 
   //! Output stress file
   std::fstream volume_file;
-  volume_file.open(volume_filename_.string(), std::ios::out);
+  volume_file.open(filename, std::ios::out);
 
   if (volume_file.is_open()) {
     //! Write the total number of vertices generated

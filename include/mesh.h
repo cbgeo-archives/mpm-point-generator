@@ -9,6 +9,7 @@
 #include <utility>
 #include <vector>
 
+#include <boost/filesystem.hpp>
 #include <eigen3/Eigen/Dense>
 
 #include "element.h"
@@ -49,6 +50,12 @@ class Mesh {
 
   //!\retval Map of element volume and id
   std::map<unsigned, double> calculate_volumes();
+
+  //! Write .vtk files for initial stresses (include coordinates as well)
+  void write_vtk_stresses(boost::filesystem::path stress_vtk_filename);
+
+  //! Write .vtk files for mesh
+  void write_vtk_mesh(boost::filesystem::path mesh_vtk_filename);
 
  protected:
   //! Total number of vertices

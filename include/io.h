@@ -39,7 +39,7 @@ class IO {
   unsigned ngauss_points() const { return ngauss_points_; }
 
   //! Return json object for material properties
-  json material_properties() const { return json_["material_properties"]; }
+  json material_properties() const { return json_material_properties_; }
 
   //! Return mesh file name
   std::string mesh_file_name() const { return mesh_filename_; }
@@ -61,22 +61,14 @@ class IO {
   //! Input json object
   json json_;
 
+  //! Material properties json object
+  json json_material_properties_;
+
   //! Input mesh file name
   std::string mesh_filename_;
 
-  //! File name of material points
-  boost::filesystem::path material_points_filename_;
-
-  //! Filename of material point stresses
-  boost::filesystem::path stress_filename_;
-
-  //! Filename of material point stresses
-  boost::filesystem::path volume_filename_;
-
   //! Number of gauss points per coordinate
   unsigned ngauss_points_{0};
-
-
 };
 
 #include "io.tcc"

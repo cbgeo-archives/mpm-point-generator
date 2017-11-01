@@ -33,8 +33,9 @@ double Element::calculate_volume() {
       h(coordinates_.at(4)[0], coordinates_.at(4)[1], coordinates_.at(4)[2]);
 
   const double volume =
-      (1.0 / 12) * (a - g).dot(((b - d).cross(c - a)) + ((e - b).cross(f - a)) +
-                               ((d - e).cross(h - a))) +
+      (1.0 / 12) *
+          (a - g).dot(((b - d).cross(c - a)) + ((e - b).cross(f - a)) +
+                      ((d - e).cross(h - a))) +
       (1.0 / 12) *
           (b - g).dot(((b - d).cross(c - a)) + ((c - g).cross(c - f))) +
       (1.0 / 12) *

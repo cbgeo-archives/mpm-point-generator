@@ -191,7 +191,7 @@ void GMSH<Tdim, Tvertices>::store_element_vertices() {
     element->coordinates(verticescoordinates);
   }
   std::cout
-      << "The coordinates for vertices of each element have been stored.\n";
+      << "The coordinates for vertices of each element have been stored\n";
 }
 
 //! Compute material points based on the centroid
