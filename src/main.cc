@@ -7,7 +7,7 @@
 #include "gmsh.h"
 #include "io.h"
 
-int main(const int argc, const char** argv) {
+int main(int argc, char** argv) {
   try {
 
     //! IO

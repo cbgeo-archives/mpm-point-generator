@@ -26,7 +26,7 @@ class IO {
   //! Get mesh_filename and output_directory
   //! \param[in] input directory
   //! \param[in] json input file name
-  explicit IO(const int& argc, const char**& argv);
+  explicit IO(int arg_c, char** arg_v);
 
   //! Write coordinates
   void write_coordinates(const std::vector<Eigen::VectorXd>& coordinates);
@@ -65,9 +65,5 @@ class IO {
 
   //! Number of gauss points per coordinate
   unsigned ngauss_points_{0};
-
-  //! Command line arguments for constructor
-  const int argc_;
-  const char** argv_;
 };
 #endif  // MPM_POINT_GEN_IO_H_
