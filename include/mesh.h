@@ -39,9 +39,6 @@ class Mesh {
   //! Compute stress of the material points
   void compute_stresses();
 
-  //!\retval Map of element volume and id
-  void calculate_volumes();
-
   //! Return the total number of vertices
   unsigned nvertices() const { return nvertices_; }
 
@@ -84,9 +81,6 @@ class Mesh {
 
   //! Map to store element id and vertices coordinates
   std::map<unsigned, Eigen::VectorXd> elementcoordinates_;
-
-  //! Map to store element id and volume of the element
-  std::map<unsigned, double> volumes_;
 
   //! Vector of material points
   std::vector<std::unique_ptr<MaterialPoints<Tdim>>> materialpoints_;

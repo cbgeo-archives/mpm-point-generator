@@ -56,22 +56,6 @@ void Mesh<Tdim, Tvertices>::compute_stresses() {
   }
 }
 
-//! Compute initial volume of material points
-//! \tparam Tdim Dimension of the mesh
-//! \tparam Tvertices Number of vertices in an element
-template <unsigned Tdim, unsigned Tvertices>
-void Mesh<Tdim, Tvertices>::calculate_volumes() {
-
-  for (const auto& element : elements_) {
-
-    unsigned id = element->id();
-
-    volumes_.insert(std::make_pair<unsigned, double>(
-        static_cast<int>(id),
-        static_cast<double>(element->calculate_volume())));
-  }
-}
-
 //! \brief Write coordinates of material points
 //! \details Write point coordinates
 //! \tparam Tdim dimension
@@ -147,7 +131,7 @@ void Mesh<Tdim, Tvertices>::write_stresses(
   std::cout << "Wrote initial stresses\n";
 }
 
-//! \brief Write volumes
+//! \brief Write volumes generated from element
 //! \param[in] volumes Map of point id and the corresponding volume
 //! \tparam Tdim dimension
 template <unsigned Tdim, unsigned Tvertices>
@@ -164,18 +148,18 @@ void Mesh<Tdim, Tvertices>::write_volumes(
   volume_file.open(filename, std::ios::out);
 
   if (volume_file.is_open()) {
-    //! Write the total number of vertices generated
-    volume_file << volumes_.size() << "\n";
 
-    //! write element id and volume
-    for (const auto& volume : volumes_) {
-      volume_file << id << '\t' << volume.second;
-      volume_file << "\n";
+    //! Write the total number of volumes (same as number of material points)
+    volume_file << npoints_ << "\n";
+
+    //! Write element id and volumet
+    for (const auto& element : elements_) {
+      volume_file << id << '\t' << element->calculate_volume() << '\n';
       ++id;
     }
     volume_file.close();
   }
-  std::cout << "Wrote Volumes \n";
+  std::cout << "Wrote volumes\n";
 }
 
 //! \brief Output .vtk files for viewing material points
