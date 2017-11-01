@@ -56,16 +56,6 @@ IO<Tdim>::IO(const std::string& file_directory, const std::string& json_file)
     std::cout << "ngauss_points not specified. Using a default value of 1\n";
     ngauss_points_ = 1;
   }
-
-  //! Make material point and stresses output file name
-  std::string extension = ".txt";
-  material_points_filename_ = output_file("material_points", extension);
-  stress_filename_ = output_file("initial_stresses", extension);
-  volume_filename_ = output_file("volumes", extension);
-
-  //! Make .vtk output file name
-  stress_vtk_filename_ = output_file("initial_stresses", ".vtk");
-  mesh_vtk_filename_ = output_file("mesh", ".vtk");
 }
 
 //! \brief Write coordinates of material points
@@ -75,12 +65,13 @@ template <unsigned Tdim>
 void IO<Tdim>::write_coordinates(
     const std::vector<Eigen::VectorXd>& coordinates) {
 
+  const auto filename = this->output_file("material_points", ".txt").string();
   std::cout << "material points will be stored in: "
-            << material_points_filename_.string() << "\n";
+            << filename << "\n";
 
   //! Output vertices file
   std::fstream material_points_file;
-  material_points_file.open(material_points_filename_.string(), std::ios::out);
+  material_points_file.open(filename, std::ios::out);
 
   if (material_points_file.is_open()) {
     //! Write the total number of vertices
@@ -109,12 +100,14 @@ template <unsigned Tdim>
 void IO<Tdim>::write_stresses(const std::vector<Eigen::VectorXd>& stresses) {
   unsigned id = 0;
 
+  const auto filename = this->output_file("initial_stresses", ".txt").string();
+
   std::cout << "initial stresses will be stored in: "
-            << stress_filename_.string() << "\n";
+            << filename << "\n";
 
   //! Output stress file
   std::fstream stress_file;
-  stress_file.open(stress_filename_.string(), std::ios::out);
+  stress_file.open(filename, std::ios::out);
 
   if (stress_file.is_open()) {
     //! Write the total number of vertices generated
@@ -179,12 +172,13 @@ void IO<Tdim>::write_volumes(const std::map<unsigned, double>& volumes) {
 
   unsigned id = 0;
 
+  const auto filename = this->output_file("volumes", ".txt").string();
   std::cout << "initial volumes will be stored in: "
-            << volume_filename_.string() << "\n";
+            << filename << "\n";
 
   //! Output stress file
   std::fstream volume_file;
-  volume_file.open(volume_filename_.string(), std::ios::out);
+  volume_file.open(filename, std::ios::out);
 
   if (volume_file.is_open()) {
     //! Write the total number of vertices generated

@@ -51,12 +51,6 @@ class IO {
   //! Write initial element volumes
   void write_volumes(const std::map<unsigned, double>& volumes);
 
-  //! Return .vtk file for stress
-  boost::filesystem::path stress_vtk_filename() { return stress_vtk_filename_; }
-
-  //! Return .vtk file for mesh
-  boost::filesystem::path mesh_vtk_filename() { return mesh_vtk_filename_; }
-
  private:
   //! Input directory
   std::string file_directory_;
@@ -72,21 +66,6 @@ class IO {
 
   //! Input mesh file name
   std::string mesh_filename_;
-
-  //! File name of material points
-  boost::filesystem::path material_points_filename_;
-
-  //! Filename of material point stresses
-  boost::filesystem::path stress_filename_;
-
-  //! Filename of material point volumes
-  boost::filesystem::path volume_filename_;
-
-  //! .vtk filename of material point stresses
-  boost::filesystem::path stress_vtk_filename_;
-
-  //! .vtk filename of Mesh
-  boost::filesystem::path mesh_vtk_filename_;
 
   //! Number of gauss points per coordinate
   unsigned ngauss_points_{0};
