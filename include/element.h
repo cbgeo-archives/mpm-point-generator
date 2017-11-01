@@ -110,6 +110,4 @@ class Element {
   std::vector<Eigen::Vector3d> coordinates_;
 };
 
-#include "element.cc"
-
 #endif  // MPM_ELEMENT_H

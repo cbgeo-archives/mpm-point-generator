@@ -48,12 +48,14 @@ include_directories(
 
 # mpm_point_generator executable
 SET(mpm_point_gen_src
+  src/element.cc
   src/main.cc
 )
 add_executable(mpm_point_generator ${mpm_point_gen_src})
 
 # Unit test
 SET(unit_test_src
+  ${PROJECT_SOURCE_DIR}/src/element.cc  
   ${PROJECT_SOURCE_DIR}/tests/unit_test.cc
   ${PROJECT_SOURCE_DIR}/tests/point_test.cc
   ${PROJECT_SOURCE_DIR}/tests/material_properties_test.cc
