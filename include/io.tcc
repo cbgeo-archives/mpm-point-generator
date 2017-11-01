@@ -167,6 +167,9 @@ boost::filesystem::path IO<Tdim>::output_file(
   return file_path;
 }
 
+//! \brief Write volumes
+//! \param[in] volumes Map of point id and the corresponding volume
+//! \tparam Tdim dimension
 template <unsigned Tdim>
 void IO<Tdim>::write_volumes(const std::map<unsigned, double>& volumes) {
 

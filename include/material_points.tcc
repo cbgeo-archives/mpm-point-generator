@@ -53,8 +53,8 @@ void MaterialPoints<Tdim>::compute_stress() {
   for (const auto& point : points_) {
 
     //! Obtain density and k0 from material properties;
-    double density = material_properties_->density();
-    double k0 = material_properties_->k0();
+    const double density = material_properties_->density();
+    const double k0 = material_properties_->k0();
 
     //! Compute the height of the point
     const double height = point->coordinates()[Tdim - 1];
