@@ -32,12 +32,6 @@ class Mesh {
   //! Compute material point location
   virtual void compute_material_points(unsigned ngauss_points) = 0;
 
-  //! Return a vector of coordinates
-  std::vector<Eigen::VectorXd> coordinates();
-
-  //! Return a vector of stresses
-  std::vector<Eigen::VectorXd> stress();
-
   //! Get material properties from json object
   void assign_material_properties(
       const std::shared_ptr<MaterialProperties>& material);
@@ -45,11 +39,26 @@ class Mesh {
   //! Compute stress of the material points
   void compute_stresses();
 
+  //!\retval Map of element volume and id
+  void calculate_volumes();
+
   //! Return the total number of vertices
   unsigned nvertices() const { return nvertices_; }
 
-  //!\retval Map of element volume and id
-  std::map<unsigned, double> calculate_volumes();
+  //! Return a vector of coordinates
+  std::vector<Eigen::VectorXd> coordinates();
+
+  //! Return a vector of stresses
+  std::vector<Eigen::VectorXd> stress();
+
+  //! Write coordinates
+  void write_coordinates(boost::filesystem::path coordinates_filename);
+
+  //! Write stresses
+  void write_stresses(boost::filesystem::path stresses_filename);
+
+  //! Write initial element volumes
+  void write_volumes(boost::filesystem::path volumes_filename);
 
   //! Write .vtk files for initial stresses (include coordinates as well)
   void write_vtk_stresses(boost::filesystem::path stress_vtk_filename);
@@ -64,6 +73,9 @@ class Mesh {
   //! Number of pgauss oints per coordinate
   unsigned ngauss_points_{std::numeric_limits<unsigned>::max()};
 
+  //! Total number of material points generated
+  unsigned npoints_{0};
+
   //! Map to store id and vertices coordinates
   std::map<unsigned, Eigen::VectorXd> vertices_;
 
@@ -72,6 +84,9 @@ class Mesh {
 
   //! Map to store element id and vertices coordinates
   std::map<unsigned, Eigen::VectorXd> elementcoordinates_;
+
+  //! Map to store element id and volume of the element
+  std::map<unsigned, double> volumes_;
 
   //! Vector of material points
   std::vector<std::unique_ptr<MaterialPoints<Tdim>>> materialpoints_;
