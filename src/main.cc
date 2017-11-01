@@ -27,6 +27,7 @@ int main(int argc, char** argv) {
     mesh->compute_material_points(io->ngauss_points());
     mesh->assign_material_properties(material);
     mesh->compute_stresses();
+    mesh->calculate_volumes();
 
     //! Write material points and stresses
     mesh->write_coordinates(io->output_file("material_points", ".txt"));
