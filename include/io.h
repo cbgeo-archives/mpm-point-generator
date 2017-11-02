@@ -54,4 +54,5 @@ class IO {
   //! Number of gauss points per coordinate
   unsigned ngauss_points_{0};
 };
+
 #endif  // MPM_POINT_GEN_IO_H_
