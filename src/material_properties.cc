@@ -1,3 +1,4 @@
+#include "material_properties.h"
 //! Constructor with density and k0
 //! \param[in] json input file containing material properties
 MaterialProperties::MaterialProperties(const json& materialproperties) {
