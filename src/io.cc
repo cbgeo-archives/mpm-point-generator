@@ -9,9 +9,9 @@ IO::IO(int argc, char** argv) {
   TCLAP::CmdLine cmd("Material Point Generator (CB-Geo)", ' ', "0.0.1");
 
   // Define dimension
-  /*TCLAP::ValueArg<unsigned int> dim_arg(
-      "d", "dimension", "Problem dimension", true, 3, "Dimension");
-  cmd.add(dim_arg);*/
+  //  TCLAP::ValueArg<unsigned int> dim_arg(
+  //    "d", "dimension", "Problem dimension", true, 3, "Dimension");
+  //  cmd.add(dim_arg);
 
   // Define working directory
   TCLAP::ValueArg<std::string> cwd_arg(
@@ -54,9 +54,9 @@ IO::IO(int argc, char** argv) {
   //! Read json file and store to private variables
   json_ = json::parse(inputFile);
 
-  // /*//! Store json object for material properties
-  //! IO handles null json object by making empty json object
-  //! MaterialProperties class could handle empty json object
+  // Store json object for material properties
+  // IO handles null json object by making empty json object
+  // MaterialProperties class could handle empty json object
   if (!json_["material_properties"].is_null()) {
     json_material_properties_ = json_["material_properties"];
   } else {
