@@ -79,7 +79,7 @@ IO::IO(int argc, char** argv) {
   //! Read and store number of gauss points per coordinate
   //! If not specified, set default value of 1
   try {
-    if (json_.at("ngauss_points").empty())
+    if (json_.at("ngauss_points").size())
       ngauss_points_ = json_["ngauss_points"].template get<unsigned>();
   } catch (json::out_of_range& out_of_range) {
     std::cerr << out_of_range.what() << '\n';
