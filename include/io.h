@@ -8,25 +8,23 @@
 #include <utility>
 #include <vector>
 
-#include "tclap/CmdLine.h"
 #include <boost/filesystem.hpp>
 #include <eigen3/Eigen/Dense>
 
-#include "material_points.h"
-#include "mesh.h"
-
+#include "tclap/CmdLine.h"
 //! Alias for JSON
 #include "json.hpp"
 using json = nlohmann::json;
 
+#include "material_points.h"
+#include "mesh.h"
+
+
 //! \brief Input/Output handler
 class IO {
  public:
-  //! Constructor with json input file
-  //! Get mesh_filename and output_directory
-  //! \param[in] input directory
-  //! \param[in] json input file name
-  explicit IO(int arg_c, char** arg_v);
+  //! Constructor with argc and argv
+  IO(int argc, char** argv);
 
   //! Write coordinates
   void write_coordinates(const std::vector<Eigen::VectorXd>& coordinates);

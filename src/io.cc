@@ -1,13 +1,9 @@
 #include "io.h"
 
-//! Constructor with json input file
-//! Get mesh_filename and output_directory
-//! \param[in] input directory
-//! \param[in] json input file name
-IO::IO(int arg_c, char** arg_v) {
-
-  int argc = arg_c;
-  char** argv = arg_v;
+//! Constructor with argc and argv
+//! \param[in] argc Number of input arguments
+//! \param[in] argv Array of input arguments
+IO::IO(int argc, char** argv) {
 
   // Set title
   TCLAP::CmdLine cmd("Material Point Generator (CB-Geo)", ' ', "0.0.1");
