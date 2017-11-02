@@ -19,7 +19,6 @@ using json = nlohmann::json;
 #include "material_points.h"
 #include "mesh.h"
 
-
 //! \brief Input/Output handler
 class IO {
  public:
