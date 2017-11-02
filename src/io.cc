@@ -88,77 +88,9 @@ IO::IO(int argc, char** argv) {
   }
 }
 
-//! \brief Write coordinates of material points
-//! \details Write point coordinates
-//! \tparam Tdim dimension
-void IO::write_coordinates(const std::vector<Eigen::VectorXd>& coordinates) {
-
-  const auto filename = this->output_file("material_points", ".txt").string();
-  std::cout << "material points will be stored in: " << filename << "\n";
-
-  //! Output vertices file
-  std::fstream material_points_file;
-  material_points_file.open(filename, std::ios::out);
-
-  if (material_points_file.is_open()) {
-    //! Write the total number of vertices
-    material_points_file << coordinates.size() << "\n";
-
-    //! Write the coordinates of the vertices
-    //! [X] [Y] [Z]
-    //! Note that for 2D, z values are 0
-    //! For 1D, both y and z values are 0
-    for (auto const& coordinate : coordinates) {
-      for (unsigned i = 0; i < coordinate.size(); ++i) {
-        material_points_file << coordinate[i] << "\t";
-      }
-      material_points_file << "\n";
-    }
-    material_points_file.close();
-  }
-
-  std::cout << "Wrote material point coordinates\n";
-}
-
-//! \brief Write initial stresses of material points
-//! \Param[in] stresses is initial stress of material points
-//! \tparam Tdim dimension
-void IO::write_stresses(const std::vector<Eigen::VectorXd>& stresses) {
-  unsigned id = 0;
-
-  const auto filename = this->output_file("initial_stresses", ".txt").string();
-
-  std::cout << "initial stresses will be stored in: " << filename << "\n";
-
-  //! Output stress file
-  std::fstream stress_file;
-  stress_file.open(filename, std::ios::out);
-
-  if (stress_file.is_open()) {
-    //! Write the total number of vertices generated
-    stress_file << stresses.size() << "\n";
-
-    //! Stresses in Voigt Notation
-    //! $\sigma_{xx}$ $\sigma_{yy}$ $\sigma_{zz}$
-    //! $\tau_{yz}$ $\tau_{zx}$ $\tau_{xy}$
-    for (const auto& stress : stresses) {
-      stress_file.setf(std::ios::fixed, std::ios::floatfield);
-      stress_file << id << '\t';
-      for (unsigned i = 0; i < stress.size(); ++i) {
-        stress_file << stress[i] << "\t";
-      }
-      stress_file << "\n";
-      ++id;
-    }
-    stress_file.close();
-  }
-  std::cout << "Wrote initial stresses\n";
-}
-
 //! \brief Write output file names and store them in private member
 //! \param[in] attribute Attribute being written (eg., material_points / stress)
 //! \param[in] file_extension File Extension (*.txt)
-//! \tparam Tdim dimension
 boost::filesystem::path IO::output_file(const std::string& attribute,
                                         const std::string& file_extension) {
 
@@ -189,33 +121,4 @@ boost::filesystem::path IO::output_file(const std::string& attribute,
   //! Create full path with working directory path and file name
   boost::filesystem::path file_path(path + file_name.str().c_str());
   return file_path;
-}
-
-//! \brief Write volumes
-//! \param[in] volumes Map of point id and the corresponding volume
-//! \tparam Tdim dimension
-void IO::write_volumes(const std::map<unsigned, double>& volumes) {
-
-  unsigned id = 0;
-
-  const auto filename = this->output_file("volumes", ".txt").string();
-  std::cout << "initial volumes will be stored in: " << filename << "\n";
-
-  //! Output stress file
-  std::fstream volume_file;
-  volume_file.open(filename, std::ios::out);
-
-  if (volume_file.is_open()) {
-    //! Write the total number of vertices generated
-    volume_file << volumes.size() << "\n";
-
-    //! write element id and volume
-    for (const auto& volume : volumes) {
-      volume_file << id << '\t' << volume.second;
-      volume_file << "\n";
-      ++id;
-    }
-    volume_file.close();
-  }
-  std::cout << "Wrote Volumes \n";
 }
