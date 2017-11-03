@@ -47,7 +47,7 @@ TEST_CASE("Point base is checked in 2D", "[Point][2D]") {
     stress << std::numeric_limits<double>::min(),
         std::numeric_limits<double>::min(), std::numeric_limits<double>::min(),
         std::numeric_limits<double>::min();
-    const double volume = std::numeric_limits<unsigned>::min();
+    const double volume = std::numeric_limits<double>::min();
     auto node = std::unique_ptr<Point<DIM>>(
         new Point<DIM>(index, global_index, coordinate, volume));
     node->stress(stress);
@@ -81,7 +81,7 @@ TEST_CASE("Point base is checked in 2D", "[Point][2D]") {
     stress << std::numeric_limits<double>::max(),
         std::numeric_limits<double>::max(), std::numeric_limits<double>::max(),
         std::numeric_limits<double>::max();
-    const double volume = std::numeric_limits<unsigned>::max();
+    const double volume = std::numeric_limits<double>::max();
     auto node = std::unique_ptr<Point<DIM>>(
         new Point<DIM>(index, global_index, coordinate, volume));
     node->stress(stress);
@@ -151,7 +151,7 @@ TEST_CASE("Point base is checked in 3D", "[Point][3D]") {
         std::numeric_limits<double>::min(), std::numeric_limits<double>::min(),
         std::numeric_limits<double>::min(), std::numeric_limits<double>::min(),
         std::numeric_limits<double>::min();
-    const double volume = std::numeric_limits<unsigned>::min();
+    const double volume = std::numeric_limits<double>::min();
     auto node = std::unique_ptr<Point<DIM>>(
         new Point<DIM>(index, global_index, coordinate, volume));
     node->stress(stress);
@@ -192,7 +192,7 @@ TEST_CASE("Point base is checked in 3D", "[Point][3D]") {
         std::numeric_limits<double>::max(), std::numeric_limits<double>::max(),
         std::numeric_limits<double>::max(), std::numeric_limits<double>::max(),
         std::numeric_limits<double>::max();
-    const double volume = std::numeric_limits<unsigned>::max();
+    const double volume = std::numeric_limits<double>::max();
     auto node = std::unique_ptr<Point<DIM>>(
         new Point<DIM>(index, global_index, coordinate, volume));
     node->stress(stress);
