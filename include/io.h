@@ -19,18 +19,11 @@ using json = nlohmann::json;
 #include "material_points.h"
 #include "mesh.h"
 
-
 //! \brief Input/Output handler
 class IO {
  public:
   //! Constructor with argc and argv
   IO(int argc, char** argv);
-
-  //! Write coordinates
-  void write_coordinates(const std::vector<Eigen::VectorXd>& coordinates);
-
-  //! Write stresses
-  void write_stresses(const std::vector<Eigen::VectorXd>& stresses);
 
   //! Return the number of points per coordinate
   unsigned ngauss_points() const { return ngauss_points_; }
@@ -44,9 +37,6 @@ class IO {
   //! Create output file names
   boost::filesystem::path output_file(const std::string& attribute,
                                       const std::string& file_extension);
-
-  //! Write initial element volumes
-  void write_volumes(const std::map<unsigned, double>& volumes);
 
  private:
   //! Input directory
@@ -64,4 +54,5 @@ class IO {
   //! Number of gauss points per coordinate
   unsigned ngauss_points_{0};
 };
+
 #endif  // MPM_POINT_GEN_IO_H_

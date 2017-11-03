@@ -29,9 +29,9 @@ int main(int argc, char** argv) {
     mesh->compute_stresses();
 
     //! Write material points and stresses
-    io->write_coordinates(mesh->coordinates());
-    io->write_stresses(mesh->stress());
-    io->write_volumes(mesh->calculate_volumes());
+    mesh->write_coordinates(io->output_file("material_points", ".txt"));
+    mesh->write_stresses(io->output_file("initial_stresses", ".txt"));
+    mesh->write_volumes(io->output_file("volumes", ".txt"));
 
     //! Write .vtk output files for viewing
     mesh->write_vtk_stresses(io->output_file("initial_stresses", ".vtk"));

@@ -56,25 +56,110 @@ void Mesh<Tdim, Tvertices>::compute_stresses() {
   }
 }
 
-//! Compute initial volume of material points
-//! \tparam Tdim Dimension of the mesh
-//! \tparam Tvertices Number of vertices in an element
-
+//! \brief Write coordinates of material points
+//! \details Write point coordinates
+//! \tparam Tdim dimension
 template <unsigned Tdim, unsigned Tvertices>
-std::map<unsigned, double> Mesh<Tdim, Tvertices>::calculate_volumes() {
+void Mesh<Tdim, Tvertices>::write_coordinates(
+    boost::filesystem::path coordinates_filename) {
 
-  std::map<unsigned, double> volumes;
+  const auto filename = coordinates_filename.string();
+  std::cout << "material points will be stored in: " << filename << "\n";
 
-  for (const auto& element : elements_) {
+  //! Output vertices file
+  std::fstream material_points_file;
+  material_points_file.open(filename, std::ios::out);
 
-    unsigned id = element->id();
+  if (material_points_file.is_open()) {
+    //! Write the total number of vertices
+    material_points_file << npoints_ << "\n";
 
-    volumes.insert(std::make_pair<unsigned, double>(
-        static_cast<int>(id),
-        static_cast<double>(element->calculate_volume())));
+    //! Write the coordinates of the vertices
+    //! [X] [Y] [Z]
+    //! Note that for 2D, z values are 0
+    //! For 1D, both y and z values are 0
+    //! Iterate over materialpoints_ to get coordinates
+    for (const auto& materialpoint : materialpoints_) {
+      for (const auto& coordinate : materialpoint->coordinates()) {
+        material_points_file << coordinate[0] << '\t' << coordinate[1] << '\t'
+                             << coordinate[2] << '\n';
+      }
+    }
+
+    material_points_file.close();
   }
+  std::cout << "Wrote material point coordinates\n";
+}
 
-  return volumes;
+//! \brief Write initial stresses of material points
+//! \Param[in] stresses is initial stress of material points
+//! \tparam Tdim dimension
+template <unsigned Tdim, unsigned Tvertices>
+void Mesh<Tdim, Tvertices>::write_stresses(
+    boost::filesystem::path stresses_filename) {
+  unsigned id = 0;
+
+  const auto filename = stresses_filename.string();
+
+  std::cout << "initial stresses will be stored in: " << filename << "\n";
+
+  //! Output stress file
+  std::fstream stress_file;
+  stress_file.open(filename, std::ios::out);
+
+  if (stress_file.is_open()) {
+    //! Write the total number of vertices generated
+    stress_file << npoints_ << "\n";
+
+    //! Stresses in Voigt Notation
+    //! $\sigma_{xx}$ $\sigma_{yy}$ $\sigma_{zz}$
+    //! $\tau_{yz}$ $\tau_{zx}$ $\tau_{xy}$
+    //! Iterate over materialpoints_ to get stress
+    for (const auto& materialpoint : materialpoints_) {
+      for (const auto& stress : materialpoint->stress()) {
+        stress_file.setf(std::ios::fixed, std::ios::floatfield);
+        stress_file << id << '\t';
+        for (unsigned i = 0; i < stress.size(); ++i) {
+          stress_file << stress[i] << "\t";
+        }
+        stress_file << "\n";
+        ++id;
+      }
+    }
+    stress_file.close();
+  }
+  std::cout << "Wrote initial stresses\n";
+}
+
+//! \brief Write volumes generated from element
+//! \param[in] volumes Map of point id and the corresponding volume
+//! \tparam Tdim dimension
+template <unsigned Tdim, unsigned Tvertices>
+void Mesh<Tdim, Tvertices>::write_volumes(
+    boost::filesystem::path volumes_filename) {
+
+  unsigned id = 0;
+
+  const auto filename = volumes_filename.string();
+  std::cout << "initial volumes will be stored in: " << filename << "\n";
+
+  //! Output stress file
+  std::fstream volume_file;
+  volume_file.open(filename, std::ios::out);
+
+  if (volume_file.is_open()) {
+
+    //! Write the total number of volumes (same as number of material points)
+    volume_file << npoints_ << "\n";
+
+    //! Write element id and volumet
+    for (const auto& element : elements_) {
+      volume_file << id << '\t' << element->calculate_volume() << '\n';
+      ++id;
+    }
+    volume_file.close();
+  }
+  std::cout << "Wrote volumes\n";
 }
 
 //! \brief Output .vtk files for viewing material points
@@ -85,11 +170,6 @@ std::map<unsigned, double> Mesh<Tdim, Tvertices>::calculate_volumes() {
 template <unsigned Tdim, unsigned Tvertices>
 void Mesh<Tdim, Tvertices>::write_vtk_stresses(
     boost::filesystem::path stress_vtk_filename) {
-
-  unsigned num_points = 0;
-  for (const auto& materialpoints : materialpoints_) {
-    num_points += materialpoints->coordinates().size();
-  }
 
   std::cout << "output .vtk file for initial stresses will be stored in: "
             << stress_vtk_filename.string() << "\n";
@@ -105,25 +185,24 @@ void Mesh<Tdim, Tvertices>::write_vtk_stresses(
     stress_vtk_file << "ASCII\n";
     stress_vtk_file << "DATASET UNSTRUCTURED_GRID\n";
 
-    stress_vtk_file << "POINTS " << num_points << " float\n";
+    stress_vtk_file << "POINTS " << npoints_ << " float\n";
 
     // Iterate over materialpoints_ to get coordinates
     for (const auto& materialpoint : materialpoints_) {
       for (const auto& coordinate : materialpoint->coordinates()) {
         stress_vtk_file << coordinate[0] << ' ' << coordinate[1] << ' '
                         << coordinate[2] << '\n';
-        ;
       }
     }
 
-    stress_vtk_file << "CELLS " << num_points << " " << 2 * num_points << '\n';
-    for (unsigned i = 0; i < num_points; i++)
+    stress_vtk_file << "CELLS " << npoints_ << " " << 2 * npoints_ << '\n';
+    for (unsigned i = 0; i < npoints_; i++)
       stress_vtk_file << "1 " << i << '\n';
 
-    stress_vtk_file << "CELL_TYPES " << num_points << '\n';
-    for (unsigned i = 0; i < num_points; i++) stress_vtk_file << "1 " << '\n';
+    stress_vtk_file << "CELL_TYPES " << npoints_ << '\n';
+    for (unsigned i = 0; i < npoints_; i++) stress_vtk_file << "1 " << '\n';
 
-    stress_vtk_file << "POINT_DATA " << num_points << '\n';
+    stress_vtk_file << "POINT_DATA " << npoints_ << '\n';
     stress_vtk_file << "VECTORS Stress float\n";
 
     // Iterate over materialpoints_ to get stress
