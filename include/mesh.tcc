@@ -32,6 +32,23 @@ std::vector<Eigen::VectorXd> Mesh<Tdim, Tvertices>::stress() {
   return stresses;
 }
 
+//! Return a vector of volumes
+//! \tparam Tdim Dimension of the mesh
+//! \tparam Tvertices Number of vertices in an element
+template <unsigned Tdim, unsigned Tvertices>
+std::vector<double> Mesh<Tdim, Tvertices>::volume() {
+
+  std::vector<double> volumes;
+
+  // Iterate over materialpoints_ to get stress
+  for (const auto& materialpoint : materialpoints_) {
+    for (const auto& volume : materialpoint->volume()) {
+      volumes.emplace_back(volume);
+    }
+  }
+  return volumes;
+}
+
 //! Assign material properties to MaterialPoints
 //! \tparam Tdim Dimension of the mesh
 //! \tparam Tvertices Number of vertices in an element
@@ -152,10 +169,12 @@ void Mesh<Tdim, Tvertices>::write_volumes(
     //! Write the total number of volumes (same as number of material points)
     volume_file << npoints_ << "\n";
 
-    //! Write element id and volume
-    for (const auto& element : elements_) {
-      volume_file << id << '\t' << element->calculate_volume() << '\n';
-      ++id;
+    //! Write material point id and volume
+    for (const auto& materialpoint : materialpoints_) {
+      for (const auto& volume : materialpoint->volume()) {
+        volume_file << id << '\t' << volume << '\n';
+        ++id;
+      }
     }
     volume_file.close();
   }

@@ -39,6 +39,7 @@ TEST_CASE("GMSH is checked in 3D", "[GMSH][3D]") {
   //! Get coordinates and stress
   std::vector<Eigen::VectorXd> coordinates = mesh->coordinates();
   std::vector<Eigen::VectorXd> stresses = mesh->stress();
+  std::vector<double> volumes = mesh->volume();
 
   //! Check size
   REQUIRE(mesh->coordinates().size() == 4);
@@ -82,4 +83,11 @@ TEST_CASE("GMSH is checked in 3D", "[GMSH][3D]") {
   REQUIRE(stresses.at(3)[3] == Approx(0).epsilon(tolerance));
   REQUIRE(stresses.at(3)[4] == Approx(0).epsilon(tolerance));
   REQUIRE(stresses.at(3)[5] == Approx(0).epsilon(tolerance));
+
+  //! Check volume
+  REQUIRE(volumes.at(0) == Approx(0.25).epsilon(tolerance));
+  REQUIRE(volumes.at(1) == Approx(0.25).epsilon(tolerance));
+  REQUIRE(volumes.at(2) == Approx(0.25).epsilon(tolerance));
+  REQUIRE(volumes.at(3) == Approx(0.25).epsilon(tolerance));
+
 }

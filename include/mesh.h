@@ -48,6 +48,9 @@ class Mesh {
   //! Return a vector of stresses
   std::vector<Eigen::VectorXd> stress();
 
+  //! Return a vector of volume
+  std::vector<double> volume();
+
   //! Write coordinates
   void write_coordinates(boost::filesystem::path coordinates_filename);
 
