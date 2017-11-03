@@ -152,7 +152,7 @@ void Mesh<Tdim, Tvertices>::write_volumes(
     //! Write the total number of volumes (same as number of material points)
     volume_file << npoints_ << "\n";
 
-    //! Write element id and volumet
+    //! Write element id and volume
     for (const auto& element : elements_) {
       volume_file << id << '\t' << element->calculate_volume() << '\n';
       ++id;
