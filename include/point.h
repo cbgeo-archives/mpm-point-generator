@@ -13,12 +13,19 @@ class Point {
   //! Constructor with global id, id and coordinates
   //! \param[in] id index of the vertex
   //! \param[in] coord Coordinates of the point
+  //! \param[in] volume in which the point represents
   Point(unsigned global_id, unsigned id, const Eigen::VectorXd& coord,
         double volume) {
     global_id_ = global_id;
     id_ = id;
     coordinates_ = coord;
     volume_ = volume;
+  }
+
+  Point(unsigned global_id, unsigned id, const Eigen::VectorXd& coord) {
+    global_id_ = global_id;
+    id_ = id;
+    coordinates_ = coord;
   }
 
   //! Return the id of the point
