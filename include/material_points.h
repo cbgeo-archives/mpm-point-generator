@@ -42,6 +42,9 @@ class MaterialPoints {
   //! Return vector of stresses
   std::vector<Eigen::VectorXd> stress();
 
+  //! Return vector of volumes
+  std::vector<double> volume();
+
  private:
   //! material points id
   unsigned id_{std::numeric_limits<unsigned>::max()};

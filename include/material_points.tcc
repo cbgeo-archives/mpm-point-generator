@@ -28,6 +28,21 @@ std::vector<Eigen::VectorXd> MaterialPoints<Tdim>::stress() {
   return stress;
 }
 
+//! Return vector of volume
+//! \tparam Tdim Dimension
+template <unsigned Tdim>
+std::vector<double> MaterialPoints<Tdim>::volume() {
+
+  std::vector<double> volume;
+
+  //! Loop through the points to get the volume
+  for (const auto& materialpoint : points_) {
+    volume.emplace_back(materialpoint->volume());
+  }
+
+  return volume;
+}
+
 //! Compute stresses of the material points
 //! \tparam Tdim Dimension
 template <unsigned Tdim>

@@ -20,8 +20,9 @@ TEST_CASE("Point base is checked in 2D", "[Point][2D]") {
     coordinate << 0, 0;
     Eigen::VectorXd stress(DIM * 2);
     stress << 0, 0, 0, 0;
+    const double volume = 0;
     auto node = std::unique_ptr<Point<DIM>>(
-        new Point<DIM>(index, global_index, coordinate));
+        new Point<DIM>(index, global_index, coordinate, volume));
     node->stress(stress);
 
     REQUIRE(node->id() == 0);
@@ -32,6 +33,7 @@ TEST_CASE("Point base is checked in 2D", "[Point][2D]") {
     REQUIRE(node->stress()[1] == Approx(0).epsilon(tolerance));
     REQUIRE(node->stress()[2] == Approx(0).epsilon(tolerance));
     REQUIRE(node->stress()[3] == Approx(0).epsilon(tolerance));
+    REQUIRE(node->volume() == Approx(0).epsilon(tolerance));
   }
 
   //! Coordinates are checked for minimum values
@@ -45,8 +47,9 @@ TEST_CASE("Point base is checked in 2D", "[Point][2D]") {
     stress << std::numeric_limits<double>::min(),
         std::numeric_limits<double>::min(), std::numeric_limits<double>::min(),
         std::numeric_limits<double>::min();
+    const double volume = std::numeric_limits<double>::min();
     auto node = std::unique_ptr<Point<DIM>>(
-        new Point<DIM>(index, global_index, coordinate));
+        new Point<DIM>(index, global_index, coordinate, volume));
     node->stress(stress);
 
     REQUIRE(node->id() == std::numeric_limits<unsigned>::min());
@@ -63,6 +66,8 @@ TEST_CASE("Point base is checked in 2D", "[Point][2D]") {
             Approx(std::numeric_limits<double>::min()).epsilon(tolerance));
     REQUIRE(node->stress()[3] ==
             Approx(std::numeric_limits<double>::min()).epsilon(tolerance));
+    REQUIRE(node->volume() ==
+            Approx(std::numeric_limits<double>::min()).epsilon(tolerance));
   }
 
   //! Coordinates are checked for maximum values
@@ -76,8 +81,9 @@ TEST_CASE("Point base is checked in 2D", "[Point][2D]") {
     stress << std::numeric_limits<double>::max(),
         std::numeric_limits<double>::max(), std::numeric_limits<double>::max(),
         std::numeric_limits<double>::max();
+    const double volume = std::numeric_limits<double>::max();
     auto node = std::unique_ptr<Point<DIM>>(
-        new Point<DIM>(index, global_index, coordinate));
+        new Point<DIM>(index, global_index, coordinate, volume));
     node->stress(stress);
 
     REQUIRE(node->id() == std::numeric_limits<unsigned>::max());
@@ -93,6 +99,8 @@ TEST_CASE("Point base is checked in 2D", "[Point][2D]") {
     REQUIRE(node->stress()[2] ==
             Approx(std::numeric_limits<double>::max()).epsilon(tolerance));
     REQUIRE(node->stress()[3] ==
+            Approx(std::numeric_limits<double>::max()).epsilon(tolerance));
+    REQUIRE(node->volume() ==
             Approx(std::numeric_limits<double>::max()).epsilon(tolerance));
   }
 }
@@ -112,8 +120,9 @@ TEST_CASE("Point base is checked in 3D", "[Point][3D]") {
     coordinate << 0, 0, 0;
     Eigen::VectorXd stress(DIM * 2);
     stress << 0, 0, 0, 0, 0, 0;
+    const double volume = 0;
     auto node = std::unique_ptr<Point<DIM>>(
-        new Point<DIM>(index, global_index, coordinate));
+        new Point<DIM>(index, global_index, coordinate, volume));
     node->stress(stress);
 
     REQUIRE(node->id() == 0);
@@ -127,6 +136,7 @@ TEST_CASE("Point base is checked in 3D", "[Point][3D]") {
     REQUIRE(node->stress()[3] == Approx(0).epsilon(tolerance));
     REQUIRE(node->stress()[4] == Approx(0).epsilon(tolerance));
     REQUIRE(node->stress()[5] == Approx(0).epsilon(tolerance));
+    REQUIRE(node->volume() == Approx(0).epsilon(tolerance));
   }
 
   //! Coordinates are checked for minimum values
@@ -141,8 +151,9 @@ TEST_CASE("Point base is checked in 3D", "[Point][3D]") {
         std::numeric_limits<double>::min(), std::numeric_limits<double>::min(),
         std::numeric_limits<double>::min(), std::numeric_limits<double>::min(),
         std::numeric_limits<double>::min();
+    const double volume = std::numeric_limits<double>::min();
     auto node = std::unique_ptr<Point<DIM>>(
-        new Point<DIM>(index, global_index, coordinate));
+        new Point<DIM>(index, global_index, coordinate, volume));
     node->stress(stress);
 
     REQUIRE(node->id() == std::numeric_limits<unsigned>::min());
@@ -165,6 +176,8 @@ TEST_CASE("Point base is checked in 3D", "[Point][3D]") {
             Approx(std::numeric_limits<double>::min()).epsilon(tolerance));
     REQUIRE(node->stress()[5] ==
             Approx(std::numeric_limits<double>::min()).epsilon(tolerance));
+    REQUIRE(node->volume() ==
+            Approx(std::numeric_limits<double>::min()).epsilon(tolerance));
   }
 
   //! Coordinates are checked for maximum values
@@ -179,8 +192,9 @@ TEST_CASE("Point base is checked in 3D", "[Point][3D]") {
         std::numeric_limits<double>::max(), std::numeric_limits<double>::max(),
         std::numeric_limits<double>::max(), std::numeric_limits<double>::max(),
         std::numeric_limits<double>::max();
+    const double volume = std::numeric_limits<double>::max();
     auto node = std::unique_ptr<Point<DIM>>(
-        new Point<DIM>(index, global_index, coordinate));
+        new Point<DIM>(index, global_index, coordinate, volume));
     node->stress(stress);
 
     REQUIRE(node->id() == std::numeric_limits<unsigned>::max());
@@ -202,6 +216,8 @@ TEST_CASE("Point base is checked in 3D", "[Point][3D]") {
     REQUIRE(node->stress()[4] ==
             Approx(std::numeric_limits<double>::max()).epsilon(tolerance));
     REQUIRE(node->stress()[5] ==
+            Approx(std::numeric_limits<double>::max()).epsilon(tolerance));
+    REQUIRE(node->volume() ==
             Approx(std::numeric_limits<double>::max()).epsilon(tolerance));
   }
 }

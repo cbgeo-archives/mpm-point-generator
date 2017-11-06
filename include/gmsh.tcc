@@ -248,6 +248,10 @@ void GMSH<Tdim, Tvertices>::compute_material_points(unsigned ngauss_points) {
       }
     }
 
+    //! Compute the volume for each point
+    //! The volume of the element is distributed evenly
+    double point_volume = element->calculate_volume() / npoints;
+
     //! Compute the gauss points (there are npoints)
     for (unsigned k = 0; k < npoints; ++k) {
 
@@ -266,8 +270,9 @@ void GMSH<Tdim, Tvertices>::compute_material_points(unsigned ngauss_points) {
 
       //! Make class point and store to material points
       materialpoints_.at(material_id)
-          ->add_points(std::unique_ptr<Point<Tdim>>(new Point<Tdim>(
-              element->id(), element->id() + last_global_id, pointsarray)));
+          ->add_points(std::unique_ptr<Point<Tdim>>(
+              new Point<Tdim>(element->id(), element->id() + last_global_id,
+                              pointsarray, point_volume)));
     }
   }
 

@@ -13,6 +13,15 @@ class Point {
   //! Constructor with global id, id and coordinates
   //! \param[in] id index of the vertex
   //! \param[in] coord Coordinates of the point
+  //! \param[in] volume in which the point represents
+  Point(unsigned global_id, unsigned id, const Eigen::VectorXd& coord,
+        double volume) {
+    global_id_ = global_id;
+    id_ = id;
+    coordinates_ = coord;
+    volume_ = volume;
+  }
+
   Point(unsigned global_id, unsigned id, const Eigen::VectorXd& coord) {
     global_id_ = global_id;
     id_ = id;
@@ -34,6 +43,9 @@ class Point {
   //! Assign stress
   void stress(const Eigen::VectorXd stress) { stress_ = stress; }
 
+  //! Return volume
+  double volume() const { return volume_; }
+
  private:
   //! local index
   unsigned id_{std::numeric_limits<unsigned>::max()};
@@ -43,8 +55,12 @@ class Point {
 
   //! Coordinates
   Eigen::VectorXd coordinates_;
+
   //! Stress
   Eigen::VectorXd stress_;
+
+  //! Volume
+  double volume_{std::numeric_limits<double>::max()};
 };
 
 #endif  // MPM_MESH_POINT_H_
