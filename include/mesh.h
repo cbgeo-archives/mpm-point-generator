@@ -42,18 +42,6 @@ class Mesh {
   //! Return the total number of vertices
   unsigned nvertices() const { return nvertices_; }
 
-  //! Return a vector of coordinates
-  std::vector<Eigen::VectorXd> coordinates();
-
-  //! Return a vector of stresses
-  std::vector<Eigen::VectorXd> stress();
-
-  //! Return a vector of volume
-  std::vector<double> volume();
-
-  //! Return a vector of global ids
-  std::vector<unsigned> global_id();
-
   //! Write coordinates
   void write_coordinates(boost::filesystem::path coordinates_filename);
 
@@ -68,6 +56,18 @@ class Mesh {
 
   //! Write .vtk files for mesh
   void write_vtk_mesh(boost::filesystem::path mesh_vtk_filename);
+
+  //! Return begin iterator of material points_
+  typename std::vector<std::shared_ptr<MaterialPoints<Tdim>>>::iterator
+      material_points_iterator_begin() {
+    return materialpoints_.begin();
+  }
+
+  //! Return end iterator of material points_
+  typename std::vector<std::shared_ptr<MaterialPoints<Tdim>>>::iterator
+      material_points_iterator_end() {
+    return materialpoints_.end();
+  }
 
  protected:
   //! Total number of vertices
