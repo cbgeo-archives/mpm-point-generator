@@ -45,6 +45,9 @@ class MaterialPoints {
   //! Return vector of volumes
   std::vector<double> volume();
 
+  //! Return vector of global id
+  std::vector<unsigned> global_id();
+
  private:
   //! material points id
   unsigned id_{std::numeric_limits<unsigned>::max()};

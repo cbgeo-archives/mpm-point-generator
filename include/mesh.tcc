@@ -114,7 +114,6 @@ void Mesh<Tdim, Tvertices>::write_coordinates(
 template <unsigned Tdim, unsigned Tvertices>
 void Mesh<Tdim, Tvertices>::write_stresses(
     boost::filesystem::path stresses_filename) {
-  unsigned id = 0;
 
   const auto filename = stresses_filename.string();
 
@@ -133,14 +132,19 @@ void Mesh<Tdim, Tvertices>::write_stresses(
     //! $\tau_{yz}$ $\tau_{zx}$ $\tau_{xy}$
     //! Iterate over materialpoints_ to get stress
     for (const auto& materialpoint : materialpoints_) {
-      for (const auto& stress : materialpoint->stress()) {
+
+      // Obtain vector of stress and global_id
+      // They are the same size
+      std::vector<Eigen::VectorXd> stress = materialpoint->stress();
+      std::vector<unsigned> global_id = materialpoint->global_id();
+
+      for (unsigned i = 0; i < stress.size(); ++i) {
         stress_file.setf(std::ios::fixed, std::ios::floatfield);
-        stress_file << id << '\t';
-        for (unsigned i = 0; i < stress.size(); ++i) {
-          stress_file << stress[i] << "\t";
+        stress_file << global_id.at(i) << '\t';
+        for (unsigned j = 0; j < stress.at(i).size(); ++j) {
+          stress_file << stress.at(i)[j] << "\t";
         }
         stress_file << "\n";
-        ++id;
       }
     }
     stress_file.close();
@@ -154,8 +158,6 @@ void Mesh<Tdim, Tvertices>::write_stresses(
 template <unsigned Tdim, unsigned Tvertices>
 void Mesh<Tdim, Tvertices>::write_volumes(
     boost::filesystem::path volumes_filename) {
-
-  unsigned id = 0;
 
   const auto filename = volumes_filename.string();
   std::cout << "initial volumes will be stored in: " << filename << "\n";
@@ -171,9 +173,14 @@ void Mesh<Tdim, Tvertices>::write_volumes(
 
     //! Write material point id and volume
     for (const auto& materialpoint : materialpoints_) {
-      for (const auto& volume : materialpoint->volume()) {
-        volume_file << id << '\t' << volume << '\n';
-        ++id;
+
+      // Obtain vector of volume and global_id
+      // They are the same size
+      std::vector<double> volume = materialpoint->volume();
+      std::vector<unsigned> global_id = materialpoint->global_id();
+
+      for (unsigned i = 0; i < volume.size(); ++i) {
+        volume_file << global_id.at(i) << '\t' << volume.at(i) << '\n';
       }
     }
     volume_file.close();

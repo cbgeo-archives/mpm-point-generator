@@ -43,6 +43,21 @@ std::vector<double> MaterialPoints<Tdim>::volume() {
   return volume;
 }
 
+//! Return vector of global id
+//! \tparam Tdim Dimension
+template <unsigned Tdim>
+std::vector<unsigned> MaterialPoints<Tdim>::global_id() {
+
+  std::vector<unsigned> global_id;
+
+  //! Loop through the points to get the volume
+  for (const auto& materialpoint : points_) {
+    global_id.emplace_back(materialpoint->global_id());
+  }
+
+  return global_id;
+}
+
 //! Compute stresses of the material points
 //! \tparam Tdim Dimension
 template <unsigned Tdim>
