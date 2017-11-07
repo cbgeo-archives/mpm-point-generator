@@ -83,13 +83,13 @@ class Mesh {
   std::map<unsigned, Eigen::VectorXd> vertices_;
 
   //! Vector to store element id and vertices id
-  std::vector<std::unique_ptr<Element>> elements_;
+  std::vector<std::shared_ptr<Element>> elements_;
 
   //! Map to store element id and vertices coordinates
   std::map<unsigned, Eigen::VectorXd> elementcoordinates_;
 
   //! Vector of material points
-  std::vector<std::unique_ptr<MaterialPoints<Tdim>>> materialpoints_;
+  std::vector<std::shared_ptr<MaterialPoints<Tdim>>> materialpoints_;
 };
 
 #include "mesh.tcc"

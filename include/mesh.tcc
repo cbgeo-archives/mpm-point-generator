@@ -13,6 +13,7 @@ std::vector<Eigen::VectorXd> Mesh<Tdim, Tvertices>::coordinates() {
     }
   }
   return coordinates;
+
 }
 
 //! Return a vector of stresses
@@ -167,6 +168,7 @@ void Mesh<Tdim, Tvertices>::write_stresses(
     stress_file.close();
   }
   std::cout << "Wrote initial stresses\n";
+
 }
 
 //! \brief Write volumes generated from element

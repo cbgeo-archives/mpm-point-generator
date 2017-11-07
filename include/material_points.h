@@ -22,8 +22,8 @@ class MaterialPoints {
   explicit MaterialPoints(unsigned id) : id_{id} {}
 
   //! Add points within this subset of MaterialPoints
-  void add_points(std::unique_ptr<Point<Tdim>>&& point) {
-    points_.emplace_back(std::move(point));
+  void add_points(std::shared_ptr<Point<Tdim>>&& point) {
+    points_.emplace_back(point);
   }
 
   //! Assign material properties
@@ -53,7 +53,7 @@ class MaterialPoints {
   unsigned id_{std::numeric_limits<unsigned>::max()};
 
   //! Points vector
-  std::vector<std::unique_ptr<Point<Tdim>>> points_;
+  std::vector<std::shared_ptr<Point<Tdim>>> points_;
 
   //! material properties associated with the vector of points
   std::shared_ptr<MaterialProperties> material_properties_{nullptr};
