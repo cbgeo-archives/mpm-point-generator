@@ -48,6 +48,16 @@ class MaterialPoints {
   //! Return vector of global id
   std::vector<unsigned> global_id();
 
+  //! Return begin iterator of points_
+  typename std::vector<std::shared_ptr<Point<Tdim>>>::iterator
+      iterator_begin() {
+    return points_.begin();
+  }
+  //! Return end iterator of points_
+  typename std::vector<std::shared_ptr<Point<Tdim>>>::iterator iterator_end() {
+    return points_.end();
+  }
+
  private:
   //! material points id
   unsigned id_{std::numeric_limits<unsigned>::max()};

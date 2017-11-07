@@ -13,7 +13,6 @@ std::vector<Eigen::VectorXd> Mesh<Tdim, Tvertices>::coordinates() {
     }
   }
   return coordinates;
-
 }
 
 //! Return a vector of stresses
@@ -115,15 +114,20 @@ void Mesh<Tdim, Tvertices>::write_coordinates(
     //! For 1D, both y and z values are 0
     //! Iterate over materialpoints_ to get coordinates
     for (const auto& materialpoint : materialpoints_) {
-      for (const auto& coordinate : materialpoint->coordinates()) {
+      for (auto itr = materialpoint->iterator_begin();
+           itr != materialpoint->iterator_end(); ++itr) {
+        Eigen::VectorXd coordinate = (*itr)->coordinates();
         material_points_file << coordinate[0] << '\t' << coordinate[1] << '\t'
                              << coordinate[2] << '\n';
       }
     }
-
     material_points_file.close();
   }
   std::cout << "Wrote material point coordinates\n";
+
+  // for (const auto& materialpoint : materialpoints_) {
+  //   std::cout << materialpoint->point()->id() <<'\n';
+  // }
 }
 
 //! \brief Write initial stresses of material points
@@ -150,17 +154,13 @@ void Mesh<Tdim, Tvertices>::write_stresses(
     //! $\tau_{yz}$ $\tau_{zx}$ $\tau_{xy}$
     //! Iterate over materialpoints_ to get stress
     for (const auto& materialpoint : materialpoints_) {
-
-      // Obtain vector of stress and global_id
-      // They are the same size
-      std::vector<Eigen::VectorXd> stress = materialpoint->stress();
-      std::vector<unsigned> global_id = materialpoint->global_id();
-
-      for (unsigned i = 0; i < stress.size(); ++i) {
+      for (auto itr = materialpoint->iterator_begin();
+           itr != materialpoint->iterator_end(); ++itr) {
         stress_file.setf(std::ios::fixed, std::ios::floatfield);
-        stress_file << global_id.at(i) << '\t';
-        for (unsigned j = 0; j < stress.at(i).size(); ++j) {
-          stress_file << stress.at(i)[j] << "\t";
+        stress_file << (*itr)->global_id() << '\t';
+        Eigen::VectorXd stress = (*itr)->stress();
+        for (unsigned i = 0; i < stress.size(); ++i) {
+          stress_file << stress[i] << "\t";
         }
         stress_file << "\n";
       }
@@ -168,7 +168,6 @@ void Mesh<Tdim, Tvertices>::write_stresses(
     stress_file.close();
   }
   std::cout << "Wrote initial stresses\n";
-
 }
 
 //! \brief Write volumes generated from element
@@ -192,14 +191,9 @@ void Mesh<Tdim, Tvertices>::write_volumes(
 
     //! Write material point id and volume
     for (const auto& materialpoint : materialpoints_) {
-
-      // Obtain vector of volume and global_id
-      // They are the same size
-      std::vector<double> volume = materialpoint->volume();
-      std::vector<unsigned> global_id = materialpoint->global_id();
-
-      for (unsigned i = 0; i < volume.size(); ++i) {
-        volume_file << global_id.at(i) << '\t' << volume.at(i) << '\n';
+      for (auto itr = materialpoint->iterator_begin();
+           itr != materialpoint->iterator_end(); ++itr) {
+        volume_file << (*itr)->global_id() << '\t' << (*itr)->volume() << '\n';
       }
     }
     volume_file.close();
@@ -234,8 +228,10 @@ void Mesh<Tdim, Tvertices>::write_vtk_stresses(
 
     // Iterate over materialpoints_ to get coordinates
     for (const auto& materialpoint : materialpoints_) {
-      for (const auto& coordinate : materialpoint->coordinates()) {
-        stress_vtk_file << coordinate[0] << ' ' << coordinate[1] << ' '
+      for (auto itr = materialpoint->iterator_begin();
+           itr != materialpoint->iterator_end(); ++itr) {
+        Eigen::VectorXd coordinate = (*itr)->coordinates();
+        stress_vtk_file << coordinate[0] << '\t' << coordinate[1] << '\t'
                         << coordinate[2] << '\n';
       }
     }
@@ -252,7 +248,9 @@ void Mesh<Tdim, Tvertices>::write_vtk_stresses(
 
     // Iterate over materialpoints_ to get stress
     for (const auto& materialpoint : materialpoints_) {
-      for (const auto& stress : materialpoint->stress()) {
+      for (auto itr = materialpoint->iterator_begin();
+           itr != materialpoint->iterator_end(); ++itr) {
+        Eigen::VectorXd stress = (*itr)->stress();
         if (Tdim == 2)
           stress_vtk_file << stress[0] << ' ' << stress[1] << " 0.\n";
         else if (Tdim == 3)
