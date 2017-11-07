@@ -51,6 +51,9 @@ class Mesh {
   //! Return a vector of volume
   std::vector<double> volume();
 
+  //! Return a vector of global ids
+  std::vector<unsigned> global_id();
+
   //! Write coordinates
   void write_coordinates(boost::filesystem::path coordinates_filename);
 

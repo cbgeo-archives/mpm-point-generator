@@ -40,9 +40,19 @@ TEST_CASE("GMSH is checked in 3D", "[GMSH][3D]") {
   std::vector<Eigen::VectorXd> coordinates = mesh->coordinates();
   std::vector<Eigen::VectorXd> stresses = mesh->stress();
   std::vector<double> volumes = mesh->volume();
+  std::vector<unsigned> global_ids = mesh->global_id();
 
   //! Check size
-  REQUIRE(mesh->coordinates().size() == 4);
+  REQUIRE(coordinates.size() == 4);
+  REQUIRE(stresses.size() == 4);
+  REQUIRE(volumes.size() == 4);
+  REQUIRE(global_ids.size() == 4);
+
+  //! Check id
+  REQUIRE(global_ids.at(0) == 0);
+  REQUIRE(global_ids.at(1) == 1);
+  REQUIRE(global_ids.at(2) == 2);
+  REQUIRE(global_ids.at(3) == 3);
 
   //! Check coordinates
   REQUIRE(coordinates.at(0)[0] == Approx(0.25).epsilon(tolerance));

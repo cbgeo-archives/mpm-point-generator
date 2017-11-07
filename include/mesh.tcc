@@ -49,6 +49,23 @@ std::vector<double> Mesh<Tdim, Tvertices>::volume() {
   return volumes;
 }
 
+//! Return a vector of global_ids
+//! \tparam Tdim Dimension of the mesh
+//! \tparam Tvertices Number of vertices in an element
+template <unsigned Tdim, unsigned Tvertices>
+std::vector<unsigned> Mesh<Tdim, Tvertices>::global_id() {
+
+  std::vector<unsigned> global_ids;
+
+  // Iterate over materialpoints_ to get stress
+  for (const auto& materialpoint : materialpoints_) {
+    for (const auto& global_id : materialpoint->global_id()) {
+      global_ids.emplace_back(global_id);
+    }
+  }
+  return global_ids;
+}
+
 //! Assign material properties to MaterialPoints
 //! \tparam Tdim Dimension of the mesh
 //! \tparam Tvertices Number of vertices in an element
