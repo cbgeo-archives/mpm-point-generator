@@ -22,7 +22,7 @@ class MaterialPoints {
   explicit MaterialPoints(unsigned id) : id_{id} {}
 
   //! Add points within this subset of MaterialPoints
-  void add_points(std::shared_ptr<Point<Tdim>>&& point) {
+  void add_points(std::shared_ptr<Point<Tdim>>& point) {
     points_.emplace_back(point);
   }
 
@@ -36,27 +36,19 @@ class MaterialPoints {
   //! Compute stress
   void compute_stress();
 
-  //! Return vector of coordinates
-  std::vector<Eigen::VectorXd> coordinates();
-
-  //! Return vector of stresses
-  std::vector<Eigen::VectorXd> stress();
-
-  //! Return vector of volumes
-  std::vector<double> volume();
-
-  //! Return vector of global id
-  std::vector<unsigned> global_id();
-
   //! Return begin iterator of points_
-  typename std::vector<std::shared_ptr<Point<Tdim>>>::iterator
-      iterator_begin() {
+  typename std::vector<std::shared_ptr<Point<Tdim>>>::const_iterator
+      points_begin() const {
     return points_.begin();
   }
   //! Return end iterator of points_
-  typename std::vector<std::shared_ptr<Point<Tdim>>>::iterator iterator_end() {
+  typename std::vector<std::shared_ptr<Point<Tdim>>>::const_iterator
+      points_end() const {
     return points_.end();
   }
+
+  //! Return total number of points
+  unsigned npoints() { return points_.size(); }
 
  private:
   //! material points id

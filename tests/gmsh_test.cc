@@ -45,8 +45,8 @@ TEST_CASE("GMSH is checked in 3D", "[GMSH][3D]") {
   for (auto itr_material_point = mesh->material_points_iterator_begin();
        itr_material_point != mesh->material_points_iterator_end();
        ++itr_material_point) {
-    for (auto itr = (*itr_material_point)->iterator_begin();
-         itr != (*itr_material_point)->iterator_end(); ++itr) {
+    for (auto itr = (*itr_material_point)->points_begin();
+         itr != (*itr_material_point)->points_end(); ++itr) {
       coordinates.emplace_back((*itr)->coordinates());
       stresses.emplace_back((*itr)->stress());
       volumes.emplace_back((*itr)->volume());

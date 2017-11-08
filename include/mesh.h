@@ -58,14 +58,14 @@ class Mesh {
   void write_vtk_mesh(boost::filesystem::path mesh_vtk_filename);
 
   //! Return begin iterator of material points_
-  typename std::vector<std::shared_ptr<MaterialPoints<Tdim>>>::iterator
-      material_points_iterator_begin() {
+  typename std::vector<std::shared_ptr<MaterialPoints<Tdim>>>::const_iterator
+      material_points_iterator_begin() const {
     return materialpoints_.begin();
   }
 
   //! Return end iterator of material points_
-  typename std::vector<std::shared_ptr<MaterialPoints<Tdim>>>::iterator
-      material_points_iterator_end() {
+  typename std::vector<std::shared_ptr<MaterialPoints<Tdim>>>::const_iterator
+      material_points_iterator_end() const {
     return materialpoints_.end();
   }
 
@@ -83,7 +83,7 @@ class Mesh {
   std::map<unsigned, Eigen::VectorXd> vertices_;
 
   //! Vector to store element id and vertices id
-  std::vector<std::shared_ptr<Element>> elements_;
+  std::vector<std::unique_ptr<Element>> elements_;
 
   //! Map to store element id and vertices coordinates
   std::map<unsigned, Eigen::VectorXd> elementcoordinates_;
