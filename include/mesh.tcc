@@ -1,54 +1,3 @@
-//! Return a vector of coordinates
-//! \tparam Tdim Dimension of the mesh
-//! \tparam Tvertices Number of vertices in an element
-template <unsigned Tdim, unsigned Tvertices>
-std::vector<Eigen::VectorXd> Mesh<Tdim, Tvertices>::coordinates() {
-
-  std::vector<Eigen::VectorXd> coordinates;
-
-  // Iterate over materialpoints_ to get coordinates
-  for (const auto& materialpoint : materialpoints_) {
-    for (const auto& coordinate : materialpoint->coordinates()) {
-      coordinates.emplace_back(coordinate);
-    }
-  }
-  return coordinates;
-}
-
-//! Return a vector of stresses
-//! \tparam Tdim Dimension of the mesh
-//! \tparam Tvertices Number of vertices in an element
-template <unsigned Tdim, unsigned Tvertices>
-std::vector<Eigen::VectorXd> Mesh<Tdim, Tvertices>::stress() {
-
-  std::vector<Eigen::VectorXd> stresses;
-
-  // Iterate over materialpoints_ to get stress
-  for (const auto& materialpoint : materialpoints_) {
-    for (const auto& stress : materialpoint->stress()) {
-      stresses.emplace_back(stress);
-    }
-  }
-  return stresses;
-}
-
-//! Return a vector of volumes
-//! \tparam Tdim Dimension of the mesh
-//! \tparam Tvertices Number of vertices in an element
-template <unsigned Tdim, unsigned Tvertices>
-std::vector<double> Mesh<Tdim, Tvertices>::volume() {
-
-  std::vector<double> volumes;
-
-  // Iterate over materialpoints_ to get stress
-  for (const auto& materialpoint : materialpoints_) {
-    for (const auto& volume : materialpoint->volume()) {
-      volumes.emplace_back(volume);
-    }
-  }
-  return volumes;
-}
-
 //! Assign material properties to MaterialPoints
 //! \tparam Tdim Dimension of the mesh
 //! \tparam Tvertices Number of vertices in an element
@@ -97,12 +46,13 @@ void Mesh<Tdim, Tvertices>::write_coordinates(
     //! For 1D, both y and z values are 0
     //! Iterate over materialpoints_ to get coordinates
     for (const auto& materialpoint : materialpoints_) {
-      for (const auto& coordinate : materialpoint->coordinates()) {
+      for (auto itr = materialpoint->points_begin();
+           itr != materialpoint->points_end(); ++itr) {
+        Eigen::VectorXd coordinate = (*itr)->coordinates();
         material_points_file << coordinate[0] << '\t' << coordinate[1] << '\t'
                              << coordinate[2] << '\n';
       }
     }
-
     material_points_file.close();
   }
   std::cout << "Wrote material point coordinates\n";
@@ -114,7 +64,6 @@ void Mesh<Tdim, Tvertices>::write_coordinates(
 template <unsigned Tdim, unsigned Tvertices>
 void Mesh<Tdim, Tvertices>::write_stresses(
     boost::filesystem::path stresses_filename) {
-  unsigned id = 0;
 
   const auto filename = stresses_filename.string();
 
@@ -133,14 +82,15 @@ void Mesh<Tdim, Tvertices>::write_stresses(
     //! $\tau_{yz}$ $\tau_{zx}$ $\tau_{xy}$
     //! Iterate over materialpoints_ to get stress
     for (const auto& materialpoint : materialpoints_) {
-      for (const auto& stress : materialpoint->stress()) {
+      for (auto itr = materialpoint->points_begin();
+           itr != materialpoint->points_end(); ++itr) {
         stress_file.setf(std::ios::fixed, std::ios::floatfield);
-        stress_file << id << '\t';
+        stress_file << (*itr)->global_id() << '\t';
+        Eigen::VectorXd stress = (*itr)->stress();
         for (unsigned i = 0; i < stress.size(); ++i) {
           stress_file << stress[i] << "\t";
         }
         stress_file << "\n";
-        ++id;
       }
     }
     stress_file.close();
@@ -154,8 +104,6 @@ void Mesh<Tdim, Tvertices>::write_stresses(
 template <unsigned Tdim, unsigned Tvertices>
 void Mesh<Tdim, Tvertices>::write_volumes(
     boost::filesystem::path volumes_filename) {
-
-  unsigned id = 0;
 
   const auto filename = volumes_filename.string();
   std::cout << "initial volumes will be stored in: " << filename << "\n";
@@ -171,9 +119,9 @@ void Mesh<Tdim, Tvertices>::write_volumes(
 
     //! Write material point id and volume
     for (const auto& materialpoint : materialpoints_) {
-      for (const auto& volume : materialpoint->volume()) {
-        volume_file << id << '\t' << volume << '\n';
-        ++id;
+      for (auto itr = materialpoint->points_begin();
+           itr != materialpoint->points_end(); ++itr) {
+        volume_file << (*itr)->global_id() << '\t' << (*itr)->volume() << '\n';
       }
     }
     volume_file.close();
@@ -208,8 +156,10 @@ void Mesh<Tdim, Tvertices>::write_vtk_stresses(
 
     // Iterate over materialpoints_ to get coordinates
     for (const auto& materialpoint : materialpoints_) {
-      for (const auto& coordinate : materialpoint->coordinates()) {
-        stress_vtk_file << coordinate[0] << ' ' << coordinate[1] << ' '
+      for (auto itr = materialpoint->points_begin();
+           itr != materialpoint->points_end(); ++itr) {
+        Eigen::VectorXd coordinate = (*itr)->coordinates();
+        stress_vtk_file << coordinate[0] << '\t' << coordinate[1] << '\t'
                         << coordinate[2] << '\n';
       }
     }
@@ -226,7 +176,9 @@ void Mesh<Tdim, Tvertices>::write_vtk_stresses(
 
     // Iterate over materialpoints_ to get stress
     for (const auto& materialpoint : materialpoints_) {
-      for (const auto& stress : materialpoint->stress()) {
+      for (auto itr = materialpoint->points_begin();
+           itr != materialpoint->points_end(); ++itr) {
+        Eigen::VectorXd stress = (*itr)->stress();
         if (Tdim == 2)
           stress_vtk_file << stress[0] << ' ' << stress[1] << " 0.\n";
         else if (Tdim == 3)

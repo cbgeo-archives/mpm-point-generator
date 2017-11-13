@@ -36,13 +36,34 @@ TEST_CASE("GMSH is checked in 3D", "[GMSH][3D]") {
   //! Check number of vertices
   REQUIRE(mesh->nvertices() == 18);
 
-  //! Get coordinates and stress
-  std::vector<Eigen::VectorXd> coordinates = mesh->coordinates();
-  std::vector<Eigen::VectorXd> stresses = mesh->stress();
-  std::vector<double> volumes = mesh->volume();
+  //! Get coordinates, stresses, volumes and global_ids
+  std::vector<Eigen::VectorXd> coordinates;
+  std::vector<Eigen::VectorXd> stresses;
+  std::vector<double> volumes;
+  std::vector<unsigned> global_ids;
+
+  for (auto iterators = mesh->material_points_begin();
+       iterators != mesh->material_points_end(); ++iterators) {
+    for (auto itr = (*iterators)->points_begin();
+         itr != (*iterators)->points_end(); ++itr) {
+      coordinates.emplace_back((*itr)->coordinates());
+      stresses.emplace_back((*itr)->stress());
+      volumes.emplace_back((*itr)->volume());
+      global_ids.emplace_back((*itr)->global_id());
+    }
+  }
 
   //! Check size
-  REQUIRE(mesh->coordinates().size() == 4);
+  REQUIRE(coordinates.size() == 4);
+  REQUIRE(stresses.size() == 4);
+  REQUIRE(volumes.size() == 4);
+  REQUIRE(global_ids.size() == 4);
+
+  //! Check id
+  REQUIRE(global_ids.at(0) == 0);
+  REQUIRE(global_ids.at(1) == 1);
+  REQUIRE(global_ids.at(2) == 2);
+  REQUIRE(global_ids.at(3) == 3);
 
   //! Check coordinates
   REQUIRE(coordinates.at(0)[0] == Approx(0.25).epsilon(tolerance));
@@ -89,5 +110,4 @@ TEST_CASE("GMSH is checked in 3D", "[GMSH][3D]") {
   REQUIRE(volumes.at(1) == Approx(0.25).epsilon(tolerance));
   REQUIRE(volumes.at(2) == Approx(0.25).epsilon(tolerance));
   REQUIRE(volumes.at(3) == Approx(0.25).epsilon(tolerance));
-
 }
