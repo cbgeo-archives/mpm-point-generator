@@ -56,10 +56,6 @@ void Mesh<Tdim, Tvertices>::write_coordinates(
     material_points_file.close();
   }
   std::cout << "Wrote material point coordinates\n";
-
-  // for (const auto& materialpoint : materialpoints_) {
-  //   std::cout << materialpoint->point()->id() <<'\n';
-  // }
 }
 
 //! \brief Write initial stresses of material points
