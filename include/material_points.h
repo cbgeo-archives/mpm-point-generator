@@ -48,7 +48,7 @@ class MaterialPoints {
   }
 
   //! Return total number of points
-  unsigned npoints() { return points_.size(); }
+  unsigned npoints() const { return points_.size(); }
 
  private:
   //! material points id

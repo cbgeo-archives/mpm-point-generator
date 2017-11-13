@@ -59,13 +59,13 @@ class Mesh {
 
   //! Return begin iterator of material points_
   typename std::vector<std::shared_ptr<MaterialPoints<Tdim>>>::const_iterator
-      material_points_iterator_begin() const {
+      material_points_begin() const {
     return materialpoints_.begin();
   }
 
   //! Return end iterator of material points_
   typename std::vector<std::shared_ptr<MaterialPoints<Tdim>>>::const_iterator
-      material_points_iterator_end() const {
+      material_points_end() const {
     return materialpoints_.end();
   }
 

@@ -42,11 +42,10 @@ TEST_CASE("GMSH is checked in 3D", "[GMSH][3D]") {
   std::vector<double> volumes;
   std::vector<unsigned> global_ids;
 
-  for (auto itr_material_point = mesh->material_points_iterator_begin();
-       itr_material_point != mesh->material_points_iterator_end();
-       ++itr_material_point) {
-    for (auto itr = (*itr_material_point)->points_begin();
-         itr != (*itr_material_point)->points_end(); ++itr) {
+  for (auto iterators = mesh->material_points_begin();
+       iterators != mesh->material_points_end(); ++iterators) {
+    for (auto itr = (*iterators)->points_begin();
+         itr != (*iterators)->points_end(); ++itr) {
       coordinates.emplace_back((*itr)->coordinates());
       stresses.emplace_back((*itr)->stress());
       volumes.emplace_back((*itr)->volume());

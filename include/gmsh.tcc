@@ -225,11 +225,11 @@ void GMSH<Tdim, Tvertices>::compute_material_points(unsigned ngauss_points) {
 
   Eigen::VectorXd pointsarray(Tdim);
 
-  //! global_id_prev should be changed later if more than one material
+  //! initial_points_id should be changed later if more than one material
   //! properties are used
   //! material_id is the index of materialpoints
   //! point_id is local index of points
-  unsigned global_id_prev = 0;
+  unsigned initial_points_id = 0;
   unsigned material_id = 0;
   unsigned point_id = 0;
 
@@ -272,14 +272,14 @@ void GMSH<Tdim, Tvertices>::compute_material_points(unsigned ngauss_points) {
 
       //! Make class point and store to material points
       std::shared_ptr<Point<Tdim>> point = std::make_shared<Point<Tdim>>(
-          point_id, point_id + global_id_prev, pointsarray, point_volume);
+          point_id, point_id + initial_points_id, pointsarray, point_volume);
       materialpoints_.at(material_id)->add_points(point);
 
       ++point_id;
     }
 
-    //! Update global_id_prev for next material properties
-    global_id_prev = point_id + 1;
+    //! Update initial_points_id for next material properties
+    initial_points_id = point_id + 1;
   }
 
   //! Find number of material points generated
