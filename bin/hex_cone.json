@@ -6,6 +6,7 @@
 		"density" : 2000.0,
 		"k0" : 0.5
 	},
-	"element_type" : 3
-
+	"element_type" : 5,
+	"dimension" : 3,
+	"vertices" : 8
 }

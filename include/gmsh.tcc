@@ -1,7 +1,7 @@
 //! Read mesh
 //! \tparam Tdim Dimension
 //! \tparam Tvertices Number of vertices in element
-//! \param[in] filename Input mesh filename
+//! \param[in] filename Input mesh filename, element_type GMSH element type
 template <unsigned Tdim, unsigned Tvertices>
 void GMSH<Tdim, Tvertices>::read_mesh(const std::string& filename, unsigned element_type) {
 
@@ -102,7 +102,7 @@ void GMSH<Tdim, Tvertices>::read_vertices(std::ifstream& file) {
 //! Read GMSH elements
 //! \tparam Tdim Dimension
 //! \tparam Tvertices Number of vertices in element
-//! \param[in] filename Input mesh filename and directory
+//! \param[in] filename Input mesh filename and directory, element_type GMSH element type
 template <unsigned Tdim, unsigned Tvertices>
 void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file, unsigned element_type) {
 
@@ -138,7 +138,6 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file, unsigned element_
   //! 5 - Hexahedron (8 nodes)
   //! For more informtion on element types, visit:
   //! http://gmsh.info/doc/texinfo/gmsh.html#File-formats
-  // const unsigned element_type = 3;
 
   //! Iterate through all elements in the file
   for (unsigned i = 0; i < nelements; ++i) {
@@ -151,11 +150,14 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file, unsigned element_
       if (elementtype != element_type) {
         istream >> line;
       } else {
-        istream >> elementarray[0] >> elementarray[1] >> elementarray[2] >>
-            elementarray[3];
-        // istream >> elementarray[0] >> elementarray[1] >> elementarray[2] >>
-        //     elementarray[3] >> elementarray[4] >> elementarray[5] >>
-        //     elementarray[6] >> elementarray[7];
+        if (Tdim == 2) {
+          istream >> elementarray[0] >> elementarray[1] >> elementarray[2] >>
+                     elementarray[3];
+        } else {
+          istream >> elementarray[0] >> elementarray[1] >> elementarray[2] >>
+                     elementarray[3] >> elementarray[4] >> elementarray[5] >>
+                     elementarray[6] >> elementarray[7];
+        }
         this->elements_.emplace_back(new Element(elementid, elementarray));
       }
     }
@@ -177,8 +179,6 @@ void GMSH<Tdim, Tvertices>::store_element_vertices() {
   //! Iterate through element_
   for (const auto& element : elements_) {
 
-    // std::vector<Eigen::Vector3d> verticescoordinates;
-    // std::vector<Eigen::Vector2d> verticescoordinates;
     std::vector<Eigen::VectorXd> verticescoordinates;
 
     //! Iterate through the vertices to get coordinates depending on the element
@@ -198,12 +198,111 @@ void GMSH<Tdim, Tvertices>::store_element_vertices() {
       << "The coordinates for vertices of each element have been stored\n";
 }
 
-//! Compute material points based on the centroid
+//! Compute material points for 2D quadrilateral
 //! \tparam Tdim Dimension
 //! \tparam Tvertices Number of vertices in element
-//! \param[in] ngauss_points Number of gauss points per coordinate
-template <unsigned Tdim, unsigned Tvertices>
-void GMSH<Tdim, Tvertices>::compute_material_points(unsigned ngauss_points, unsigned element_type) {
+//! \param[in] ngauss_points Number of gauss points per coordinate, element_type GMSH element type
+template <>
+inline void GMSH<2, 4>::compute_material_points(unsigned ngauss_points, unsigned element_type) {
+
+  const unsigned Tdim = 2;
+  const unsigned Tvertices = 4;
+
+  //! Storing ngauss_points to member variable and get constants from namespace
+  ngauss_points_ = ngauss_points;
+  std::vector<double> gauss_constants =
+      element::gauss_points.find(ngauss_points_)->second;
+
+  //! Create a matrix of xi from gauss points
+  //! Matrix is size npoints x Tdim
+  //! For 2D only
+  unsigned npoints = std::pow(ngauss_points_, Tdim);
+  Eigen::MatrixXd xi_gauss_points(npoints, Tdim);
+  unsigned counter = 0;
+  for (unsigned ii = 0; ii < ngauss_points_; ++ii) {
+    for (unsigned jj = 0; jj < ngauss_points_; ++jj) {
+        xi_gauss_points(counter, 0) = gauss_constants.at(ii);
+        xi_gauss_points(counter, 1) = gauss_constants.at(jj);
+        ++counter;
+    }
+  }
+
+  Eigen::VectorXd pointsarray(Tdim);
+
+  //! global_id is the index for all points
+  unsigned global_id = 0;
+  //! material_id is the index of materialpoints
+  unsigned material_id = 0;
+  //! point_id is local index of points
+  unsigned point_id = 0;
+
+  //! Update vector of material points
+  //! Fill materialpoints_ vector for the first component
+  materialpoints_.emplace_back(std::shared_ptr<MaterialPoints<Tdim>>(
+      new MaterialPoints<Tdim>(material_id)));
+  for (const auto& element : elements_) {
+
+    //! Store coordinates in Tdim x Tvertices matrix
+    //! Where N is the number of nodes per element
+    //! This is rearranging of the data to have stored in matrix form
+    Eigen::MatrixXd node_coordinates(Tdim, Tvertices);
+    for (unsigned i = 0; i < Tvertices; ++i) {
+      for (unsigned j = 0; j < Tdim; ++j) {
+        node_coordinates(j, i) = element->vertex_coordinates(i)[j];
+      }
+    }
+
+    //! Compute the volume for each point
+    //! The volume of the element is distributed evenly
+    double point_volume = element->calculate_volume() / npoints;
+
+    //! Compute the gauss points (there are npoints)
+    for (unsigned k = 0; k < npoints; ++k) {
+
+      //! Get array of xi for this gauss point
+      std::array<double, Tdim> xi;
+      for (unsigned l = 0; l < Tdim; ++l) xi.at(l) = xi_gauss_points(k, l);
+
+      //  gauss point in cartesian coordinate
+      for (unsigned i = 0; i < Tdim; ++i) {
+        pointsarray[i] = 0;
+        
+        Eigen::VectorXd shape_function = element::quadrilateral::shapefn(xi);
+
+        for (unsigned j = 0; j < Tvertices; ++j) {
+          pointsarray[i] += shape_function[j] * node_coordinates(i, j);
+        }
+      }
+
+      //! Make class point and store to material points
+      std::shared_ptr<Point<Tdim>> point = std::make_shared<Point<Tdim>>(
+          point_id, global_id, pointsarray, point_volume);
+      materialpoints_.at(material_id)->add_points(point);
+
+      //! Update point_id
+      ++point_id;
+      //! Update global_id
+      global_id = point_id;
+    }
+  }
+
+  //! Find number of material points generated
+  for (const auto& materialpoint : materialpoints_)
+    npoints_ += materialpoint->npoints();
+
+  std::cout << "Number of Material Points: " << npoints_ << '\n';
+}
+
+
+//! Compute material points for 3D hexahedron
+//! \tparam Tdim Dimension
+//! \tparam Tvertices Number of vertices in element
+//! \param[in] ngauss_points Number of gauss points per coordinate, element_type GMSH element type
+template <>
+inline void GMSH<3, 8>::compute_material_points(unsigned ngauss_points, unsigned element_type) {
+
+  const unsigned Tdim = 3;
+  const unsigned Tvertices = 8;
 
   //! Storing ngauss_points to member variable and get constants from namespace
   ngauss_points_ = ngauss_points;
@@ -240,7 +339,6 @@ void GMSH<Tdim, Tvertices>::compute_material_points(unsigned ngauss_points, unsi
   //! Fill materialpoints_ vector for the first component
   materialpoints_.emplace_back(std::shared_ptr<MaterialPoints<Tdim>>(
       new MaterialPoints<Tdim>(material_id)));
-
   for (const auto& element : elements_) {
 
     //! Store coordinates in Tdim x Tvertices matrix
@@ -268,11 +366,7 @@ void GMSH<Tdim, Tvertices>::compute_material_points(unsigned ngauss_points, unsi
       for (unsigned i = 0; i < Tdim; ++i) {
         pointsarray[i] = 0;
         
-        Eigen::VectorXd shape_function;
-        // if (element_type == 3)
-          // shape_function = element::quadrilateral::shapefn(xi);
-        // else if (element_type == 5)
-          shape_function = element::hexahedron::shapefn(xi);
+        Eigen::VectorXd shape_function = element::hexahedron::shapefn(xi);
 
         for (unsigned j = 0; j < Tvertices; ++j) {
           pointsarray[i] += shape_function[j] * node_coordinates(i, j);

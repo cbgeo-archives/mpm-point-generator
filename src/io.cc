@@ -106,6 +106,24 @@ IO::IO(int argc, char** argv) {
     std::cout << "element_type not specified. Using a default value of 3\n";
     element_type_ = 3;
   }
+
+  try {
+    if (json_.at("dimension").size())
+      dimension_ = json_["dimension"].template get<unsigned>();
+  } catch (json::out_of_range& out_of_range) {
+    std::cerr << out_of_range.what() << '\n';
+    std::cout << "dimension not specified. Using a default value of 2\n";
+    dimension_ = 2;
+  }
+
+  try {
+    if (json_.at("vertices").size())
+      nvertices_ = json_["vertices"].template get<unsigned>();
+  } catch (json::out_of_range& out_of_range) {
+    std::cerr << out_of_range.what() << '\n';
+    std::cout << "vertices not specified. Using a default value of 4\n";
+    nvertices_ = 4;
+  }
 }
 
 //! \brief Write output file names and store them in private member

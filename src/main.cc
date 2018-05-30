@@ -13,12 +13,18 @@ int main(int argc, char** argv) {
     //! IO
     std::unique_ptr<IO> io(new IO(argc, argv));
 
-    //! Mesh
-    std::unique_ptr<Mesh<3, 8>> mesh(new GMSH<3, 8>());
-
     //! MaterialProperties
     std::shared_ptr<MaterialProperties> material =
         std::make_shared<MaterialProperties>(io->material_properties());
+
+    // const unsigned Tdim = io->dimension();
+    // const unsigned Tvertices = io->nvertices();
+
+    const unsigned Tdim = 2;
+    const unsigned Tvertices = 4;
+
+    //! Mesh
+    std::unique_ptr<Mesh<Tdim, Tvertices>> mesh(new GMSH<Tdim, Tvertices>);
 
     //! Read mesh
     mesh->read_mesh(io->mesh_file_name(), io->element_type());
