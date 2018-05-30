@@ -28,6 +28,9 @@ class IO {
   //! Return the number of points per coordinate
   unsigned ngauss_points() const { return ngauss_points_; }
 
+  //! Return the element type
+  unsigned element_type() const { return element_type_; }
+
   //! Return json object for material properties
   json material_properties() const { return json_material_properties_; }
 
@@ -53,6 +56,9 @@ class IO {
 
   //! Number of gauss points per coordinate
   unsigned ngauss_points_{0};
+
+  //! Element type from GMSH
+  unsigned element_type_;
 };
 
 #endif  // MPM_POINT_GEN_IO_H_

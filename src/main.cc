@@ -21,10 +21,10 @@ int main(int argc, char** argv) {
         std::make_shared<MaterialProperties>(io->material_properties());
 
     //! Read mesh
-    mesh->read_mesh(io->mesh_file_name());
+    mesh->read_mesh(io->mesh_file_name(), io->element_type());
 
     //! Compute material points and stresses
-    mesh->compute_material_points(io->ngauss_points());
+    mesh->compute_material_points(io->ngauss_points(), io->element_type());
     mesh->assign_material_properties(material);
     mesh->compute_stresses();
 

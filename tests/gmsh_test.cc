@@ -28,8 +28,8 @@ TEST_CASE("GMSH is checked in 3D", "[GMSH][3D]") {
   auto material = std::shared_ptr<MaterialProperties>(
       new MaterialProperties(material_json));
 
-  mesh->read_mesh(filename);
-  mesh->compute_material_points(1);
+  mesh->read_mesh(filename, 5);
+  mesh->compute_material_points(1, 5);
   mesh->assign_material_properties(material);
   mesh->compute_stresses();
 

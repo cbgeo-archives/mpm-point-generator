@@ -25,7 +25,7 @@ class GMSH : public Mesh<Tdim, Tvertices> {
 
  public:
   //! Read GMSH file
-  void read_mesh(const std::string& filename);
+  void read_mesh(const std::string& filename, unsigned element_type);
 
   //! Read keyword in GMSH
   void read_keyword(std::ifstream& file, const std::string& keyword);
@@ -34,13 +34,13 @@ class GMSH : public Mesh<Tdim, Tvertices> {
   void read_vertices(std::ifstream& file);
 
   //! Read elements in GMSH
-  void read_elements(std::ifstream& file);
+  void read_elements(std::ifstream& file, unsigned element_type);
 
   //! Store element id and vertices coordinates as map
   void store_element_vertices();
 
   //! Compute material points from element coordinate map
-  void compute_material_points(unsigned ngauss_points);
+  void compute_material_points(unsigned ngauss_points, unsigned element_type);
 
  private:
   //! Total number of vertices

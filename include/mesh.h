@@ -27,10 +27,10 @@ class Mesh {
 
  public:
   //! Read vertices from mesh
-  virtual void read_mesh(const std::string& filename) = 0;
+  virtual void read_mesh(const std::string& filename, unsigned element_type) = 0;
 
   //! Compute material point location
-  virtual void compute_material_points(unsigned ngauss_points) = 0;
+  virtual void compute_material_points(unsigned ngauss_points, unsigned element_type) = 0;
 
   //! Get material properties from json object
   void assign_material_properties(

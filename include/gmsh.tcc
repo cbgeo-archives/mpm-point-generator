@@ -3,7 +3,7 @@
 //! \tparam Tvertices Number of vertices in element
 //! \param[in] filename Input mesh filename
 template <unsigned Tdim, unsigned Tvertices>
-void GMSH<Tdim, Tvertices>::read_mesh(const std::string& filename) {
+void GMSH<Tdim, Tvertices>::read_mesh(const std::string& filename, unsigned element_type) {
 
   std::ifstream file;
   file.open(filename.c_str(), std::ios::in);
@@ -11,7 +11,7 @@ void GMSH<Tdim, Tvertices>::read_mesh(const std::string& filename) {
     throw std::runtime_error("Specified GMSH file does not exist");
   if (file.good()) {
     read_vertices(file);
-    read_elements(file);
+    read_elements(file, element_type);
   }
   file.close();
 }
@@ -104,7 +104,7 @@ void GMSH<Tdim, Tvertices>::read_vertices(std::ifstream& file) {
 //! \tparam Tvertices Number of vertices in element
 //! \param[in] filename Input mesh filename and directory
 template <unsigned Tdim, unsigned Tvertices>
-void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
+void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file, unsigned element_type) {
 
   //! Find the line of interest
   read_keyword(file, "$Elements");
@@ -138,7 +138,7 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
   //! 5 - Hexahedron (8 nodes)
   //! For more informtion on element types, visit:
   //! http://gmsh.info/doc/texinfo/gmsh.html#File-formats
-  const unsigned element_type = 5;
+  // const unsigned element_type = 3;
 
   //! Iterate through all elements in the file
   for (unsigned i = 0; i < nelements; ++i) {
@@ -152,8 +152,10 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
         istream >> line;
       } else {
         istream >> elementarray[0] >> elementarray[1] >> elementarray[2] >>
-            elementarray[3] >> elementarray[4] >> elementarray[5] >>
-            elementarray[6] >> elementarray[7];
+            elementarray[3];
+        // istream >> elementarray[0] >> elementarray[1] >> elementarray[2] >>
+        //     elementarray[3] >> elementarray[4] >> elementarray[5] >>
+        //     elementarray[6] >> elementarray[7];
         this->elements_.emplace_back(new Element(elementid, elementarray));
       }
     }
@@ -175,7 +177,9 @@ void GMSH<Tdim, Tvertices>::store_element_vertices() {
   //! Iterate through element_
   for (const auto& element : elements_) {
 
-    std::vector<Eigen::Vector3d> verticescoordinates;
+    // std::vector<Eigen::Vector3d> verticescoordinates;
+    // std::vector<Eigen::Vector2d> verticescoordinates;
+    std::vector<Eigen::VectorXd> verticescoordinates;
 
     //! Iterate through the vertices to get coordinates depending on the element
     for (unsigned j = 0; j < Tvertices; ++j) {
@@ -199,7 +203,7 @@ void GMSH<Tdim, Tvertices>::store_element_vertices() {
 //! \tparam Tvertices Number of vertices in element
 //! \param[in] ngauss_points Number of gauss points per coordinate
 template <unsigned Tdim, unsigned Tvertices>
-void GMSH<Tdim, Tvertices>::compute_material_points(unsigned ngauss_points) {
+void GMSH<Tdim, Tvertices>::compute_material_points(unsigned ngauss_points, unsigned element_type) {
 
   //! Storing ngauss_points to member variable and get constants from namespace
   ngauss_points_ = ngauss_points;
@@ -260,10 +264,16 @@ void GMSH<Tdim, Tvertices>::compute_material_points(unsigned ngauss_points) {
       std::array<double, Tdim> xi;
       for (unsigned l = 0; l < Tdim; ++l) xi.at(l) = xi_gauss_points(k, l);
 
-      // Compute gauss point in cartesian coordinate
+      //  gauss point in cartesian coordinate
       for (unsigned i = 0; i < Tdim; ++i) {
         pointsarray[i] = 0;
-        Eigen::VectorXd shape_function = element::hexahedron::shapefn(xi);
+        
+        Eigen::VectorXd shape_function;
+        // if (element_type == 3)
+          // shape_function = element::quadrilateral::shapefn(xi);
+        // else if (element_type == 5)
+          shape_function = element::hexahedron::shapefn(xi);
+
         for (unsigned j = 0; j < Tvertices; ++j) {
           pointsarray[i] += shape_function[j] * node_coordinates(i, j);
         }
