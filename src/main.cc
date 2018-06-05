@@ -19,6 +19,29 @@ int main(int argc, char** argv) {
 
     // const unsigned Tdim = io->dimension();
     // const unsigned Tvertices = io->nvertices();
+    // unsigned TTdim = io->dimension();
+    // unsigned Tvertices;
+        
+    // int dim = 2;
+    // switch (dim) {
+    //     case 2: {
+    //         const unsigned Tdim = 2;
+    //         break;
+    //     }
+    //     case 3: {
+    //         const unsigned Tdim = 3;
+    //         break;
+    //     }
+    // }
+
+    // int vertices = 4;
+    // switch (vertices) {
+    //     case 4 : 
+    //         Tvertices = 4;
+    //         break;
+    //     case 8 :
+    //         Tvertices = 8;
+    // }    
 
     const unsigned Tdim = 2;
     const unsigned Tvertices = 4;

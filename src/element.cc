@@ -38,8 +38,8 @@ double Element::calculate_volume() {
              + 0.5 * sqrt(std::pow((a - d).norm(), 2) * std::pow((a - c).norm(), 2) -
                           std::pow((a - d).dot((a - c)), 2));
 
-    
-  } else {
+
+  } else if (dim == 3) {
   
       /* Node numbering as read in by mesh file
      

@@ -150,13 +150,9 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file, unsigned element_
       if (elementtype != element_type) {
         istream >> line;
       } else {
-        if (Tdim == 2) {
-          istream >> elementarray[0] >> elementarray[1] >> elementarray[2] >>
-                     elementarray[3];
-        } else {
-          istream >> elementarray[0] >> elementarray[1] >> elementarray[2] >>
-                     elementarray[3] >> elementarray[4] >> elementarray[5] >>
-                     elementarray[6] >> elementarray[7];
+        //! For every element, get the node number of its vertices
+        for (unsigned j = 0; j < elementarray.size(); ++j) {
+          istream >> elementarray[j];
         }
         this->elements_.emplace_back(new Element(elementid, elementarray));
       }
