@@ -64,10 +64,10 @@ TEST_CASE("GMSH is checked in 2D", "[GMSH][2D]") {
   REQUIRE(global_ids.at(1) == 1);
 
   //! Check coordinates
-  REQUIRE(coordinates.at(0)[0] == Approx(0.50).epsilon(tolerance));
-  REQUIRE(coordinates.at(0)[1] == Approx(0.50).epsilon(tolerance));
-  REQUIRE(coordinates.at(1)[0] == Approx(0.50).epsilon(tolerance));
-  REQUIRE(coordinates.at(1)[1] == Approx(2.00).epsilon(tolerance));
+  REQUIRE(coordinates.at(0)[0] == Approx(1.00).epsilon(tolerance));
+  REQUIRE(coordinates.at(0)[1] == Approx(1.00).epsilon(tolerance));
+  REQUIRE(coordinates.at(1)[0] == Approx(1.00).epsilon(tolerance));
+  REQUIRE(coordinates.at(1)[1] == Approx(2.50).epsilon(tolerance));
 
   //! Check stress
   REQUIRE(stresses.at(0)[0] == Approx(-14715).epsilon(tolerance));
@@ -84,7 +84,7 @@ TEST_CASE("GMSH is checked in 2D", "[GMSH][2D]") {
   REQUIRE(stresses.at(1)[5] == Approx(0).epsilon(tolerance));
   
   //! Check volume
-  REQUIRE(volumes.at(0) == Approx(1).epsilon(tolerance));
+  REQUIRE(volumes.at(0) == Approx(4).epsilon(tolerance));
   REQUIRE(volumes.at(1) == Approx(2).epsilon(tolerance));
 
 }
