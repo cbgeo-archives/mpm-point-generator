@@ -27,10 +27,12 @@ class Mesh {
 
  public:
   //! Read vertices from mesh
-  virtual void read_mesh(const std::string& filename, unsigned element_type) = 0;
+  virtual void read_mesh(const std::string& filename,
+                         unsigned element_type) = 0;
 
   //! Compute material point location
-  virtual void compute_material_points(unsigned ngauss_points, unsigned element_type) = 0;
+  virtual void generate_material_points(unsigned ngauss_points,
+                                        unsigned element_type) = 0;
 
   //! Get material properties from json object
   void assign_material_properties(
@@ -72,9 +74,6 @@ class Mesh {
  protected:
   //! Total number of vertices
   unsigned nvertices_{std::numeric_limits<unsigned>::max()};
-
-  //! Number of pgauss oints per coordinate
-  unsigned ngauss_points_{std::numeric_limits<unsigned>::max()};
 
   //! Total number of material points generated
   unsigned npoints_{0};

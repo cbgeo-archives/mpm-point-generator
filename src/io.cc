@@ -87,8 +87,6 @@ IO::IO(int argc, char** argv) {
     ngauss_points_ = 1;
   }
 
-
-
   //! Read and store the element_type
   //! If not specified, set default value of 3
   //! Documentation from GMSH

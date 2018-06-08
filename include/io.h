@@ -35,7 +35,7 @@ class IO {
   unsigned dimension() const { return dimension_; }
 
   //! Return number of vertices in an element
-  unsigned nvertices() const { return nvertices_; }    
+  unsigned nvertices() const { return nvertices_; }
 
   //! Return json object for material properties
   json material_properties() const { return json_material_properties_; }
@@ -71,7 +71,6 @@ class IO {
 
   //! Number of vertices per element
   unsigned nvertices_{0};
-
 };
 
 #endif  // MPM_POINT_GEN_IO_H_

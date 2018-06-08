@@ -29,7 +29,7 @@ TEST_CASE("GMSH is checked in 3D", "[GMSH][3D]") {
       new MaterialProperties(material_json));
 
   mesh->read_mesh(filename, 5);
-  mesh->compute_material_points(1, 5);
+  mesh->generate_material_points(1, 5);
   mesh->assign_material_properties(material);
   mesh->compute_stresses();
 

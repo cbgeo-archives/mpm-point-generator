@@ -29,7 +29,7 @@ TEST_CASE("GMSH is checked in 2D", "[GMSH][2D]") {
       new MaterialProperties(material_json));
 
   mesh->read_mesh(filename, 3);
-  mesh->compute_material_points(1, 3);
+  mesh->generate_material_points(1, 3);
   mesh->assign_material_properties(material);
   mesh->compute_stresses();
 
@@ -82,9 +82,8 @@ TEST_CASE("GMSH is checked in 2D", "[GMSH][2D]") {
   REQUIRE(stresses.at(1)[3] == Approx(0).epsilon(tolerance));
   REQUIRE(stresses.at(1)[4] == Approx(0).epsilon(tolerance));
   REQUIRE(stresses.at(1)[5] == Approx(0).epsilon(tolerance));
-  
+
   //! Check volume
   REQUIRE(volumes.at(0) == Approx(4).epsilon(tolerance));
   REQUIRE(volumes.at(1) == Approx(2).epsilon(tolerance));
-
 }
