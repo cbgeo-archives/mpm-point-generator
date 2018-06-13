@@ -1,12 +1,10 @@
 {
 	"mesh_file" : "hexcone.msh",
 	"results_path" : "results/",
+	"dimension" : 3,
 	"ngauss_points" : 1,
 	"material_properties" : {
 		"density" : 2000.0,
 		"k0" : 0.5
-	},
-	"element_type" : 5,
-	"dimension" : 3,
-	"vertices" : 8
+	}
 }

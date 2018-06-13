@@ -28,14 +28,8 @@ class IO {
   //! Return the number of points per coordinate
   unsigned ngauss_points() const { return ngauss_points_; }
 
-  //! Return the element type
-  unsigned element_type() const { return element_type_; }
-
   //! Return the dimension of the problem: 2 or 3
   unsigned dimension() const { return dimension_; }
-
-  //! Return number of vertices in an element
-  unsigned nvertices() const { return nvertices_; }
 
   //! Return json object for material properties
   json material_properties() const { return json_material_properties_; }
@@ -63,14 +57,8 @@ class IO {
   //! Number of gauss points per coordinate
   unsigned ngauss_points_{0};
 
-  //! Element type from GMSH
-  unsigned element_type_{0};
-
   //! 2D or 3D
   unsigned dimension_{0};
-
-  //! Number of vertices per element
-  unsigned nvertices_{0};
 };
 
 #endif  // MPM_POINT_GEN_IO_H_

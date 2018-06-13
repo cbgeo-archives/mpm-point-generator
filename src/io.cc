@@ -87,24 +87,6 @@ IO::IO(int argc, char** argv) {
     ngauss_points_ = 1;
   }
 
-  //! Read and store the element_type
-  //! If not specified, set default value of 3
-  //! Documentation from GMSH
-  //! 2 - Triangle (3 nodes)
-  //! 3 - Quadrangle (4 nodes)
-  //! 4 - Tetrahedron (4 nodes)
-  //! 5 - Hexahedron (8 nodes)
-  //! For more informtion on element types, visit:
-  //! http://gmsh.info/doc/texinfo/gmsh.html#File-formats
-  try {
-    if (json_.at("element_type").size())
-      element_type_ = json_["element_type"].template get<unsigned>();
-  } catch (json::out_of_range& out_of_range) {
-    std::cerr << out_of_range.what() << '\n';
-    std::cout << "element_type not specified. Using a default value of 3\n";
-    element_type_ = 3;
-  }
-
   try {
     if (json_.at("dimension").size())
       dimension_ = json_["dimension"].template get<unsigned>();
@@ -114,14 +96,6 @@ IO::IO(int argc, char** argv) {
     dimension_ = 2;
   }
 
-  try {
-    if (json_.at("vertices").size())
-      nvertices_ = json_["vertices"].template get<unsigned>();
-  } catch (json::out_of_range& out_of_range) {
-    std::cerr << out_of_range.what() << '\n';
-    std::cout << "vertices not specified. Using a default value of 4\n";
-    nvertices_ = 4;
-  }
 }
 
 //! \brief Write output file names and store them in private member

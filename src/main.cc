@@ -27,10 +27,10 @@ int main(int argc, char** argv) {
         std::unique_ptr<Mesh<Tdim, Tvertices>> mesh(new GMSH<Tdim, Tvertices>);
 
         //! Read mesh
-        mesh->read_mesh(io->mesh_file_name(), io->element_type());
+        mesh->read_mesh(io->mesh_file_name());
 
         //! Compute material points and stresses
-        mesh->generate_material_points(io->ngauss_points(), io->element_type());
+        mesh->generate_material_points(io->ngauss_points());
         mesh->assign_material_properties(material);
         mesh->compute_stresses();
 
@@ -54,10 +54,10 @@ int main(int argc, char** argv) {
         break;
 
         //! Read mesh
-        mesh->read_mesh(io->mesh_file_name(), io->element_type());
+        mesh->read_mesh(io->mesh_file_name());
 
         //! Compute material points and stresses
-        mesh->generate_material_points(io->ngauss_points(), io->element_type());
+        mesh->generate_material_points(io->ngauss_points());
         mesh->assign_material_properties(material);
         mesh->compute_stresses();
 
@@ -81,10 +81,10 @@ int main(int argc, char** argv) {
         std::unique_ptr<Mesh<Tdim, Tvertices>> mesh(new GMSH<Tdim, Tvertices>);
 
         //! Read mesh
-        mesh->read_mesh(io->mesh_file_name(), io->element_type());
+        mesh->read_mesh(io->mesh_file_name());
 
         //! Compute material points and stresses
-        mesh->generate_material_points(io->ngauss_points(), io->element_type());
+        mesh->generate_material_points(io->ngauss_points());
         mesh->assign_material_properties(material);
         mesh->compute_stresses();
 

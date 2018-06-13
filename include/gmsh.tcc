@@ -1,10 +1,9 @@
 //! Read mesh
 //! \tparam Tdim Dimension
 //! \tparam Tvertices Number of vertices in element
-//! \param[in] filename Input mesh filename, element_type GMSH element type
+//! \param[in] filename Input mesh filename
 template <unsigned Tdim, unsigned Tvertices>
-void GMSH<Tdim, Tvertices>::read_mesh(const std::string& filename,
-                                      unsigned element_type) {
+void GMSH<Tdim, Tvertices>::read_mesh(const std::string& filename) {
 
   std::ifstream file;
   file.open(filename.c_str(), std::ios::in);
@@ -12,7 +11,7 @@ void GMSH<Tdim, Tvertices>::read_mesh(const std::string& filename,
     throw std::runtime_error("Specified GMSH file does not exist");
   if (file.good()) {
     read_vertices(file);
-    read_elements(file, element_type);
+    read_elements(file);
   }
   file.close();
 }
@@ -103,11 +102,10 @@ void GMSH<Tdim, Tvertices>::read_vertices(std::ifstream& file) {
 //! Read GMSH elements
 //! \tparam Tdim Dimension
 //! \tparam Tvertices Number of vertices in element
-//! \param[in] filename Input mesh filename and directory, element_type GMSH
+//! \param[in] filename Input mesh filename and directory
 //! element type
 template <unsigned Tdim, unsigned Tvertices>
-void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file,
-                                          unsigned element_type) {
+void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
 
   //! Find the line of interest
   read_keyword(file, "$Elements");
@@ -141,6 +139,7 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file,
   //! 5 - Hexahedron (8 nodes)
   //! For more informtion on element types, visit:
   //! http://gmsh.info/doc/texinfo/gmsh.html#File-formats
+  unsigned element_type = 3;
 
   //! Iterate through all elements in the file
   for (unsigned i = 0; i < nelements; ++i) {
@@ -200,17 +199,16 @@ void GMSH<Tdim, Tvertices>::store_element_vertices() {
 //! Generate material points for 2D quadrilateral
 //! \tparam Tdim Dimension
 //! \tparam Tvertices Number of vertices in element
-//! \param[in] ngauss_points Number of gauss points per coordinate, element_type
+//! \param[in] ngauss_points Number of gauss points per coordinate
 //! GMSH element type
 template <>
-inline void GMSH<2, 4>::generate_material_points(unsigned ngauss_points,
-                                                 unsigned element_type) {
+inline void GMSH<2, 4>::generate_material_points(unsigned ngauss_points) {
 
   const unsigned Tdim = 2;
   const unsigned Tvertices = 4;
 
   //! Get constants from namespace
-  std::vector<double> gauss_constants =
+  auto gauss_constants =
       element::gauss_points.find(ngauss_points)->second;
 
   //! Create a matrix of xi from gauss points
@@ -296,17 +294,15 @@ inline void GMSH<2, 4>::generate_material_points(unsigned ngauss_points,
 //! Generate material points for 3D hexahedron
 //! \tparam Tdim Dimension
 //! \tparam Tvertices Number of vertices in element
-//! \param[in] ngauss_points Number of gauss points per coordinate, element_type
+//! \param[in] ngauss_points Number of gauss points per coordinate
 //! GMSH element type
 template <>
-inline void GMSH<3, 8>::generate_material_points(unsigned ngauss_points,
-                                                 unsigned element_type) {
+inline void GMSH<3, 8>::generate_material_points(unsigned ngauss_points) {
 
   const unsigned Tdim = 3;
   const unsigned Tvertices = 8;
 
   //! Get constants from namespace
-  ngauss_points = ngauss_points;
   std::vector<double> gauss_constants =
       element::gauss_points.find(ngauss_points)->second;
 
@@ -318,10 +314,10 @@ inline void GMSH<3, 8>::generate_material_points(unsigned ngauss_points,
   unsigned counter = 0;
   for (unsigned i = 0; i < ngauss_points; ++i) {
     for (unsigned j = 0; j < ngauss_points; ++j) {
-      for (unsigned kk = 0; kk < ngauss_points; ++kk) {
+      for (unsigned k = 0; k < ngauss_points; ++k) {
         xi_gauss_points(counter, 0) = gauss_constants.at(i);
         xi_gauss_points(counter, 1) = gauss_constants.at(j);
-        xi_gauss_points(counter, 2) = gauss_constants.at(kk);
+        xi_gauss_points(counter, 2) = gauss_constants.at(k);
         ++counter;
       }
     }
