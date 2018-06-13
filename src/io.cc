@@ -53,49 +53,81 @@ IO::IO(int argc, char** argv) {
   //! Store json object as private variable
   //! Read json file and store to private variables
   json_ = json::parse(inputFile);
+}
 
-  // Store json object for material properties
-  // IO handles null json object by making empty json object
-  // MaterialProperties class could handle empty json object
-  if (!json_["material_properties"].is_null()) {
-    json_material_properties_ = json_["material_properties"];
-  } else {
-    std::cout << "No material properties specified, using default\n";
-    json_material_properties_.clear();
-  }
+std::string IO::mesh_file_name() const {
+
+  std::string mesh_file_name;
 
   //! Check if mesh file is present
-  mesh_filename_ =
+  mesh_file_name =
       working_dir_ + json_["mesh_file"].template get<std::string>();
   std::ifstream meshfile;
   meshfile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
   try {
-    meshfile.open(mesh_filename_);
+    meshfile.open(mesh_file_name);
   } catch (const std::ifstream::failure& except) {
     std::cerr << "Exception opening/reading mesh file";
   }
   meshfile.close();
 
-  //! Read and store number of gauss points per coordinate
+  return mesh_file_name;
+}
+
+//! \brief Return user-specified material propertes
+json IO::material_properties() const {
+
+  json json_material_properties;
+
+  // Store json object for material properties
+  // IO handles null json object by making empty json object
+  // MaterialProperties class could handle empty json object
+  if (!json_["material_properties"].is_null()) {
+    json_material_properties = json_["material_properties"];
+  } else {
+    std::cout << "No material properties specified, using default\n";
+    json_material_properties.clear();
+  }
+
+  return json_material_properties;
+}
+
+//! \brief Return user-specified gauss points
+unsigned IO::ngauss_points() const {
+
+  unsigned ngauss_points{0};
+
+  //! Read and pass the
   //! If not specified, set default value of 1
   try {
     if (json_.at("ngauss_points").size())
-      ngauss_points_ = json_["ngauss_points"].template get<unsigned>();
+      ngauss_points = json_["ngauss_points"].template get<unsigned>();
   } catch (json::out_of_range& out_of_range) {
     std::cerr << out_of_range.what() << '\n';
     std::cout << "ngauss_points not specified. Using a default value of 1\n";
-    ngauss_points_ = 1;
+    ngauss_points = 1;
   }
 
+  return ngauss_points;
+}
+
+//! \brief Return user-specified dimension
+unsigned IO::dimension() const {
+
+  unsigned dimension{0};
+
+  //! Read and pass the
+  //! If not specified, set default value of 1
   try {
     if (json_.at("dimension").size())
-      dimension_ = json_["dimension"].template get<unsigned>();
+      dimension = json_["dimension"].template get<unsigned>();
   } catch (json::out_of_range& out_of_range) {
     std::cerr << out_of_range.what() << '\n';
     std::cout << "dimension not specified. Using a default value of 2\n";
-    dimension_ = 2;
+    dimension = 2;
   }
 
+  return dimension;
 }
 
 //! \brief Write output file names and store them in private member

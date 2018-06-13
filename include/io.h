@@ -26,16 +26,16 @@ class IO {
   IO(int argc, char** argv);
 
   //! Return the number of points per coordinate
-  unsigned ngauss_points() const { return ngauss_points_; }
+  unsigned ngauss_points() const;
 
   //! Return the dimension of the problem: 2 or 3
-  unsigned dimension() const { return dimension_; }
+  unsigned dimension() const;
 
   //! Return json object for material properties
-  json material_properties() const { return json_material_properties_; }
+  json material_properties() const;
 
   //! Return mesh file name
-  std::string mesh_file_name() const { return mesh_filename_; }
+  std::string mesh_file_name() const;
 
   //! Create output file names
   boost::filesystem::path output_file(const std::string& attribute,
@@ -47,18 +47,6 @@ class IO {
 
   //! Input json object
   json json_;
-
-  //! Material properties json object
-  json json_material_properties_;
-
-  //! Input mesh file name
-  std::string mesh_filename_;
-
-  //! Number of gauss points per coordinate
-  unsigned ngauss_points_{0};
-
-  //! 2D or 3D
-  unsigned dimension_{0};
 };
 
 #endif  // MPM_POINT_GEN_IO_H_

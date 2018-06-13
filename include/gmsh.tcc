@@ -131,7 +131,7 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
   //! Array to store vertices coordinates
   Eigen::VectorXd elementarray(Tvertices);
 
-  //! specify element type 4 = tetrahedral, 5 = hexahedron
+  //! specify element type 3 = quadrilateral, 5 = hexahedron
   //! Documentation from GMSH
   //! 2 - Triangle (3 nodes)
   //! 3 - Quadrangle (4 nodes)
@@ -139,7 +139,13 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
   //! 5 - Hexahedron (8 nodes)
   //! For more informtion on element types, visit:
   //! http://gmsh.info/doc/texinfo/gmsh.html#File-formats
-  unsigned element_type = 3;
+  unsigned element_type;
+
+  if (Tdim == 2) {
+    element_type = 3;
+  } else {
+    element_type = 5;
+  }
 
   //! Iterate through all elements in the file
   for (unsigned i = 0; i < nelements; ++i) {
@@ -208,8 +214,7 @@ inline void GMSH<2, 4>::generate_material_points(unsigned ngauss_points) {
   const unsigned Tvertices = 4;
 
   //! Get constants from namespace
-  auto gauss_constants =
-      element::gauss_points.find(ngauss_points)->second;
+  auto gauss_constants = element::gauss_points.find(ngauss_points)->second;
 
   //! Create a matrix of xi from gauss points
   //! Matrix is size npoints x Tdim
