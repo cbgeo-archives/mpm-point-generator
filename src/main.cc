@@ -18,7 +18,8 @@ int main(int argc, char** argv) {
     std::vector<std::unique_ptr<MaterialProperties>> material;
 
     for (unsigned i = 0; i < io->material_properties().size(); i++) {
-        material.emplace_back(std::make_unique<MaterialProperties>(io->material_properties()[i]));    
+      material.emplace_back(
+          std::make_unique<MaterialProperties>(io->material_properties()[i]));
     }
 
     switch (io->dimension()) {

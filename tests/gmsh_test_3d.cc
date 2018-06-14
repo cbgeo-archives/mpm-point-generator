@@ -32,7 +32,7 @@ TEST_CASE("GMSH is checked in 3D", "[GMSH][3D]") {
 
   for (unsigned i = 0; i < material_json.size(); i++) {
     material.emplace_back(std::unique_ptr<MaterialProperties>(
-      new MaterialProperties(material_json[i])));
+        new MaterialProperties(material_json[i])));
   }
 
   mesh->read_mesh(filename);

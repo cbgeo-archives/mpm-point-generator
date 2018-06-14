@@ -27,9 +27,6 @@ IO::IO(int argc, char** argv) {
   // Parse arguments
   cmd.parse(argc, argv);
 
-  // Dimension
-  // dimension_ = dim_arg.getValue();
-
   //! Set working directory
   working_dir_ = cwd_arg.getValue();
 

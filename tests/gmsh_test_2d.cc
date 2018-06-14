@@ -1,8 +1,8 @@
 // GMSH test
 #include <array>
+#include <iostream>
 #include <limits>
 #include <vector>
-#include <iostream>
 
 #include <eigen3/Eigen/Dense>
 
@@ -33,9 +33,9 @@ TEST_CASE("GMSH is checked in 2D", "[GMSH][2D]") {
 
   for (unsigned i = 0; i < material_json.size(); i++) {
     material.emplace_back(std::unique_ptr<MaterialProperties>(
-      new MaterialProperties(material_json[i])));
+        new MaterialProperties(material_json[i])));
   }
-      
+
   mesh->read_mesh(filename);
   mesh->generate_material_points(1);
   mesh->assign_material_properties(std::move(material));
