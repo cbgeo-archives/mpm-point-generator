@@ -143,7 +143,7 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
 
   if (Tdim == 2) {
     element_type = 3;
-  } else {
+  } else if (Tdim == 3) {
     element_type = 5;
   }
 
@@ -278,9 +278,9 @@ inline void GMSH<2, 4>::generate_material_points(unsigned ngauss_points) {
       }
 
       //! Make class point and store to material points
-      std::shared_ptr<Point<Tdim>> point = std::make_shared<Point<Tdim>>(
+      std::unique_ptr<Point<Tdim>> point = std::make_unique<Point<Tdim>>(
           point_id, global_id, pointsarray, point_volume);
-      materialpoints_.at(material_id)->add_points(point);
+      materialpoints_.at(material_id)->add_points(std::move(point));
 
       //! Update point_id
       ++point_id;
@@ -376,9 +376,9 @@ inline void GMSH<3, 8>::generate_material_points(unsigned ngauss_points) {
       }
 
       //! Make class point and store to material points
-      std::shared_ptr<Point<Tdim>> point = std::make_shared<Point<Tdim>>(
+      std::unique_ptr<Point<Tdim>> point = std::make_unique<Point<Tdim>>(
           point_id, global_id, pointsarray, point_volume);
-      materialpoints_.at(material_id)->add_points(point);
+      materialpoints_.at(material_id)->add_points(std::move(point));
 
       //! Update point_id
       ++point_id;

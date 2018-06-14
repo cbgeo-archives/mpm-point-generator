@@ -15,7 +15,7 @@ int main(int argc, char** argv) {
 
     //! MaterialProperties
     std::shared_ptr<MaterialProperties> material =
-        std::make_shared<MaterialProperties>(io->material_properties());
+        std::make_unique<MaterialProperties>(io->material_properties());
 
     switch (io->dimension()) {
 
@@ -49,9 +49,9 @@ int main(int argc, char** argv) {
       case 3: {
         const unsigned Tdim = 3;
         const unsigned Tvertices = 8;
+
         //! Mesh
         std::unique_ptr<Mesh<Tdim, Tvertices>> mesh(new GMSH<Tdim, Tvertices>);
-        break;
 
         //! Read mesh
         mesh->read_mesh(io->mesh_file_name());
