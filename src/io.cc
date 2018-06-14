@@ -52,6 +52,7 @@ IO::IO(int argc, char** argv) {
   json_ = json::parse(inputFile);
 }
 
+//! \brief Return user-specified mesh file name
 std::string IO::mesh_file_name() const {
 
   std::string mesh_file_name;
