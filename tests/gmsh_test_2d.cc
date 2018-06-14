@@ -1,6 +1,5 @@
 // GMSH test
 #include <array>
-#include <iostream>
 #include <limits>
 #include <vector>
 
