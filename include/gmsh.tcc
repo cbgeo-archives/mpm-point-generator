@@ -241,7 +241,7 @@ inline void GMSH<2, 4>::generate_material_points(unsigned ngauss_points) {
 
   //! Update vector of material points
   //! Fill materialpoints_ vector for the first component
-  materialpoints_.emplace_back(std::shared_ptr<MaterialPoints<Tdim>>(
+  materialpoints_.emplace_back(std::unique_ptr<MaterialPoints<Tdim>>(
       new MaterialPoints<Tdim>(material_id)));
   for (const auto& element : elements_) {
 
@@ -339,7 +339,7 @@ inline void GMSH<3, 8>::generate_material_points(unsigned ngauss_points) {
 
   //! Update vector of material points
   //! Fill materialpoints_ vector for the first component
-  materialpoints_.emplace_back(std::shared_ptr<MaterialPoints<Tdim>>(
+  materialpoints_.emplace_back(std::unique_ptr<MaterialPoints<Tdim>>(
       new MaterialPoints<Tdim>(material_id)));
   for (const auto& element : elements_) {
 

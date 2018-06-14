@@ -32,7 +32,7 @@ class IO {
   unsigned dimension() const;
 
   //! Return json object for material properties
-  json material_properties() const;
+  std::vector<json> material_properties() const;
 
   //! Return mesh file name
   std::string mesh_file_name() const;

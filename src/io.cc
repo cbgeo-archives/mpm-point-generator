@@ -75,18 +75,20 @@ std::string IO::mesh_file_name() const {
 }
 
 //! \brief Return user-specified material propertes
-json IO::material_properties() const {
+std::vector<json> IO::material_properties() const {
 
-  json json_material_properties;
+  std::vector<json> json_material_properties;
 
   // Store json object for material properties
   // IO handles null json object by making empty json object
   // MaterialProperties class could handle empty json object
-  if (!json_["material_properties"].is_null()) {
-    json_material_properties = json_["material_properties"];
-  } else {
-    std::cout << "No material properties specified, using default\n";
-    json_material_properties.clear();
+  for (unsigned i = 0; i < json_["material_properties"].size(); i++) {
+    if (!json_["material_properties"].is_null()) {
+      json_material_properties.emplace_back(json_["material_properties"].at(i));
+    } else {
+      std::cout << "No material properties specified, using default\n";
+      json_material_properties.clear();
+    }
   }
 
   return json_material_properties;

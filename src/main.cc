@@ -1,5 +1,6 @@
 #include <iostream>
 #include <memory>
+#include <vector>
 
 //! TCLAP for Input Argument Parsing
 #include "tclap/CmdLine.h"
@@ -14,8 +15,11 @@ int main(int argc, char** argv) {
     std::unique_ptr<IO> io(new IO(argc, argv));
 
     //! MaterialProperties
-    std::shared_ptr<MaterialProperties> material =
-        std::make_unique<MaterialProperties>(io->material_properties());
+    std::vector<std::unique_ptr<MaterialProperties>> material;
+
+    for (unsigned i = 0; i < io->material_properties().size(); i++) {
+        material.emplace_back(std::make_unique<MaterialProperties>(io->material_properties()[i]));    
+    }
 
     switch (io->dimension()) {
 
@@ -31,7 +35,7 @@ int main(int argc, char** argv) {
 
         //! Compute material points and stresses
         mesh->generate_material_points(io->ngauss_points());
-        mesh->assign_material_properties(material);
+        mesh->assign_material_properties(std::move(material));
         mesh->compute_stresses();
 
         //! Write material points and stresses
@@ -58,7 +62,7 @@ int main(int argc, char** argv) {
 
         //! Compute material points and stresses
         mesh->generate_material_points(io->ngauss_points());
-        mesh->assign_material_properties(material);
+        mesh->assign_material_properties(std::move(material));
         mesh->compute_stresses();
 
         //! Write material points and stresses
@@ -85,7 +89,7 @@ int main(int argc, char** argv) {
 
         //! Compute material points and stresses
         mesh->generate_material_points(io->ngauss_points());
-        mesh->assign_material_properties(material);
+        mesh->assign_material_properties(std::move(material));
         mesh->compute_stresses();
 
         //! Write material points and stresses

@@ -29,8 +29,8 @@ class MaterialPoints {
   //! Assign material properties
   //! \param[in] material pointer to MaterialProperties
   void assign_material_properties(
-      const std::shared_ptr<MaterialProperties>& material) {
-    material_properties_ = material;
+      std::unique_ptr<MaterialProperties> material) {
+    material_properties_ = std::move(material);
   }
 
   //! Compute stress
@@ -58,7 +58,7 @@ class MaterialPoints {
   std::vector<std::unique_ptr<Point<Tdim>>> points_;
 
   //! material properties associated with the vector of points
-  std::shared_ptr<MaterialProperties> material_properties_{nullptr};
+  std::unique_ptr<MaterialProperties> material_properties_{nullptr};
 };
 
 #include "material_points.tcc"

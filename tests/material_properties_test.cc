@@ -20,7 +20,7 @@ TEST_CASE("MaterialProperties base is checked", "[MaterialProperties]") {
     materialproperties["density"] = 0;
     materialproperties["k0"] = 0;
 
-    auto material = std::shared_ptr<MaterialProperties>(
+    auto material = std::unique_ptr<MaterialProperties>(
         new MaterialProperties(materialproperties));
 
     REQUIRE(material->density() == Approx(0).epsilon(tolerance));
@@ -33,7 +33,7 @@ TEST_CASE("MaterialProperties base is checked", "[MaterialProperties]") {
     materialproperties["density"] = std::numeric_limits<double>::min();
     materialproperties["k0"] = std::numeric_limits<double>::min();
 
-    auto material = std::shared_ptr<MaterialProperties>(
+    auto material = std::unique_ptr<MaterialProperties>(
         new MaterialProperties(materialproperties));
 
     REQUIRE(material->density() ==
@@ -48,7 +48,7 @@ TEST_CASE("MaterialProperties base is checked", "[MaterialProperties]") {
     materialproperties["density"] = std::numeric_limits<double>::max();
     materialproperties["k0"] = std::numeric_limits<double>::max();
 
-    auto material = std::shared_ptr<MaterialProperties>(
+    auto material = std::unique_ptr<MaterialProperties>(
         new MaterialProperties(materialproperties));
 
     REQUIRE(material->density() ==
