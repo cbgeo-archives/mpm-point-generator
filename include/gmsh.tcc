@@ -210,17 +210,17 @@ void GMSH<Tdim, Tvertices>::store_element_vertices() {
 template <>
 inline void GMSH<2, 4>::generate_material_points(unsigned ngauss_points) {
 
-  const unsigned Tdim = 2;
-  const unsigned Tvertices = 4;
+  const unsigned dim = 2;
+  const unsigned vertices = 4;
 
   //! Get constants from namespace
   auto gauss_constants = element::gauss_points.find(ngauss_points)->second;
 
   //! Create a matrix of xi from gauss points
-  //! Matrix is size npoints x Tdim
+  //! Matrix is size npoints x dim
   //! For 2D only
-  unsigned npoints = std::pow(ngauss_points, Tdim);
-  Eigen::MatrixXd xi_gauss_points(npoints, Tdim);
+  unsigned npoints = std::pow(ngauss_points, dim);
+  Eigen::MatrixXd xi_gauss_points(npoints, dim);
   unsigned counter = 0;
   for (unsigned i = 0; i < ngauss_points; ++i) {
     for (unsigned j = 0; j < ngauss_points; ++j) {
@@ -230,7 +230,7 @@ inline void GMSH<2, 4>::generate_material_points(unsigned ngauss_points) {
     }
   }
 
-  Eigen::VectorXd pointsarray(Tdim);
+  Eigen::VectorXd pointsarray(dim);
 
   //! global_id is the index for all points
   unsigned global_id = 0;
@@ -241,16 +241,17 @@ inline void GMSH<2, 4>::generate_material_points(unsigned ngauss_points) {
 
   //! Update vector of material points
   //! Fill materialpoints_ vector for the first component
-  materialpoints_.emplace_back(std::unique_ptr<MaterialPoints<Tdim>>(
-      new MaterialPoints<Tdim>(material_id)));
+  materialpoints_.emplace_back(
+      std::make_unique<MaterialPoints<dim>>(material_id));
+
   for (const auto& element : elements_) {
 
-    //! Store coordinates in Tdim x Tvertices matrix
+    //! Store coordinates in dim x vertices matrix
     //! Where N is the number of nodes per element
     //! This is rearranging of the data to have stored in matrix form
-    Eigen::MatrixXd node_coordinates(Tdim, Tvertices);
-    for (unsigned i = 0; i < Tvertices; ++i) {
-      for (unsigned j = 0; j < Tdim; ++j) {
+    Eigen::MatrixXd node_coordinates(dim, vertices);
+    for (unsigned i = 0; i < vertices; ++i) {
+      for (unsigned j = 0; j < dim; ++j) {
         node_coordinates(j, i) = element->vertex_coordinates(i)[j];
       }
     }
@@ -263,22 +264,22 @@ inline void GMSH<2, 4>::generate_material_points(unsigned ngauss_points) {
     for (unsigned k = 0; k < npoints; ++k) {
 
       //! Get array of xi for this gauss point
-      std::array<double, Tdim> xi;
-      for (unsigned l = 0; l < Tdim; ++l) xi.at(l) = xi_gauss_points(k, l);
+      std::array<double, dim> xi;
+      for (unsigned l = 0; l < dim; ++l) xi.at(l) = xi_gauss_points(k, l);
 
       //  gauss point in cartesian coordinate
-      for (unsigned i = 0; i < Tdim; ++i) {
+      for (unsigned i = 0; i < dim; ++i) {
         pointsarray[i] = 0;
 
         Eigen::VectorXd shape_function = element::quadrilateral::shapefn(xi);
 
-        for (unsigned j = 0; j < Tvertices; ++j) {
+        for (unsigned j = 0; j < vertices; ++j) {
           pointsarray[i] += shape_function[j] * node_coordinates(i, j);
         }
       }
 
       //! Make class point and store to material points
-      std::unique_ptr<Point<Tdim>> point = std::make_unique<Point<Tdim>>(
+      std::unique_ptr<Point<dim>> point = std::make_unique<Point<dim>>(
           point_id, global_id, pointsarray, point_volume);
       materialpoints_.at(material_id)->add_points(std::move(point));
 
@@ -290,8 +291,8 @@ inline void GMSH<2, 4>::generate_material_points(unsigned ngauss_points) {
   }
 
   //! Find number of material points generated
-  for (const auto& materialpoint : materialpoints_)
-    npoints_ += materialpoint->npoints();
+  for (const auto& materialpoints : materialpoints_)
+    npoints_ += materialpoints->npoints();
 
   std::cout << "Number of Material Points: " << npoints_ << '\n';
 }
@@ -304,18 +305,17 @@ inline void GMSH<2, 4>::generate_material_points(unsigned ngauss_points) {
 template <>
 inline void GMSH<3, 8>::generate_material_points(unsigned ngauss_points) {
 
-  const unsigned Tdim = 3;
-  const unsigned Tvertices = 8;
+  const unsigned dim = 3;
+  const unsigned vertices = 8;
 
   //! Get constants from namespace
-  std::vector<double> gauss_constants =
-      element::gauss_points.find(ngauss_points)->second;
+  auto gauss_constants = element::gauss_points.find(ngauss_points)->second;
 
   //! Create a matrix of xi from gauss points
-  //! Matrix is size npoints x Tdim
+  //! Matrix is size npoints x dim
   //! For 3D only
-  unsigned npoints = std::pow(ngauss_points, Tdim);
-  Eigen::MatrixXd xi_gauss_points(npoints, Tdim);
+  unsigned npoints = std::pow(ngauss_points, dim);
+  Eigen::MatrixXd xi_gauss_points(npoints, dim);
   unsigned counter = 0;
   for (unsigned i = 0; i < ngauss_points; ++i) {
     for (unsigned j = 0; j < ngauss_points; ++j) {
@@ -328,7 +328,7 @@ inline void GMSH<3, 8>::generate_material_points(unsigned ngauss_points) {
     }
   }
 
-  Eigen::VectorXd pointsarray(Tdim);
+  Eigen::VectorXd pointsarray(dim);
 
   //! global_id is the index for all points
   unsigned global_id = 0;
@@ -339,16 +339,17 @@ inline void GMSH<3, 8>::generate_material_points(unsigned ngauss_points) {
 
   //! Update vector of material points
   //! Fill materialpoints_ vector for the first component
-  materialpoints_.emplace_back(std::unique_ptr<MaterialPoints<Tdim>>(
-      new MaterialPoints<Tdim>(material_id)));
+  materialpoints_.emplace_back(
+      std::make_unique<MaterialPoints<dim>>(material_id));
+
   for (const auto& element : elements_) {
 
-    //! Store coordinates in Tdim x Tvertices matrix
+    //! Store coordinates in dim x vertices matrix
     //! Where N is the number of nodes per element
     //! This is rearranging of the data to have stored in matrix form
-    Eigen::MatrixXd node_coordinates(Tdim, Tvertices);
-    for (unsigned i = 0; i < Tvertices; ++i) {
-      for (unsigned j = 0; j < Tdim; ++j) {
+    Eigen::MatrixXd node_coordinates(dim, vertices);
+    for (unsigned i = 0; i < vertices; ++i) {
+      for (unsigned j = 0; j < dim; ++j) {
         node_coordinates(j, i) = element->vertex_coordinates(i)[j];
       }
     }
@@ -361,22 +362,22 @@ inline void GMSH<3, 8>::generate_material_points(unsigned ngauss_points) {
     for (unsigned k = 0; k < npoints; ++k) {
 
       //! Get array of xi for this gauss point
-      std::array<double, Tdim> xi;
-      for (unsigned l = 0; l < Tdim; ++l) xi.at(l) = xi_gauss_points(k, l);
+      std::array<double, dim> xi;
+      for (unsigned l = 0; l < dim; ++l) xi.at(l) = xi_gauss_points(k, l);
 
       //  gauss point in cartesian coordinate
-      for (unsigned i = 0; i < Tdim; ++i) {
+      for (unsigned i = 0; i < dim; ++i) {
         pointsarray[i] = 0;
 
         Eigen::VectorXd shape_function = element::hexahedron::shapefn(xi);
 
-        for (unsigned j = 0; j < Tvertices; ++j) {
+        for (unsigned j = 0; j < vertices; ++j) {
           pointsarray[i] += shape_function[j] * node_coordinates(i, j);
         }
       }
 
       //! Make class point and store to material points
-      std::unique_ptr<Point<Tdim>> point = std::make_unique<Point<Tdim>>(
+      std::unique_ptr<Point<dim>> point = std::make_unique<Point<dim>>(
           point_id, global_id, pointsarray, point_volume);
       materialpoints_.at(material_id)->add_points(std::move(point));
 
@@ -388,8 +389,8 @@ inline void GMSH<3, 8>::generate_material_points(unsigned ngauss_points) {
   }
 
   //! Find number of material points generated
-  for (const auto& materialpoint : materialpoints_)
-    npoints_ += materialpoint->npoints();
+  for (const auto& materialpoints : materialpoints_)
+    npoints_ += materialpoints->npoints();
 
   std::cout << "Number of Material Points: " << npoints_ << '\n';
 }

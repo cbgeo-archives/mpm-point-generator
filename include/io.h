@@ -14,7 +14,7 @@
 #include "tclap/CmdLine.h"
 //! Alias for JSON
 #include "json.hpp"
-using json = nlohmann::json;
+using Json = nlohmann::json;
 
 #include "material_points.h"
 #include "mesh.h"
@@ -32,7 +32,7 @@ class IO {
   unsigned dimension() const;
 
   //! Return json object for material properties
-  std::vector<json> material_properties() const;
+  std::vector<Json> material_properties() const;
 
   //! Return mesh file name
   std::string mesh_file_name() const;
@@ -46,7 +46,7 @@ class IO {
   std::string working_dir_;
 
   //! Input json object
-  json json_;
+  Json json_;
 };
 
 #endif  // MPM_POINT_GEN_IO_H_

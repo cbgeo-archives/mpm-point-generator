@@ -79,29 +79,7 @@ int main(int argc, char** argv) {
       }
 
       default: {
-        const unsigned Tdim = 2;
-        const unsigned Tvertices = 4;
-
-        //! Mesh
-        std::unique_ptr<Mesh<Tdim, Tvertices>> mesh(new GMSH<Tdim, Tvertices>);
-
-        //! Read mesh
-        mesh->read_mesh(io->mesh_file_name());
-
-        //! Compute material points and stresses
-        mesh->generate_material_points(io->ngauss_points());
-        mesh->assign_material_properties(std::move(material));
-        mesh->compute_stresses();
-
-        //! Write material points and stresses
-        mesh->write_coordinates(io->output_file("material_points", ".txt"));
-        mesh->write_stresses(io->output_file("initial_stresses", ".txt"));
-        mesh->write_volumes(io->output_file("volumes", ".txt"));
-
-        //! Write .vtk output files for viewing
-        mesh->write_vtk_stresses(io->output_file("initial_stresses", ".vtk"));
-        mesh->write_vtk_mesh(io->output_file("mesh", ".vtk"));
-
+        std::cout << "Dimension is not specified correctly\n";
         break;
       }
     }

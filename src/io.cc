@@ -73,9 +73,9 @@ std::string IO::mesh_file_name() const {
 }
 
 //! \brief Return user-specified material propertes
-std::vector<json> IO::material_properties() const {
+std::vector<Json> IO::material_properties() const {
 
-  std::vector<json> json_material_properties;
+  std::vector<Json> json_material_properties;
 
   // Store json object for material properties
   // IO handles null json object by making empty json object

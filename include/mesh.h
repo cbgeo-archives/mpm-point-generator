@@ -17,7 +17,7 @@
 
 //! Alias for JSON
 #include "json.hpp"
-using json = nlohmann::json;
+using Json = nlohmann::json;
 
 //! \brief Abstract class for handling mesh
 //! \tparam Tdim Dimension of the mesh
