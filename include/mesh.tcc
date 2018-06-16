@@ -4,10 +4,11 @@
 //! \param[in] material pointer to MaterialProperties
 template <unsigned Tdim, unsigned Tvertices>
 void Mesh<Tdim, Tvertices>::assign_material_properties(
-    const std::shared_ptr<MaterialProperties>& material) {
+    std::vector<std::unique_ptr<MaterialProperties>> material) {
 
-  for (const auto& materialpoint : materialpoints_) {
-    materialpoint->assign_material_properties(material);
+  //! Note that this implementation is only for 1 material for the whole body
+  for (unsigned i = 0; i < materialpoints_.size(); i++) {
+    materialpoints_[i]->assign_material_properties(std::move(material[i]));
   }
 }
 

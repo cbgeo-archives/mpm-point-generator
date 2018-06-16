@@ -18,7 +18,7 @@ TEST_CASE("GMSH is checked in 3D", "[GMSH][3D]") {
   SECTION("Check volume of a hexahedron") {
 
     // Element coordinates
-    std::vector<Eigen::Vector3d> coordinates;
+    std::vector<Eigen::VectorXd> coordinates;
     // Element vertices
     Eigen::VectorXd vertices(8);
     vertices.setZero();

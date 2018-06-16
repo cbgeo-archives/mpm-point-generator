@@ -17,7 +17,7 @@
 
 //! Alias for JSON
 #include "json.hpp"
-using json = nlohmann::json;
+using Json = nlohmann::json;
 
 //! \brief Abstract class for handling mesh
 //! \tparam Tdim Dimension of the mesh
@@ -30,11 +30,11 @@ class Mesh {
   virtual void read_mesh(const std::string& filename) = 0;
 
   //! Compute material point location
-  virtual void compute_material_points(unsigned ngauss_points) = 0;
+  virtual void generate_material_points(unsigned ngauss_points) = 0;
 
   //! Get material properties from json object
   void assign_material_properties(
-      const std::shared_ptr<MaterialProperties>& material);
+      std::vector<std::unique_ptr<MaterialProperties>> material);
 
   //! Compute stress of the material points
   void compute_stresses();
@@ -58,13 +58,13 @@ class Mesh {
   void write_vtk_mesh(boost::filesystem::path mesh_vtk_filename);
 
   //! Return begin iterator of material points_
-  typename std::vector<std::shared_ptr<MaterialPoints<Tdim>>>::const_iterator
+  typename std::vector<std::unique_ptr<MaterialPoints<Tdim>>>::const_iterator
       material_points_begin() const {
     return materialpoints_.begin();
   }
 
   //! Return end iterator of material points_
-  typename std::vector<std::shared_ptr<MaterialPoints<Tdim>>>::const_iterator
+  typename std::vector<std::unique_ptr<MaterialPoints<Tdim>>>::const_iterator
       material_points_end() const {
     return materialpoints_.end();
   }
@@ -72,9 +72,6 @@ class Mesh {
  protected:
   //! Total number of vertices
   unsigned nvertices_{std::numeric_limits<unsigned>::max()};
-
-  //! Number of pgauss oints per coordinate
-  unsigned ngauss_points_{std::numeric_limits<unsigned>::max()};
 
   //! Total number of material points generated
   unsigned npoints_{0};
@@ -89,7 +86,7 @@ class Mesh {
   std::map<unsigned, Eigen::VectorXd> elementcoordinates_;
 
   //! Vector of material points
-  std::vector<std::shared_ptr<MaterialPoints<Tdim>>> materialpoints_;
+  std::vector<std::unique_ptr<MaterialPoints<Tdim>>> materialpoints_;
 };
 
 #include "mesh.tcc"

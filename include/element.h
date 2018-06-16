@@ -1,6 +1,8 @@
 #ifndef MPM_ELEMENT_H
 #define MPM_ELEMENT_H
 
+#include <cmath>
+
 #include <map>
 #include <vector>
 
@@ -80,7 +82,7 @@ class Element {
 
   //! Pass element vertices coordinates from mesh to element class
   //!\param[in] coordinates of all element vertices
-  void coordinates(const std::vector<Eigen::Vector3d>& coordinates) {
+  void coordinates(const std::vector<Eigen::VectorXd>& coordinates) {
 
     coordinates_ = coordinates;
   }
@@ -89,7 +91,7 @@ class Element {
   unsigned id() const { return id_; }
 
   //! Return coordinates of a vertex
-  Eigen::Vector3d vertex_coordinates(unsigned vid) const {
+  Eigen::VectorXd vertex_coordinates(unsigned vid) const {
     return coordinates_.at(vid);
   }
 
@@ -107,7 +109,7 @@ class Element {
   Eigen::VectorXd vertices_;
 
   //! vector of element vertices coordinates
-  std::vector<Eigen::Vector3d> coordinates_;
+  std::vector<Eigen::VectorXd> coordinates_;
 };
 
 #endif  // MPM_ELEMENT_H
