@@ -58,8 +58,7 @@ TEST_CASE("GMSH is checked in 3D", "[GMSH][3D]") {
     Element element(id, vertices);
 
     // Assign coordinates of vertices
-    Eigen::Vector3d a = {0, 0, 0}, b = {0, 0, 3},
-                    c = {3, 0, 0}, d = {0, 3, 0};
+    Eigen::Vector3d a = {0, 0, 0}, b = {0, 0, 3}, c = {3, 0, 0}, d = {0, 3, 0};
 
     coordinates.push_back(a);
     coordinates.push_back(b);

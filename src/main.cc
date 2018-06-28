@@ -54,7 +54,7 @@ int main(int argc, char** argv) {
       case 3: {
         const unsigned Tdim = 3;
         // const unsigned Tvertices = 8; // hexahedron
-        const unsigned Tvertices = 4; // tetrahedron
+        const unsigned Tvertices = 4;  // tetrahedron
 
         //! Mesh
         std::unique_ptr<Mesh<Tdim, Tvertices>> mesh(new GMSH<Tdim, Tvertices>);

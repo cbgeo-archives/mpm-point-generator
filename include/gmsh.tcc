@@ -3,7 +3,8 @@
 //! \tparam Tvertices Number of vertices in element
 //! \param[in] filename Input mesh filename
 template <unsigned Tdim, unsigned Tvertices>
-void GMSH<Tdim, Tvertices>::read_mesh(const std::string& filename, const unsigned nvertices) {
+void GMSH<Tdim, Tvertices>::read_mesh(const std::string& filename,
+                                      const unsigned nvertices) {
 
   std::ifstream file;
   file.open(filename.c_str(), std::ios::in);
@@ -105,7 +106,8 @@ void GMSH<Tdim, Tvertices>::read_vertices(std::ifstream& file) {
 //! \param[in] filename Input mesh filename and directory
 //! element type
 template <unsigned Tdim, unsigned Tvertices>
-void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file, const unsigned nvertices) {
+void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file,
+                                          const unsigned nvertices) {
 
   //! Find the line of interest
   read_keyword(file, "$Elements");
@@ -143,8 +145,8 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file, const unsigned nv
 
   if (Tdim == 2) {
     element_type = 3;
-  } else if (Tdim == 3) {   
-    if (nvertices == 8) { 
+  } else if (Tdim == 3) {
+    if (nvertices == 8) {
       element_type = 5;
     } else if (nvertices == 4) {
       element_type = 4;

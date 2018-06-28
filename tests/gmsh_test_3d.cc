@@ -19,7 +19,7 @@ TEST_CASE("GMSH is checked in 3D hexahedron", "[GMSH][3D][hexahedron]") {
 
   //! 3D Test of IO Class
   const unsigned DIM = 3;
-  const unsigned nvertices = 8; 
+  const unsigned nvertices = 8;
   const double tolerance = 1.E-12;
 
   //! Make json object with material in it
