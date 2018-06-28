@@ -3,7 +3,7 @@
 //! \tparam Tvertices Number of vertices in element
 //! \param[in] filename Input mesh filename
 template <unsigned Tdim, unsigned Tvertices>
-void GMSH<Tdim, Tvertices>::read_mesh(const std::string& filename) {
+void GMSH<Tdim, Tvertices>::read_mesh(const std::string& filename, const unsigned nvertices) {
 
   std::ifstream file;
   file.open(filename.c_str(), std::ios::in);
@@ -11,7 +11,7 @@ void GMSH<Tdim, Tvertices>::read_mesh(const std::string& filename) {
     throw std::runtime_error("Specified GMSH file does not exist");
   if (file.good()) {
     read_vertices(file);
-    read_elements(file);
+    read_elements(file, nvertices);
   }
   file.close();
 }
@@ -105,7 +105,7 @@ void GMSH<Tdim, Tvertices>::read_vertices(std::ifstream& file) {
 //! \param[in] filename Input mesh filename and directory
 //! element type
 template <unsigned Tdim, unsigned Tvertices>
-void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
+void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file, const unsigned nvertices) {
 
   //! Find the line of interest
   read_keyword(file, "$Elements");
@@ -139,13 +139,16 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
   //! 5 - Hexahedron (8 nodes)
   //! For more informtion on element types, visit:
   //! http://gmsh.info/doc/texinfo/gmsh.html#File-formats
-  unsigned element_type;
+  unsigned element_type = 3;
 
   if (Tdim == 2) {
     element_type = 3;
-  } else if (Tdim == 3) {
-    // element_type = 5;
-    element_type = 4;
+  } else if (Tdim == 3) {   
+    if (nvertices == 8) { 
+      element_type = 5;
+    } else if (nvertices == 4) {
+      element_type = 4;
+    }
   }
 
   //! Iterate through all elements in the file

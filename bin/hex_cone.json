@@ -2,6 +2,7 @@
 	"mesh_file" : "hexcone.msh",
 	"results_path" : "results/",
 	"dimension" : 3,
+	"nvertices" : 8,
 	"ngauss_points" : 1,
 	"material_properties" : [
 		{

@@ -130,6 +130,25 @@ unsigned IO::dimension() const {
   return dimension;
 }
 
+//! \brief Return user-specified number of vertices
+unsigned IO::nvertices() const {
+
+  unsigned nvertices{0};
+
+  //! Read and pass the
+  //! If not specified, set default value of 1
+  try {
+    if (json_.at("nvertices").size())
+      nvertices = json_["nvertices"].template get<unsigned>();
+  } catch (json::out_of_range& out_of_range) {
+    std::cerr << out_of_range.what() << '\n';
+    std::cout << "nvertices not specified. Using a default value of 2\n";
+    nvertices = 4;
+  }
+
+  return nvertices;
+}
+
 //! \brief Write output file names and store them in private member
 //! \param[in] attribute Attribute being written (eg., material_points / stress)
 //! \param[in] file_extension File Extension (*.txt)

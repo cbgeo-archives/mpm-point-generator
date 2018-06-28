@@ -32,7 +32,7 @@ int main(int argc, char** argv) {
         std::unique_ptr<Mesh<Tdim, Tvertices>> mesh(new GMSH<Tdim, Tvertices>);
 
         //! Read mesh
-        mesh->read_mesh(io->mesh_file_name());
+        mesh->read_mesh(io->mesh_file_name(), io->nvertices());
 
         //! Compute material points and stresses
         mesh->generate_material_points(io->ngauss_points());
@@ -53,14 +53,14 @@ int main(int argc, char** argv) {
 
       case 3: {
         const unsigned Tdim = 3;
-        // const unsigned Tvertices = 8;
-        const unsigned Tvertices = 4;
+        // const unsigned Tvertices = 8; // hexahedron
+        const unsigned Tvertices = 4; // tetrahedron
 
         //! Mesh
         std::unique_ptr<Mesh<Tdim, Tvertices>> mesh(new GMSH<Tdim, Tvertices>);
 
         //! Read mesh
-        mesh->read_mesh(io->mesh_file_name());
+        mesh->read_mesh(io->mesh_file_name(), io->nvertices());
 
         //! Compute material points and stresses
         mesh->generate_material_points(io->ngauss_points());

@@ -45,4 +45,29 @@ TEST_CASE("GMSH is checked in 3D", "[GMSH][3D]") {
 
     REQUIRE(element.calculate_volume() == Approx(0.000125).epsilon(tolerance));
   }
+
+  SECTION("Check volume of a tetrahedron") {
+
+    // Element coordinates
+    std::vector<Eigen::VectorXd> coordinates;
+    // Element vertices
+    Eigen::VectorXd vertices(4);
+    vertices.setZero();
+
+    // Create a new element
+    Element element(id, vertices);
+
+    // Assign coordinates of vertices
+    Eigen::Vector3d a = {0, 0, 0}, b = {0, 0, 3},
+                    c = {3, 0, 0}, d = {0, 3, 0};
+
+    coordinates.push_back(a);
+    coordinates.push_back(b);
+    coordinates.push_back(c);
+    coordinates.push_back(d);
+
+    element.coordinates(coordinates);
+
+    REQUIRE(element.calculate_volume() == Approx(4.5).epsilon(tolerance));
+  }
 }

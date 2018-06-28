@@ -31,6 +31,9 @@ class IO {
   //! Return the dimension of the problem: 2 or 3
   unsigned dimension() const;
 
+  //! Return the number of vertices of the problem: determine the element type
+  unsigned nvertices() const;
+
   //! Return json object for material properties
   std::vector<Json> material_properties() const;
 
