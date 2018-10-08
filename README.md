@@ -6,6 +6,7 @@
 [![CircleCI](https://circleci.com/gh/cb-geo/mpm-point-generator.svg?style=svg)](https://circleci.com/gh/cb-geo/mpm-point-generator)
 [![codecov](https://codecov.io/gh/cb-geo/mpm-point-generator/branch/develop/graph/badge.svg)](https://codecov.io/gh/cb-geo/mpm-point-generator)
 [![Coverity Scan](https://scan.coverity.com/projects/12790/badge.svg?flat=1)](https://scan.coverity.com/projects/cb-geo-mpm-point-generator)
+[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.1450330.svg)](https://zenodo.org/badge/doi/10.5281/zenodo.1450330.svg)
 
 ## Compile and Run
 
@@ -41,3 +42,9 @@ where:
    -h,  --help
      Displays usage information and exits.
 ```
+
+## Referencing the code
+
+To reference the code, please use the DOI: [![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.1450330.svg)](https://zenodo.org/badge/doi/10.5281/zenodo.1450330.svg)
+
+Wilkes, C., Tjung, E., Kumar., K (2018) CB-Geo MPM point generator, version 1.0-alpha, https://github.com/cb-geo/mpm-point-generator, doi://10.5281/zenodo.1450330.
