@@ -51,6 +51,9 @@ class Mesh {
   //! Write initial element volumes
   void write_volumes(boost::filesystem::path volumes_filename);
 
+  //! Write .vtk files for point
+  void write_vtk_points(boost::filesystem::path mesh_vtk_filename);
+
   //! Write .vtk files for initial stresses (include coordinates as well)
   void write_vtk_stresses(boost::filesystem::path stress_vtk_filename);
 

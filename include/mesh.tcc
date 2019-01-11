@@ -192,6 +192,53 @@ void Mesh<Tdim, Tvertices>::write_vtk_stresses(
   std::cout << "Wrote initial stresses vtk file\n";
 }
 
+//! \brief Output .vtk file for viewing material points
+//! \details Write material points coordinates
+//! \tparam Tdim dimension
+//! \tparam Tvertices Number of vertices in an element
+//! \param[in] stress_vtk_filename the directory and filename of output
+template <unsigned Tdim, unsigned Tvertices>
+void Mesh<Tdim, Tvertices>::write_vtk_points(
+    boost::filesystem::path mesh_vtk_filename) {
+
+  std::cout << "output .vtk file for points will be stored in: "
+            << mesh_vtk_filename.string() << "\n";
+
+  //! Output stress file
+  std::fstream points_vtk_file;
+  points_vtk_file.open(mesh_vtk_filename.string(), std::ios::out);
+
+  //! Write .vtk file
+  if (points_vtk_file.is_open()) {
+    points_vtk_file << "# vtk DataFile Version 2.0\n";
+    points_vtk_file << "MPM_POINT_GENERATOR: Points\n";
+    points_vtk_file << "ASCII\n";
+    points_vtk_file << "DATASET UNSTRUCTURED_GRID\n";
+
+    points_vtk_file << "POINTS " << npoints_ << " float\n";
+
+    // Iterate over materialpoints_ to get coordinates
+    for (const auto& materialpoint : materialpoints_) {
+      for (auto itr = materialpoint->points_begin();
+           itr != materialpoint->points_end(); ++itr) {
+        Eigen::VectorXd coordinate = (*itr)->coordinates();
+        points_vtk_file << coordinate[0] << '\t' << coordinate[1] << '\t'
+                        << coordinate[2] << '\n';
+      }
+    }
+
+    points_vtk_file << "CELLS " << npoints_ << " " << 2 * npoints_ << '\n';
+    for (unsigned i = 0; i < npoints_; i++)
+      points_vtk_file << "1 " << i << '\n';
+
+    points_vtk_file << "CELL_TYPES " << npoints_ << '\n';
+    for (unsigned i = 0; i < npoints_; i++) points_vtk_file << "1 " << '\n';
+
+    points_vtk_file.close();
+  }
+  std::cout << "Wrote points vtk file\n";
+}
+
 //! \brief Output .vtk files for viewing mesh
 //! \details Write mesh coordinates and elements
 //! \tparam Tdim dimension
