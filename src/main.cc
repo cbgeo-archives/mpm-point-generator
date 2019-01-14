@@ -45,6 +45,7 @@ int main(int argc, char** argv) {
         mesh->write_volumes(io->output_file("volumes", ".txt"));
 
         //! Write .vtk output files for viewing
+        mesh->write_vtk_points(io->output_file("points", ".vtk"));
         mesh->write_vtk_stresses(io->output_file("initial_stresses", ".vtk"));
         mesh->write_vtk_mesh(io->output_file("mesh", ".vtk"));
 
@@ -72,6 +73,7 @@ int main(int argc, char** argv) {
         mesh->write_volumes(io->output_file("volumes", ".txt"));
 
         //! Write .vtk output files for viewing
+        mesh->write_vtk_points(io->output_file("points", ".vtk"));
         mesh->write_vtk_stresses(io->output_file("initial_stresses", ".vtk"));
         mesh->write_vtk_mesh(io->output_file("mesh", ".vtk"));
 
