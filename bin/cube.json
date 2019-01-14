@@ -1,9 +1,12 @@
 {
-	"mesh_file" : "cube.msh",
-	"results_path" : "results/",
-	"ngauss_points" : 1,
-	"material_properties" : {
-		"density" : 2400.0,
-		"k0" : 0.5
-	}
+    "mesh_file" : "cube.msh",
+    "results_path" : "results/",
+    "dimension" : 3,
+    "ngauss_points" : 1,
+    "material_properties" : [
+        {
+            "density" : 2400.0,
+    	"k0" : 0.5
+        }
+    ]
 }
