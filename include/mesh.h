@@ -43,22 +43,22 @@ class Mesh {
   unsigned nvertices() const { return nvertices_; }
 
   //! Write coordinates
-  void write_coordinates(boost::filesystem::path coordinates_filename);
+  void write_coordinates(const boost::filesystem::path& coordinates_filename);
 
   //! Write stresses
-  void write_stresses(boost::filesystem::path stresses_filename);
+  void write_stresses(const boost::filesystem::path& stresses_filename);
 
   //! Write initial element volumes
-  void write_volumes(boost::filesystem::path volumes_filename);
-
-  //! Write .vtk files for point
-  void write_vtk_points(boost::filesystem::path mesh_vtk_filename);
+  void write_volumes(const boost::filesystem::path& volumes_filename);
 
   //! Write .vtk files for initial stresses (include coordinates as well)
-  void write_vtk_stresses(boost::filesystem::path stress_vtk_filename);
+  void write_vtk_stresses(const boost::filesystem::path& stress_vtk_filename);
+
+  //! Write .vtk files for point
+  void write_vtk_points(const boost::filesystem::path& mesh_vtk_filename);
 
   //! Write .vtk files for mesh
-  void write_vtk_mesh(boost::filesystem::path mesh_vtk_filename);
+  void write_vtk_mesh(const boost::filesystem::path& mesh_vtk_filename);
 
   //! Return begin iterator of material points_
   typename std::vector<std::unique_ptr<MaterialPoints<Tdim>>>::const_iterator

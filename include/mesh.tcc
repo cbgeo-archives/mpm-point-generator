@@ -28,7 +28,7 @@ void Mesh<Tdim, Tvertices>::compute_stresses() {
 //! \tparam Tdim dimension
 template <unsigned Tdim, unsigned Tvertices>
 void Mesh<Tdim, Tvertices>::write_coordinates(
-    boost::filesystem::path coordinates_filename) {
+    const boost::filesystem::path& coordinates_filename) {
 
   const auto filename = coordinates_filename.string();
   std::cout << "material points will be stored in: " << filename << "\n";
@@ -64,7 +64,7 @@ void Mesh<Tdim, Tvertices>::write_coordinates(
 //! \tparam Tdim dimension
 template <unsigned Tdim, unsigned Tvertices>
 void Mesh<Tdim, Tvertices>::write_stresses(
-    boost::filesystem::path stresses_filename) {
+    const boost::filesystem::path& stresses_filename) {
 
   const auto filename = stresses_filename.string();
 
@@ -104,7 +104,7 @@ void Mesh<Tdim, Tvertices>::write_stresses(
 //! \tparam Tdim dimension
 template <unsigned Tdim, unsigned Tvertices>
 void Mesh<Tdim, Tvertices>::write_volumes(
-    boost::filesystem::path volumes_filename) {
+    const boost::filesystem::path& volumes_filename) {
 
   const auto filename = volumes_filename.string();
   std::cout << "initial volumes will be stored in: " << filename << "\n";
@@ -137,7 +137,7 @@ void Mesh<Tdim, Tvertices>::write_volumes(
 //! \param[in] stress_vtk_filename the directory and filename of output
 template <unsigned Tdim, unsigned Tvertices>
 void Mesh<Tdim, Tvertices>::write_vtk_stresses(
-    boost::filesystem::path stress_vtk_filename) {
+    const boost::filesystem::path& stress_vtk_filename) {
 
   std::cout << "output .vtk file for initial stresses will be stored in: "
             << stress_vtk_filename.string() << "\n";
@@ -199,7 +199,7 @@ void Mesh<Tdim, Tvertices>::write_vtk_stresses(
 //! \param[in] stress_vtk_filename the directory and filename of output
 template <unsigned Tdim, unsigned Tvertices>
 void Mesh<Tdim, Tvertices>::write_vtk_points(
-    boost::filesystem::path mesh_vtk_filename) {
+    const boost::filesystem::path& mesh_vtk_filename) {
 
   std::cout << "output .vtk file for points will be stored in: "
             << mesh_vtk_filename.string() << "\n";
@@ -246,7 +246,7 @@ void Mesh<Tdim, Tvertices>::write_vtk_points(
 //! \param[in] mesh_vtk_filename the directory and filename of output
 template <unsigned Tdim, unsigned Tvertices>
 void Mesh<Tdim, Tvertices>::write_vtk_mesh(
-    boost::filesystem::path mesh_vtk_filename) {
+    const boost::filesystem::path& mesh_vtk_filename) {
 
   unsigned num_vertices = vertices_.size();
   unsigned num_elements = elements_.size();
