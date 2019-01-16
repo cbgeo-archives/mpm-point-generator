@@ -64,29 +64,51 @@ void GMSH<Tdim, Tvertices>::read_vertices(std::ifstream& file) {
 
   //! Read number of vertices
   unsigned nvertices = std::numeric_limits<unsigned>::max();
-  istream >> nvertices;
-  getline(istream, line);
+  unsigned nentities = std::numeric_limits<unsigned>::max();
+  istream >> nentities >> nvertices;
+  std::getline(istream, line);
+
+  std::cout << __FILE__ << Tdim << " " << __LINE__ << "vertices: " << nvertices
+            << "\n";
 
   //! Vertices id
   unsigned vertid = 0;
 
+  double ignore;
+
   //! Read vertex coordinates & id
-  for (unsigned i = 0; i < nvertices; ++i) {
+  for (unsigned i = 0; i < nentities; ++i) {
     std::getline(file, line);
-    std::istringstream istream(line);
+    std::istringstream istream_entity(line);
+    unsigned ncomponents = 0;
 
     if (line.find('#') == std::string::npos && line != "") {
-      //! Coordinates of vertex
-      Eigen::VectorXd vertex(Tdim);
+      istream_entity >> ignore >> ignore >> ignore >> ncomponents;
 
-      istream >> vertid;
+      for (unsigned j = 0; j < ncomponents; ++j) {
+        std::getline(file, line);
+        std::istringstream istream(line);
 
-      if (Tdim == 3) {
-        istream >> vertex[0] >> vertex[1] >> vertex[2];
-      } else {
-        istream >> vertex[0] >> vertex[1];
+        if (line.find('#') == std::string::npos && line != "") {
+          //! Coordinates of vertex
+
+          // verify the number of nodes in this entity and loop with getline the
+          // exact number of times of nodes in this entity
+
+          Eigen::Matrix<double,Tdim,1> vertex;
+
+          istream >> vertid;
+
+          if (Tdim == 3) {
+            istream >> vertex[0] >> vertex[1] >> vertex[2];
+          } else {
+            istream >> vertex[0] >> vertex[1];
+            // std::cout << vertid << " " << vertex[0] << " " << vertex[1] <<
+            // "\n";
+          }
+          this->vertices_.insert(std::make_pair(vertid, vertex));
+        }
       }
-      this->vertices_.insert(std::make_pair(vertid, vertex));
     }
   }
 
