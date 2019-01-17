@@ -56,54 +56,21 @@ SET(mpm_point_gen_src
 add_executable(mpm_point_generator ${mpm_point_gen_src})
 
 # Unit test
-SET(unit_test_src
+SET(test_src
   ${PROJECT_SOURCE_DIR}/src/material_properties.cc
   ${PROJECT_SOURCE_DIR}/src/element.cc
-  ${PROJECT_SOURCE_DIR}/tests/unit_test.cc
+  ${PROJECT_SOURCE_DIR}/tests/test_main.cc  
   ${PROJECT_SOURCE_DIR}/tests/point_test.cc
   ${PROJECT_SOURCE_DIR}/tests/material_properties_test.cc
   ${PROJECT_SOURCE_DIR}/tests/volume_test.cc
-)
-add_executable(mpm_point_generator_unit_test ${unit_test_src})
-
-# Regression test for 2d
-SET(regression_test_src
-  ${PROJECT_SOURCE_DIR}/tests/regression_test.cc
-  ${PROJECT_SOURCE_DIR}/src/element.cc
   ${PROJECT_SOURCE_DIR}/tests/gmsh_test_2d.cc
-  ${PROJECT_SOURCE_DIR}/src/material_properties.cc
-)
-add_executable(mpm_point_generator_regression_test_2d ${regression_test_src})
-
-# Regression test for 3d
-SET(regression_test_src
-  ${PROJECT_SOURCE_DIR}/tests/regression_test.cc
-  ${PROJECT_SOURCE_DIR}/src/element.cc
   ${PROJECT_SOURCE_DIR}/tests/gmsh_test_3d.cc
-  ${PROJECT_SOURCE_DIR}/src/material_properties.cc
 )
-add_executable(mpm_point_generator_regression_test_3d ${regression_test_src})
-
-option(EIGEN3_HEADER_PATH "path to eigen3 header files,  command line option" "")
-
-
-add_test(NAME mpm_point_generator_unit_test COMMAND $<TARGET_FILE:mpm_point_generator_unit_test>)
-include(CTest)
-
-add_test(NAME mpm_point_generator_regression_test_2d COMMAND $<TARGET_FILE:mpm_point_generator_regression_test_2d>)
-include(CTest)
-
-add_test(NAME mpm_point_generator_regression_test_3d COMMAND $<TARGET_FILE:mpm_point_generator_regression_test_3d>)
-include(CTest)
-
-find_program( MEMORYCHECK_COMMAND valgrind )
-set( MEMORYCHECK_COMMAND_OPTIONS "--leak-check=full --error-exitcode=1" )
+add_executable(mpm_point_generator_unit_test ${test_src})
 
 # Coverage
 find_package(codecov)
-add_coverage(mpm_point_generator)
-add_coverage(mpm_point_generator_unit_test)
-add_coverage(mpm_point_generator_regression_test_2d)
-add_coverage(mpm_point_generator_regression_test_3d)
-
-install(TARGETS mpm_point_generator mpm_point_generator_unit_test mpm_point_generator_regression_test_2d mpm_point_generator_regression_test_3d RUNTIME DESTINATION bin)
+if(ENABLE_COVERAGE)
+  add_executable(mpm_point_generator_test_coverage ${test_src})
+  add_coverage(mpm_point_generator_test_covearge)
+endif()

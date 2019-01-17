@@ -95,7 +95,7 @@ void GMSH<Tdim, Tvertices>::read_vertices(std::ifstream& file) {
           // verify the number of nodes in this entity and loop with getline the
           // exact number of times of nodes in this entity
 
-          Eigen::Matrix<double,Tdim,1> vertex;
+          Eigen::Matrix<double, Tdim, 1> vertex;
 
           istream >> vertid;
 

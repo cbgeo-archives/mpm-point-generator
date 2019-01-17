@@ -8,7 +8,7 @@
 #include "element.h"
 
 //! \brief Check the volume of an element computation
-TEST_CASE("GMSH is checked in 3D", "[GMSH][3D]") {
+TEST_CASE("Volume of a 3D mesh is checked", "[GMSH][3D]") {
 
   const double tolerance = 1.E-12;
 

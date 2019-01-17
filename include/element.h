@@ -43,7 +43,7 @@ inline Eigen::VectorXd shapefn(const std::array<double, 3>& xi) {
 
   return shapefn_;
 }
-}
+}  // namespace hexahedron
 
 //! Namespace conatining shape functions for 4-node quadrilateral
 namespace quadrilateral {
@@ -60,8 +60,8 @@ inline Eigen::VectorXd shapefn(const std::array<double, 2>& xi) {
 
   return shapefn_;
 }
-}
-};
+}  // namespace quadrilateral
+};  // namespace element
 
 //! Element class to hold element vertices id and coordinates
 //! \param[in] element id

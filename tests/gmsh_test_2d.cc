@@ -8,7 +8,6 @@
 #include "catch.hpp"
 #include "gmsh.h"
 #include "material_points.h"
-#include "regression_global.h"
 
 //! Alias for JSON
 #include "json.hpp"
@@ -35,13 +34,14 @@ TEST_CASE("GMSH is checked in 2D", "[GMSH][2D]") {
         std::make_unique<MaterialProperties>(material_json[i]));
   }
 
+  const std::string filename = "../bin/plate.msh";
   mesh->read_mesh(filename);
   mesh->generate_material_points(1);
   mesh->assign_material_properties(std::move(material));
   mesh->compute_stresses();
 
   //! Check number of vertices
-  REQUIRE(mesh->nvertices() == 6);
+  REQUIRE(mesh->nvertices() == 106);
 
   //! Get coordinates, stresses, volumes and global_ids
   std::vector<Eigen::VectorXd> coordinates;
