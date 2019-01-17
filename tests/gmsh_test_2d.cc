@@ -61,6 +61,7 @@ TEST_CASE("GMSH is checked in 2D", "[GMSH][2D]") {
   }
 
   //! Check size
+  // TODO
   REQUIRE(coordinates.size() == 2);
   REQUIRE(stresses.size() == 2);
   REQUIRE(volumes.size() == 2);
