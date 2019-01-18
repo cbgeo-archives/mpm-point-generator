@@ -138,7 +138,8 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
 
   //! Number of elements
   unsigned nelements = std::numeric_limits<unsigned>::max();
-  istream >> nelements;
+  unsigned nentities = std::numeric_limits<unsigned>::max();
+  istream >> nentities >> nelements;
   getline(istream, line);
 
   //! Element type
@@ -161,30 +162,35 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
   //! 5 - Hexahedron (8 nodes)
   //! For more informtion on element types, visit:
   //! http://gmsh.info/doc/texinfo/gmsh.html#File-formats
-  unsigned element_type;
 
-  if (Tdim == 2) {
-    element_type = 3;
-  } else if (Tdim == 3) {
-    element_type = 5;
-  }
+  //! element type is 3 (Quadrangle) for 2D and 5 (Hexahedron) for 3D
+  unsigned element_type = (Tdim == 2) ? 3 : 5;
 
-  //! Iterate through all elements in the file
-  for (unsigned i = 0; i < nelements; ++i) {
+  //! Iterate through all entities with elements in the file
+  for (unsigned i = 0; i < nentities; ++i) {
     std::getline(file, line);
     std::istringstream istream(line);
-    if (line.find('#') == std::string::npos && line != "") {
-      istream >> elementid >> elementtype >> elementry >> physical >> elementry;
 
-      //! If element type not equals to specified Tvertices, skip element
-      if (elementtype != element_type) {
-        istream >> line;
-      } else {
-        //! For every element, get the node number of its vertices
-        for (unsigned j = 0; j < elementarray.size(); ++j) {
-          istream >> elementarray[j];
+    double ignore;
+    unsigned ncomponents = 0;
+    if (line.find('#') == std::string::npos && line != "") {
+      istream >> ignore >> ignore >> elementtype >> ncomponents;
+
+      //! Iterate through all elements in one entity
+      for (unsigned j = 0; j < ncomponents; ++j) {
+        std::getline(file, line);
+        if (line.find('#') == std::string::npos && line != "") {
+
+          //! If element type not equals to specified Tvertices, skip element
+          if (elementtype == element_type) {
+            istream >> elementid;
+            //! For every element, get the node number of its vertices
+            for (unsigned k = 0; k < elementarray.size(); ++k) {
+              istream >> elementarray[k];
+            }
+            this->elements_.emplace_back(new Element(elementid, elementarray));
+          }
         }
-        this->elements_.emplace_back(new Element(elementid, elementarray));
       }
     }
   }
