@@ -67,10 +67,11 @@ SET(test_src
   ${PROJECT_SOURCE_DIR}/tests/gmsh_test_3d.cc
 )
 add_executable(mpm_point_generator_unit_test ${test_src})
+add_test(NAME mpm_point_generator_unit_test COMMAND $<TARGET_FILE:mpm_point_generator_unit_test>)
+enable_testing()
 
 # Coverage
 find_package(codecov)
 if(ENABLE_COVERAGE)
-  add_executable(mpm_point_generator_test_coverage ${test_src})
-  add_coverage(mpm_point_generator_test_covearge)
+  add_coverage(mpm_point_generator_unit_test)
 endif()
