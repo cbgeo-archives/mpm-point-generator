@@ -175,10 +175,16 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
     unsigned ncomponents = 0;
     if (line.find('#') == std::string::npos && line != "") {
       istream >> ignore >> ignore >> elementtype >> ncomponents;
-
+      std::cout << elementtype << "   " << ncomponents << "\n";
+      
       //! Iterate through all elements in one entity
       for (unsigned j = 0; j < ncomponents; ++j) {
         std::getline(file, line);
+        std::istringstream istream(line);
+
+        std::cout << line << "\n";
+        std::cout << istream.str() << "\n";
+        
         if (line.find('#') == std::string::npos && line != "") {
 
           //! If element type not equals to specified Tvertices, skip element
@@ -187,7 +193,9 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
             //! For every element, get the node number of its vertices
             for (unsigned k = 0; k < elementarray.size(); ++k) {
               istream >> elementarray[k];
+              std::cout << elementarray[k] << "  ";
             }
+            std::cout << "=> Element id as read: " << elementid << "\n";
             this->elements_.emplace_back(new Element(elementid, elementarray));
           }
         }
@@ -197,7 +205,9 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
   std::cout << "Number of Elements: " << elements_.size() << '\n';
 
   //! Get the coordinates for each vertex of each element
+  std::cout << __FILE__ << __LINE__ << "\n";
   this->store_element_vertices();
+  std::cout << __FILE__ << __LINE__ << "\n";
 }
 
 //! Store element vertices
@@ -207,7 +217,6 @@ template <unsigned Tdim, unsigned Tvertices>
 void GMSH<Tdim, Tvertices>::store_element_vertices() {
 
   Eigen::VectorXd elementkeyvalues(Tvertices);
-
   //! Iterate through element_
   for (const auto& element : elements_) {
 
@@ -220,8 +229,18 @@ void GMSH<Tdim, Tvertices>::store_element_vertices() {
       //! Get the coordinates for the required vertex idz
       auto verticesfind = vertices_.find(vertex_id);
 
-      //! For each vertex, store the coordinates
-      verticescoordinates.push_back(verticesfind->second);
+      if (verticesfind != vertices_.end()) {
+
+        /* std::cout << verticesfind->second << "\n";
+        std::cout << "vertex " << j << ": id - " << vertex_id
+                  << " coordinates: " << verticesfind->second[0]
+                  << verticesfind->second[1]; */
+
+        //! For each vertex, store the coordinates
+        verticescoordinates.push_back(verticesfind->second);
+      } else {
+        std::cout << "vertex id:" << vertex_id << " element id: " << element->id() << "\n";
+      }
     }
 
     element->coordinates(verticescoordinates);
