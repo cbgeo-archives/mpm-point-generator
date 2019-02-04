@@ -64,29 +64,51 @@ void GMSH<Tdim, Tvertices>::read_vertices(std::ifstream& file) {
 
   //! Read number of vertices
   unsigned nvertices = std::numeric_limits<unsigned>::max();
-  istream >> nvertices;
-  getline(istream, line);
+  unsigned nentities = std::numeric_limits<unsigned>::max();
+  istream >> nentities >> nvertices;
+  std::getline(istream, line);
+
+  std::cout << __FILE__ << Tdim << " " << __LINE__ << "vertices: " << nvertices
+            << "\n";
 
   //! Vertices id
   unsigned vertid = 0;
 
+  double ignore;
+
   //! Read vertex coordinates & id
-  for (unsigned i = 0; i < nvertices; ++i) {
+  for (unsigned i = 0; i < nentities; ++i) {
     std::getline(file, line);
-    std::istringstream istream(line);
+    std::istringstream istream_entity(line);
+    unsigned ncomponents = 0;
 
     if (line.find('#') == std::string::npos && line != "") {
-      //! Coordinates of vertex
-      Eigen::VectorXd vertex(Tdim);
+      istream_entity >> ignore >> ignore >> ignore >> ncomponents;
 
-      istream >> vertid;
+      for (unsigned j = 0; j < ncomponents; ++j) {
+        std::getline(file, line);
+        std::istringstream istream(line);
 
-      if (Tdim == 3) {
-        istream >> vertex[0] >> vertex[1] >> vertex[2];
-      } else {
-        istream >> vertex[0] >> vertex[1];
+        if (line.find('#') == std::string::npos && line != "") {
+          //! Coordinates of vertex
+
+          // verify the number of nodes in this entity and loop with getline the
+          // exact number of times of nodes in this entity
+
+          Eigen::Matrix<double, Tdim, 1> vertex;
+
+          istream >> vertid;
+
+          if (Tdim == 3) {
+            istream >> vertex[0] >> vertex[1] >> vertex[2];
+          } else {
+            istream >> vertex[0] >> vertex[1];
+            // std::cout << vertid << " " << vertex[0] << " " << vertex[1] <<
+            // "\n";
+          }
+          this->vertices_.insert(std::make_pair(vertid, vertex));
+        }
       }
-      this->vertices_.insert(std::make_pair(vertid, vertex));
     }
   }
 
@@ -116,7 +138,8 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
 
   //! Number of elements
   unsigned nelements = std::numeric_limits<unsigned>::max();
-  istream >> nelements;
+  unsigned nentities = std::numeric_limits<unsigned>::max();
+  istream >> nentities >> nelements;
   getline(istream, line);
 
   //! Element type
@@ -139,37 +162,52 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
   //! 5 - Hexahedron (8 nodes)
   //! For more informtion on element types, visit:
   //! http://gmsh.info/doc/texinfo/gmsh.html#File-formats
-  unsigned element_type;
 
-  if (Tdim == 2) {
-    element_type = 3;
-  } else if (Tdim == 3) {
-    element_type = 5;
-  }
+  //! element type is 3 (Quadrangle) for 2D and 5 (Hexahedron) for 3D
+  unsigned element_type = (Tdim == 2) ? 3 : 5;
 
-  //! Iterate through all elements in the file
-  for (unsigned i = 0; i < nelements; ++i) {
+  //! Iterate through all entities with elements in the file
+  for (unsigned i = 0; i < nentities; ++i) {
     std::getline(file, line);
     std::istringstream istream(line);
-    if (line.find('#') == std::string::npos && line != "") {
-      istream >> elementid >> elementtype >> elementry >> physical >> elementry;
 
-      //! If element type not equals to specified Tvertices, skip element
-      if (elementtype != element_type) {
-        istream >> line;
-      } else {
-        //! For every element, get the node number of its vertices
-        for (unsigned j = 0; j < elementarray.size(); ++j) {
-          istream >> elementarray[j];
+    double ignore;
+    unsigned ncomponents = 0;
+    if (line.find('#') == std::string::npos && line != "") {
+      istream >> ignore >> ignore >> elementtype >> ncomponents;
+      std::cout << elementtype << "   " << ncomponents << "\n";
+      
+      //! Iterate through all elements in one entity
+      for (unsigned j = 0; j < ncomponents; ++j) {
+        std::getline(file, line);
+        std::istringstream istream(line);
+
+        std::cout << line << "\n";
+        std::cout << istream.str() << "\n";
+        
+        if (line.find('#') == std::string::npos && line != "") {
+
+          //! If element type not equals to specified Tvertices, skip element
+          if (elementtype == element_type) {
+            istream >> elementid;
+            //! For every element, get the node number of its vertices
+            for (unsigned k = 0; k < elementarray.size(); ++k) {
+              istream >> elementarray[k];
+              std::cout << elementarray[k] << "  ";
+            }
+            std::cout << "=> Element id as read: " << elementid << "\n";
+            this->elements_.emplace_back(new Element(elementid, elementarray));
+          }
         }
-        this->elements_.emplace_back(new Element(elementid, elementarray));
       }
     }
   }
   std::cout << "Number of Elements: " << elements_.size() << '\n';
 
   //! Get the coordinates for each vertex of each element
+  std::cout << __FILE__ << __LINE__ << "\n";
   this->store_element_vertices();
+  std::cout << __FILE__ << __LINE__ << "\n";
 }
 
 //! Store element vertices
@@ -179,7 +217,6 @@ template <unsigned Tdim, unsigned Tvertices>
 void GMSH<Tdim, Tvertices>::store_element_vertices() {
 
   Eigen::VectorXd elementkeyvalues(Tvertices);
-
   //! Iterate through element_
   for (const auto& element : elements_) {
 
@@ -192,8 +229,18 @@ void GMSH<Tdim, Tvertices>::store_element_vertices() {
       //! Get the coordinates for the required vertex idz
       auto verticesfind = vertices_.find(vertex_id);
 
-      //! For each vertex, store the coordinates
-      verticescoordinates.push_back(verticesfind->second);
+      if (verticesfind != vertices_.end()) {
+
+        /* std::cout << verticesfind->second << "\n";
+        std::cout << "vertex " << j << ": id - " << vertex_id
+                  << " coordinates: " << verticesfind->second[0]
+                  << verticesfind->second[1]; */
+
+        //! For each vertex, store the coordinates
+        verticescoordinates.push_back(verticesfind->second);
+      } else {
+        std::cout << "vertex id:" << vertex_id << " element id: " << element->id() << "\n";
+      }
     }
 
     element->coordinates(verticescoordinates);
