@@ -60,6 +60,9 @@ class Mesh {
   //! Write .vtk files for mesh
   void write_vtk_mesh(const boost::filesystem::path& mesh_vtk_filename);
 
+  //! Write mesh file for mpm input
+  void write_mpm_mesh(const boost::filesystem::path& mesh_vtk_filename);
+
   //! Return begin iterator of material points_
   typename std::vector<std::unique_ptr<MaterialPoints<Tdim>>>::const_iterator
       material_points_begin() const {

@@ -307,3 +307,50 @@ void Mesh<Tdim, Tvertices>::write_vtk_mesh(
   }
   std::cout << "Wrote mesh vtk file\n";
 }
+
+//! \brief Write node coordinates and element id
+//! \details Generate mesh file for mpm code
+//! \tparam Tdim dimension
+//! \tparam Tvertices Number of vertices in an element
+template <unsigned Tdim, unsigned Tvertices>
+void Mesh<Tdim, Tvertices>::write_mpm_mesh(
+    const boost::filesystem::path& mesh_mpm_filename) {
+
+  const auto filename = mesh_mpm_filename.string();
+  std::cout << "mesh file for mpm will be stored in: " << filename << '\n';
+
+  //! Output vertices file
+  std::fstream mesh_mpm_file;
+  mesh_mpm_file.open(filename, std::ios::out);
+
+  if (mesh_mpm_file.is_open()) {
+    //! Write the total number of vertices
+    mesh_mpm_file << vertices_.size() << '\t' << elements_.size() << '\n';
+
+    //! Write the coordinates of the vertices
+    //! [X] [Y] [Z]
+    //! Note that for 2D, there are no z values
+    //! Iterate over vertices to get coordinates
+    for (std::map<unsigned, Eigen::VectorXd>::iterator it = vertices_.begin();
+         it != vertices_.end(); ++it) {
+      Eigen::VectorXd vertice = it->second;
+
+      mesh_mpm_file << vertice[0] << '\t' << vertice[1] << '\t' << vertice[2]
+                    << '\n';
+    }
+
+    //! Write the element id
+    //! It follows GMSH4 convention
+    const unsigned nodes_in_element = 8;
+    for (const auto& element : elements_) {
+      Eigen::VectorXd vertices = element->vertices();
+      for (unsigned i = 0; i < nodes_in_element; ++i) {
+        mesh_mpm_file << vertices[i] - 1 << '\t';
+      }
+      mesh_mpm_file << '\n';
+    }
+
+    mesh_mpm_file.close();
+  }
+  std::cout << "Wrote mesh file\n";
+}
