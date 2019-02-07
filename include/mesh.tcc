@@ -317,7 +317,6 @@ void Mesh<Tdim, Tvertices>::write_mpm_mesh(
     const boost::filesystem::path& mesh_mpm_filename) {
 
   const auto filename = mesh_mpm_filename.string();
-  std::cout << "mesh file for mpm will be stored in: " << filename << '\n';
 
   //! Output vertices file
   std::fstream mesh_mpm_file;
