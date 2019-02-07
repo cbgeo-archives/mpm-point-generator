@@ -325,7 +325,7 @@ void Mesh<Tdim, Tvertices>::write_mpm_mesh(
 
   if (mesh_mpm_file.is_open()) {
     //! Write the total number of vertices
-    mesh_mpm_file << vertices_.size() << '\t' << elements_.size() << '\n';
+    mesh_mpm_file << vertices_.size() << "\t" << elements_.size() << "\n";
 
     //! Write the coordinates of the vertices
     //! [X] [Y] [Z]
