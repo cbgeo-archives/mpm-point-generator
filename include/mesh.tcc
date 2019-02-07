@@ -333,7 +333,7 @@ void Mesh<Tdim, Tvertices>::write_mpm_mesh(
     //! Iterate over vertices to get coordinates
     for (std::map<unsigned, Eigen::VectorXd>::iterator it = vertices_.begin();
          it != vertices_.end(); ++it) {
-      Eigen::VectorXd vertice = it->second;
+      Eigen::VectorXd vertex = it->second;
 
       mesh_mpm_file << vertice[0] << '\t' << vertice[1] << '\t' << vertice[2]
                     << '\n';
