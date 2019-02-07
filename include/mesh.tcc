@@ -345,7 +345,7 @@ void Mesh<Tdim, Tvertices>::write_mpm_mesh(
     for (const auto& element : elements_) {
       Eigen::VectorXd vertices = element->vertices();
       for (unsigned i = 0; i < nodes_in_element; ++i) {
-        mesh_mpm_file << vertices[i] - 1 << '\t';
+        mesh_mpm_file << (vertices[i] - 1) << "\t";
       }
       mesh_mpm_file << '\n';
     }
