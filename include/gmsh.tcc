@@ -184,9 +184,8 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
           if (elementtype == element_type) {
             istream >> elementid;
             //! For every element, get the node number of its vertices
-            for (unsigned k = 0; k < elementarray.size(); ++k) {
+            for (unsigned k = 0; k < elementarray.size(); ++k)
               istream >> elementarray[k];
-            }
             this->elements_.emplace_back(new Element(elementid, elementarray));
           }
         }

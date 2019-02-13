@@ -330,11 +330,10 @@ void Mesh<Tdim, Tvertices>::write_mpm_mesh(
     //! [X] [Y] [Z]
     //! Note that for 2D, there are no z values
     //! Iterate over vertices to get coordinates
-    for (auto itr = vertices_.begin(); itr != vertices_.end(); ++itr) {
-      Eigen::VectorXd coordinates = itr->second;
-      for (unsigned i = 0; i < coordinates.size(); ++i) {
+    for (auto& vertice : vertices_) {
+      Eigen::VectorXd coordinates = vertice.second;
+      for (unsigned i = 0; i < coordinates.size(); ++i)
           mesh_mpm_file << coordinates[i] << "\t";
-      }
       mesh_mpm_file << "\n";
     }
 
