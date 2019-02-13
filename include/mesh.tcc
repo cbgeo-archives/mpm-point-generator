@@ -336,7 +336,7 @@ void Mesh<Tdim, Tvertices>::write_mpm_mesh(
         if (i == (coordinates.size() - 1)) 
           mesh_mpm_file << coordinates[i];
         else
-          mesh_mpm_file << coordinates[i] << '\t';
+          mesh_mpm_file << coordinates[i] << "\t";
       }
       mesh_mpm_file << "\n";
     }
