@@ -348,5 +348,4 @@ void Mesh<Tdim, Tvertices>::write_mpm_mesh(
     }
     mesh_mpm_file.close();
   }
-  std::cout << "Wrote mesh file\n";
 }
