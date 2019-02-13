@@ -61,7 +61,7 @@ class Mesh {
   void write_vtk_mesh(const boost::filesystem::path& mesh_vtk_filename);
 
   //! Write mesh file for mpm input
-  void write_mpm_mesh(const boost::filesystem::path& mesh_vtk_filename);
+  void write_mpm_mesh(const boost::filesystem::path& mesh_filename);
 
   //! Return begin iterator of material points_
   typename std::vector<std::unique_ptr<MaterialPoints<Tdim>>>::const_iterator
