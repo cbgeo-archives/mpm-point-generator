@@ -314,7 +314,7 @@ void Mesh<Tdim, Tvertices>::write_vtk_mesh(
 //! \tparam Tvertices Number of vertices in an element
 template <unsigned Tdim, unsigned Tvertices>
 void Mesh<Tdim, Tvertices>::write_mpm_mesh(
-    const boost::filesystem::path& mesh_mpm_filename) {
+    const boost::filesystem::path& mesh_filename) {
 
   const auto filename = mesh_filename.string();
 
