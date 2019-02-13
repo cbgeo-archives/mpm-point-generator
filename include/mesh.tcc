@@ -347,7 +347,7 @@ void Mesh<Tdim, Tvertices>::write_mpm_mesh(
       for (unsigned i = 0; i < vertices.size(); ++i) {
         mesh_mpm_file << (vertices[i] - 1) << '\t';
       }
-      mesh_mpm_file << "\n";
+      mesh_mpm_file << std::endl;
     }
     mesh_mpm_file.close();
   }
