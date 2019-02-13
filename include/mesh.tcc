@@ -333,7 +333,6 @@ void Mesh<Tdim, Tvertices>::write_mpm_mesh(
     for (auto itr = vertices_.begin(); itr != vertices_.end(); ++itr) {
       Eigen::VectorXd coordinates = itr->second;
       for (unsigned i = 0; i < coordinates.size(); ++i) {
-        else
           mesh_mpm_file << coordinates[i] << "\t";
       }
       mesh_mpm_file << "\n";
