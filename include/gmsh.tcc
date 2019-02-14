@@ -68,9 +68,6 @@ void GMSH<Tdim, Tvertices>::read_vertices(std::ifstream& file) {
   istream >> nentities >> nvertices;
   std::getline(istream, line);
 
-  std::cout << __FILE__ << Tdim << " " << __LINE__ << "vertices: " << nvertices
-            << "\n";
-
   //! Vertices id
   unsigned vertid = 0;
 
@@ -175,15 +172,11 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
     unsigned ncomponents = 0;
     if (line.find('#') == std::string::npos && line != "") {
       istream >> ignore >> ignore >> elementtype >> ncomponents;
-      std::cout << elementtype << "   " << ncomponents << "\n";
       
       //! Iterate through all elements in one entity
       for (unsigned j = 0; j < ncomponents; ++j) {
         std::getline(file, line);
         std::istringstream istream(line);
-
-        std::cout << line << "\n";
-        std::cout << istream.str() << "\n";
         
         if (line.find('#') == std::string::npos && line != "") {
 
@@ -193,9 +186,7 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
             //! For every element, get the node number of its vertices
             for (unsigned k = 0; k < elementarray.size(); ++k) {
               istream >> elementarray[k];
-              std::cout << elementarray[k] << "  ";
             }
-            std::cout << "=> Element id as read: " << elementid << "\n";
             this->elements_.emplace_back(new Element(elementid, elementarray));
           }
         }
@@ -205,9 +196,7 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
   std::cout << "Number of Elements: " << elements_.size() << '\n';
 
   //! Get the coordinates for each vertex of each element
-  std::cout << __FILE__ << __LINE__ << "\n";
   this->store_element_vertices();
-  std::cout << __FILE__ << __LINE__ << "\n";
 }
 
 //! Store element vertices
