@@ -33,7 +33,7 @@ TEST_CASE("GMSH is checked in 3D", "[GMSH][3D]") {
     material.emplace_back(
         std::make_unique<MaterialProperties>(material_json[i]));
   }
-  const std::string filename = "../bin/cube.msh";
+  const std::string filename = "../bin/box.msh";
   mesh->read_mesh(filename);
   mesh->generate_material_points(1);
   mesh->assign_material_properties(std::move(material));

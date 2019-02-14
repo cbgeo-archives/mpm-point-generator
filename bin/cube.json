@@ -1,5 +1,5 @@
 {
-  "mesh_file" : "cube.msh",
+  "mesh_file" : "box.msh",
   "results_path" : "results/",
   "dimension": 3,
 	"ngauss_points" : 1,
