@@ -172,21 +172,18 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
     unsigned ncomponents = 0;
     if (line.find('#') == std::string::npos && line != "") {
       istream >> ignore >> ignore >> elementtype >> ncomponents;
-      
       //! Iterate through all elements in one entity
       for (unsigned j = 0; j < ncomponents; ++j) {
         std::getline(file, line);
         std::istringstream istream(line);
-        
         if (line.find('#') == std::string::npos && line != "") {
 
           //! If element type not equals to specified Tvertices, skip element
           if (elementtype == element_type) {
             istream >> elementid;
             //! For every element, get the node number of its vertices
-            for (unsigned k = 0; k < elementarray.size(); ++k) {
+            for (unsigned k = 0; k < elementarray.size(); ++k)
               istream >> elementarray[k];
-            }
             this->elements_.emplace_back(new Element(elementid, elementarray));
           }
         }
