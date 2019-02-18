@@ -2,7 +2,8 @@
 #define MPM_ELEMENT_H
 
 #include <cmath>
-
+#include <fstream>
+#include <iostream>
 #include <map>
 #include <vector>
 

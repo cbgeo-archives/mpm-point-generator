@@ -3,7 +3,8 @@
 //! \tparam Tvertices Number of vertices in element
 //! \param[in] filename Input mesh filename
 template <unsigned Tdim, unsigned Tvertices>
-void GMSH<Tdim, Tvertices>::read_mesh(const std::string& filename) {
+void GMSH<Tdim, Tvertices>::read_mesh(const std::string& filename,
+                                      const unsigned nvertices) {
 
   std::ifstream file;
   file.open(filename.c_str(), std::ios::in);
@@ -11,7 +12,7 @@ void GMSH<Tdim, Tvertices>::read_mesh(const std::string& filename) {
     throw std::runtime_error("Specified GMSH file does not exist");
   if (file.good()) {
     read_vertices(file);
-    read_elements(file);
+    read_elements(file, nvertices);
   }
   file.close();
 }
@@ -105,7 +106,8 @@ void GMSH<Tdim, Tvertices>::read_vertices(std::ifstream& file) {
 //! \param[in] filename Input mesh filename and directory
 //! element type
 template <unsigned Tdim, unsigned Tvertices>
-void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
+void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file,
+                                          const unsigned nvertices) {
 
   //! Find the line of interest
   read_keyword(file, "$Elements");
@@ -139,12 +141,16 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
   //! 5 - Hexahedron (8 nodes)
   //! For more informtion on element types, visit:
   //! http://gmsh.info/doc/texinfo/gmsh.html#File-formats
-  unsigned element_type;
+  unsigned element_type = 3;
 
   if (Tdim == 2) {
     element_type = 3;
   } else if (Tdim == 3) {
-    element_type = 5;
+    if (nvertices == 8) {
+      element_type = 5;
+    } else if (nvertices == 4) {
+      element_type = 4;
+    }
   }
 
   //! Iterate through all elements in the file
@@ -373,6 +379,88 @@ inline void GMSH<3, 8>::generate_material_points(unsigned ngauss_points) {
 
         for (unsigned j = 0; j < vertices; ++j) {
           pointsarray[i] += shape_function[j] * node_coordinates(i, j);
+        }
+      }
+
+      //! Make class point and store to material points
+      std::unique_ptr<Point<dim>> point = std::make_unique<Point<dim>>(
+          point_id, global_id, pointsarray, point_volume);
+      materialpoints_.at(material_id)->add_points(std::move(point));
+
+      //! Update point_id
+      ++point_id;
+      //! Update global_id
+      global_id = point_id;
+    }
+  }
+
+  //! Find number of material points generated
+  for (const auto& materialpoints : materialpoints_)
+    npoints_ += materialpoints->npoints();
+
+  std::cout << "Number of Material Points: " << npoints_ << '\n';
+}
+
+//! Generate material points for 3D tetrahedron
+//! \tparam Tdim Dimension
+//! \tparam Tvertices Number of vertices in element
+//! \param[in] ngauss_points Number of gauss points per coordinate
+//! GMSH element type
+template <>
+inline void GMSH<3, 4>::generate_material_points(unsigned ngauss_points) {
+
+  //! Note ngauss_points = 1 all the time
+
+  const unsigned dim = 3;
+  const unsigned vertices = 4;
+
+  //! Get constants from namespace
+  auto gauss_constants = element::gauss_points.find(ngauss_points)->second;
+
+  //! Create a matrix of xi from gauss points
+  //! Matrix is size npoints x dim
+  //! For 3D only
+  unsigned npoints = std::pow(ngauss_points, dim);
+
+  Eigen::VectorXd pointsarray(dim);
+
+  //! global_id is the index for all points
+  unsigned global_id = 0;
+  //! material_id is the index of materialpoints
+  unsigned material_id = 0;
+  //! point_id is local index of points
+  unsigned point_id = 0;
+
+  //! Update vector of material points
+  //! Fill materialpoints_ vector for the first component
+  materialpoints_.emplace_back(
+      std::make_unique<MaterialPoints<dim>>(material_id));
+
+  for (const auto& element : elements_) {
+
+    //! Store coordinates in dim x vertices matrix
+    //! Where N is the number of nodes per element
+    //! This is rearranging of the data to have stored in matrix form
+    Eigen::MatrixXd node_coordinates(dim, vertices);
+    for (unsigned i = 0; i < vertices; ++i) {
+      for (unsigned j = 0; j < dim; ++j) {
+        node_coordinates(j, i) = element->vertex_coordinates(i)[j];
+      }
+    }
+
+    //! Compute the volume for each point
+    //! The volume of the element is distributed evenly
+    double point_volume = element->calculate_volume() / npoints;
+
+    //! Compute the gauss points (there are npoints)
+    for (unsigned k = 0; k < npoints; ++k) {
+
+      //  material point in cartesian coordinate
+      for (unsigned i = 0; i < dim; ++i) {
+        pointsarray[i] = 0;
+
+        for (unsigned j = 0; j < vertices; ++j) {
+          pointsarray[i] += node_coordinates(i, j) / 4;
         }
       }
 

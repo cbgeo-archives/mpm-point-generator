@@ -19,6 +19,7 @@ TEST_CASE("GMSH is checked in 2D", "[GMSH][2D]") {
 
   //! 3D Test of IO Class
   const unsigned DIM = 2;
+  const unsigned nvertices = 4;
   const double tolerance = 1.E-12;
 
   //! Make json object with material in it
@@ -35,7 +36,7 @@ TEST_CASE("GMSH is checked in 2D", "[GMSH][2D]") {
         std::make_unique<MaterialProperties>(material_json[i]));
   }
 
-  mesh->read_mesh(filename);
+  mesh->read_mesh(filename, nvertices);
   mesh->generate_material_points(1);
   mesh->assign_material_properties(std::move(material));
   mesh->compute_stresses();

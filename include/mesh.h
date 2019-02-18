@@ -27,7 +27,8 @@ class Mesh {
 
  public:
   //! Read vertices from mesh
-  virtual void read_mesh(const std::string& filename) = 0;
+  virtual void read_mesh(const std::string& filename,
+                         const unsigned nvertices) = 0;
 
   //! Compute material point location
   virtual void generate_material_points(unsigned ngauss_points) = 0;
