@@ -14,8 +14,9 @@ jobs:
             [ "$(ls -A build)" ] && rm -rf build/*
             cd build
             cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++ -DCMAKE_EXPORT_COMPILE_COMMANDS=On ..
-            make -j8 
-            ctest -VV
+            make -j8
+            ./mpm_point_generator_unit_test [2D]
+            #ctest -VV
       # Clang 3.9
       - run:
           name: Clang-3.9 build
@@ -24,8 +25,9 @@ jobs:
             [ "$(ls -A build)" ] && rm -rf build/*
             cd build
             cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_EXPORT_COMPILE_COMMANDS=On ..
-            make -j8 
-            ctest -VV
+            make -j8
+            ./mpm_point_generator_unit_test [2D]
+            #ctest -VV
       # cppcheck
       - run:
           name: cppcheck
@@ -41,7 +43,7 @@ jobs:
             cd build
             cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++ -DCMAKE_EXPORT_COMPILE_COMMANDS=On -DENABLE_COVERAGE=On ..
             make mpm_point_generator_unit_test -j2
-            ./mpm_point_generator_unit_test
+            ./mpm_point_generator_unit_test [2D]
             make gcov
             make lcov
             bash <(curl -s https://codecov.io/bash) -X gcov

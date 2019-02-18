@@ -68,9 +68,6 @@ void GMSH<Tdim, Tvertices>::read_vertices(std::ifstream& file) {
   istream >> nentities >> nvertices;
   std::getline(istream, line);
 
-  std::cout << __FILE__ << Tdim << " " << __LINE__ << "vertices: " << nvertices
-            << "\n";
-
   //! Vertices id
   unsigned vertid = 0;
 
@@ -180,6 +177,7 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
         std::getline(file, line);
         std::istringstream istream(line);
         if (line.find('#') == std::string::npos && line != "") {
+
           //! If element type not equals to specified Tvertices, skip element
           if (elementtype == element_type) {
             istream >> elementid;
@@ -195,9 +193,7 @@ void GMSH<Tdim, Tvertices>::read_elements(std::ifstream& file) {
   std::cout << "Number of Elements: " << elements_.size() << '\n';
 
   //! Get the coordinates for each vertex of each element
-  std::cout << __FILE__ << __LINE__ << "\n";
   this->store_element_vertices();
-  std::cout << __FILE__ << __LINE__ << "\n";
 }
 
 //! Store element vertices

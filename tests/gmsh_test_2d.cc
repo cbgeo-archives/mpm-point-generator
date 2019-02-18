@@ -62,36 +62,19 @@ TEST_CASE("GMSH is checked in 2D", "[GMSH][2D]") {
 
   //! Check size
   // TODO
-  REQUIRE(coordinates.size() == 2);
-  REQUIRE(stresses.size() == 2);
-  REQUIRE(volumes.size() == 2);
-  REQUIRE(global_ids.size() == 2);
+  REQUIRE(coordinates.size() == 43);
+  REQUIRE(stresses.size() == 43);
+  REQUIRE(volumes.size() == 43);
+  REQUIRE(global_ids.size() == 43);
 
   //! Check id
   REQUIRE(global_ids.at(0) == 0);
   REQUIRE(global_ids.at(1) == 1);
 
   //! Check coordinates
-  REQUIRE(coordinates.at(0)[0] == Approx(1.00).epsilon(tolerance));
-  REQUIRE(coordinates.at(0)[1] == Approx(1.00).epsilon(tolerance));
-  REQUIRE(coordinates.at(1)[0] == Approx(1.00).epsilon(tolerance));
-  REQUIRE(coordinates.at(1)[1] == Approx(2.50).epsilon(tolerance));
-
-  //! Check stress
-  REQUIRE(stresses.at(0)[0] == Approx(-14715).epsilon(tolerance));
-  REQUIRE(stresses.at(0)[1] == Approx(-29430).epsilon(tolerance));
-  REQUIRE(stresses.at(0)[2] == Approx(0).epsilon(tolerance));
-  REQUIRE(stresses.at(0)[3] == Approx(0).epsilon(tolerance));
-  REQUIRE(stresses.at(0)[4] == Approx(0).epsilon(tolerance));
-  REQUIRE(stresses.at(0)[5] == Approx(0).epsilon(tolerance));
-  REQUIRE(stresses.at(1)[0] == Approx(0).epsilon(tolerance));
-  REQUIRE(stresses.at(1)[1] == Approx(0).epsilon(tolerance));
-  REQUIRE(stresses.at(1)[2] == Approx(0).epsilon(tolerance));
-  REQUIRE(stresses.at(1)[3] == Approx(0).epsilon(tolerance));
-  REQUIRE(stresses.at(1)[4] == Approx(0).epsilon(tolerance));
-  REQUIRE(stresses.at(1)[5] == Approx(0).epsilon(tolerance));
+  REQUIRE(coordinates.at(0)[0] == Approx(0.697264485069).epsilon(tolerance));
+  REQUIRE(coordinates.at(0)[1] == Approx(0.675002087384).epsilon(tolerance));
 
   //! Check volume
-  REQUIRE(volumes.at(0) == Approx(4).epsilon(tolerance));
-  REQUIRE(volumes.at(1) == Approx(2).epsilon(tolerance));
+  REQUIRE(volumes.at(0) == Approx(0.216696115506).epsilon(tolerance));
 }
